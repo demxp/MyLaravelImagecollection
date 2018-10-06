@@ -50,7 +50,7 @@ class User extends Authenticatable
     public function edit($fields)
     {
         $this->fill($fields);
-        if(!isNull($fields->password)){
+        if(!is_null($fields->password)){
             $user->password = bcrypt($fields['password']);
         }
         $this->save();
@@ -63,12 +63,13 @@ class User extends Authenticatable
         $this->delete();
     }
 
-    public function uploadAvatar($image)
+    public function uploadAvatar($avatar)
     {
+        if(is_null($avatar)) {return;}
         $this->removeAvatar();
-        $filename = str_random(10) . '.' . $image->extension;
-        $image->saveAs('uploads', $filename);
-        $this->image = $filename;
+        $filename = str_random(10) . '.' . $avatar->extension();
+        $avatar->storeAs('uploads', $filename);
+        $this->avatar = $filename;
         $this->save();
     }  
 
@@ -81,7 +82,7 @@ class User extends Authenticatable
 
     public function getAvatar()
     {
-        if(!isNull($this->avatar)){
+        if(!is_null($this->avatar)){
             return '/uploads/'.$this->avatar;
         }
         return '/img/no_avatar.jpg';

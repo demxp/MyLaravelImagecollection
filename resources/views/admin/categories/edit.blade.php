@@ -31,7 +31,7 @@
       </div>
         <!-- /.box-body -->
         <div class="box-footer">
-          <button class="btn btn-default">Назад</button>
+          <a href="{{route('categories.index')}}" class="btn btn-default">Назад</a>
           <button class="btn btn-warning pull-right">Изменить</button>
         </div>
         {!! Form::close() !!}        

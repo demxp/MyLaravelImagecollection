@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -15,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email',
     ];
 
     /**
@@ -50,8 +51,8 @@ class User extends Authenticatable
     public function edit($fields)
     {
         $this->fill($fields);
-        if(!is_null($fields->password)){
-            $user->password = bcrypt($fields['password']);
+        if(!is_null($fields['password'])){
+            $this->password = bcrypt($fields['password']);
         }
         $this->save();
 
@@ -66,11 +67,21 @@ class User extends Authenticatable
     public function uploadAvatar($avatar)
     {
         if(is_null($avatar)) {return;}
-        $this->removeAvatar();
-        $filename = str_random(10) . '.' . $avatar->extension();
-        $avatar->storeAs('uploads', $filename);
-        $this->avatar = $filename;
-        $this->save();
+        $parsed_image = preg_split("/[:;,]+/", $avatar);
+        
+        // Декодируем данные, закодированные алгоритмом MIME base64
+        $decodedData = base64_decode($parsed_image[3]);
+
+        // Создаем изображение на сервере
+        $filename = str_random(10) . '.jpg';
+        if (imagejpeg(imagecreatefromstring($decodedData), 'uploads/' . $filename)) {
+            $this->removeAvatar();
+            $this->avatar = $filename;
+            $this->save();
+            return 0;
+        }else{
+            return 1;
+        }
     }  
 
     public function removeAvatar()

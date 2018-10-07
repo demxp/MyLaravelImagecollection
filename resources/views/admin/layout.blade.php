@@ -25,6 +25,22 @@
     border: none;
     padding: 0px;
   }
+
+  .user-avatar{
+    text-align: center;
+    max-width: 120px;
+  }
+
+  .user-avatar img {
+      width: 100%;
+      max-width: 70px;
+      height: auto;
+  }  
+
+  .user-avatar a{
+    display: inline-block;
+    margin: 5px auto;
+  }
 </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">

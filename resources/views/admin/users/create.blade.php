@@ -11,7 +11,7 @@
       </h1>
     </section>
 
-    {!! Form::open(['route' => 'users.store', 'files' => true]) !!}
+    {!! Form::open(['route' => 'users.store']) !!}
     <!-- Main content -->
     <section class="content">
 
@@ -37,9 +37,16 @@
             </div>
             <div class="form-group">
               <label for="exampleInputFile">Аватар</label>
-              <input type="file" id="exampleInputFile" name="avatar">
-
-              <p class="help-block">Какое-нибудь уведомление о форматах..</p>
+              <input type="hidden" id="avatar_image_field" name="avatar">
+              <script type="text/javascript" src="/js/imageResizer.js"></script>
+              <div class="form-group">
+              	<div class="row">
+              		<div class="col-md-4 user-avatar col-md-offset-4">
+						<a class="btn btn-success btn-xs" onclick="javascript:addpicture(this, 220);">Загрузить</a>
+						<img src="/img/no_avatar.jpg" alt="" class="img-circle" id="avatar_image">
+              		</div>
+              	</div>
+              </div>
             </div>
         </div>
       </div>
@@ -51,7 +58,6 @@
         <!-- /.box-footer-->
       </div>
       <!-- /.box -->
-
     </section>
     {!! Form::close() !!}    
     <!-- /.content -->

@@ -46,8 +46,8 @@
                   <td>{{$user->id}}</td>
                   <td>{{$user->name}}</td>
                   <td>{{$user->email}}</td>
-                  <td>
-                    <img src="{{$user->getAvatar()}}" alt="" class="img-responsive" width="150">
+                  <td class="user-avatar">
+                    <img src="{{$user->getAvatar()}}" alt="" class="img-circle">
                   </td>
                   <td><a href="{{route('users.edit', $user->id)}}" class="fa fa-pencil"></a>
                     {{Form::open(['route' => ['users.destroy', $user->id], 'method' => 'delete'])}}

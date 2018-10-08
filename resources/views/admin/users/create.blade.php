@@ -42,7 +42,7 @@
               <div class="form-group">
               	<div class="row">
               		<div class="col-md-4 user-avatar col-md-offset-4">
-						<a class="btn btn-success btn-xs" onclick="javascript:addpicture(this, 220);">Загрузить</a>
+						<a class="btn btn-success btn-xs" onclick="javascript:addpicture(this, {'size':220, 'img_element_id':'avatar_image', 'field_element_id':'avatar_image_field'});">Загрузить</a>
 						<img src="/img/no_avatar.jpg" alt="" class="img-circle" id="avatar_image">
               		</div>
               	</div>

@@ -10,16 +10,16 @@ class Images extends Model
 {
 	use Sluggable;
 
-	protected $fillable = ['title', 'image'];
+	protected $fillable = ['title'];
 
 	public function category()
 	{
-	   	return $this->hasOne(Category::class);
+	   	return $this->belongsTo(Category::class);
 	}
 
 	public function author()
 	{
-	    return $this->hasOne(User::class);
+	    return $this->belongsTo(User::class, 'user_id');
 	}
 
 	public function tags()	
@@ -46,9 +46,7 @@ class Images extends Model
     	$image = new static;
     	$image->fill($fields);
     	$image->user_id = 1;
-    	if($image->image == null){
-    		$image->image = 'no_image.jpg';
-    	}
+        $image->image = self::uploadImageByString($fields['image']);
     	$image->save();
 
     	return $image;
@@ -57,14 +55,39 @@ class Images extends Model
     public function edit($fields)
     {
     	$this->fill($fields);
+        if(!is_null($fields['image'])){
+            Storage::delete('uploads/'.$this->image);
+            $this->image = self::uploadImageByString($fields['image']);
+        }
     	$this->save();
     }
 
     public function remove()
     {
-    	Storage::delete('uploads'.$this->image);
+    	Storage::delete('uploads/'.$this->image);
     	$this->delete();
     }
+
+    public static function uploadImageByString($imagestring)
+    {
+        if(is_null($imagestring)) {return;}
+        $parsed_image = preg_split("/[:;,]+/", $imagestring);
+        
+        // Декодируем данные, закодированные алгоритмом MIME base64
+        $decodedData = base64_decode($parsed_image[3]);
+
+        // Создаем изображение на сервере
+        $filename = str_random(10) . '.jpg';
+        imagejpeg(imagecreatefromstring($decodedData), 'uploads/' . $filename);
+        return $filename;
+
+        // Надо бы как-то отлавливать косяки, если возникнут...
+        //if (imagejpeg(imagecreatefromstring($decodedData), 'uploads/' . $filename)) {
+        //    return $filename;
+        //}else{
+        //    return 1;
+        //}
+    } 
 
     public function uploadImage($image)
     {
@@ -81,7 +104,7 @@ class Images extends Model
 
     public function getImageFile()
     {
-    	if(!isNull($this->image)){
+    	if(!is_null($this->image)){
     		return '/uploads/'.$this->image;
     	}
     	return '/img/no_image.jpg';
@@ -98,17 +121,16 @@ class Images extends Model
     public function setTags($ids)
     {
     	if($ids == null) { return; }
-
     	$this->tags()->sync($ids);
     }
 
-    public function setHidden()
+    public function setPrivate()
     {
     	$this->status = 0;
     	$this->save();
     }
 
-    public function setShowed()
+    public function setPublic()
     {
     	$this->status = 1;
     	$this->save();
@@ -116,9 +138,22 @@ class Images extends Model
 
     public function toggleVisibility($value)
     {
-    	if(isNull($value)){
-    		return $this->setHidden();
+    	if(!is_null($value)){
+    		return $this->setPrivate();
     	}
-    	return $this->setShowed();
+    	return $this->setPublic();
     }
+
+    public function getCategoryTitle()
+    {
+        if(is_null($this->category)){
+            return "Нет категории";
+        }
+        return $this->category->title;
+    }
+
+    public function getTags()
+    {
+        return implode(', ', $this->tags->pluck('title')->all());
+    }    
 }

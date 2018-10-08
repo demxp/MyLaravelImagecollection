@@ -41,6 +41,17 @@
     display: inline-block;
     margin: 5px auto;
   }
+
+  .image-preview a{
+    margin: 10px auto;
+    display: block;
+  }
+
+  .image-preview img {
+      width: 100%;
+      height: auto;
+  }   
+      
 </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">

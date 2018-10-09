@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -43,7 +44,10 @@ class User extends Authenticatable
         $user = new static;
         $user->fill($fields);
         $user->password = bcrypt($fields['password']);
+        $user->uploadertoken = md5(str_random(10).$user->email);
         $user->save();
+
+        self::createUserUploadFolder($user->id);
 
         return $user;
     }
@@ -74,7 +78,7 @@ class User extends Authenticatable
 
         // Создаем изображение на сервере
         $filename = str_random(10) . '.jpg';
-        if (imagejpeg(imagecreatefromstring($decodedData), 'uploads/' . $filename)) {
+        if (imagejpeg(imagecreatefromstring($decodedData), 'uploads/avatars/' . $filename)) {
             $this->removeAvatar();
             $this->avatar = $filename;
             $this->save();
@@ -87,14 +91,14 @@ class User extends Authenticatable
     public function removeAvatar()
     {
         if($this->avatar != null){
-            Storage::delete('uploads/'.$this->avatar);
+            Storage::delete('uploads/avatars/'.$this->avatar);
         }
     }
 
     public function getAvatar()
     {
         if(!is_null($this->avatar)){
-            return '/uploads/'.$this->avatar;
+            return '/uploads/avatars/'.$this->avatar;
         }
         return '/img/no_avatar.jpg';
     }
@@ -121,5 +125,45 @@ class User extends Authenticatable
     {
         $this->is_banned = 0;
         $this->save();
-    }        
+    }   
+
+    public static function createUserUploadFolder($user_id)
+    {
+        $dirname = 'uploads/pictures/user'.$user_id;
+        Storage::makeDirectory($dirname);
+        Storage::makeDirectory($dirname.'/thumbnails');
+    }
+
+    public static function createApiAccess($key)
+    {
+        if(is_null($key)) {return null;}
+
+        $user = User::where([
+            ['uploadertoken', $key],
+            ['is_banned', 0]
+        ])->first();
+
+        if(is_null($user)){return null;}
+
+        return $user->email.":".password_hash($user->id, PASSWORD_DEFAULT);
+    }
+
+    public static function checkApiAccess(Request $request)
+    {
+        if(is_null($request->server('PHP_AUTH_USER')) || is_null($request->server('PHP_AUTH_PW'))){
+            return null;
+        }
+
+        $email = $request->server('PHP_AUTH_USER');
+        $token = $request->server('PHP_AUTH_PW');
+
+        $user = User::where([
+            ['email', $email],
+            ['is_banned', 0]
+        ])->first();  
+
+        if(is_null($user) || !password_verify($user->id, $token)){return null;}
+
+        return $user;
+    }
 }

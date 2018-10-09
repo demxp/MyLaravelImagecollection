@@ -48,7 +48,7 @@
                   <td>{{$image->getCategoryTitle()}}</td>
                   <td>{{$image->getTags()}}</td>
                   <td>
-                    <img src="{{$image->getImageFile()}}" alt="" width="100">
+                    <img src="{{$image->getThumbnail()}}" alt="" width="100">
                   </td>
                   <td><a href="{{route('images.edit', $image->id)}}" class="fa fa-pencil"></a>
                     {{Form::open(['route' => ['images.destroy', $image->id], 'method' => 'delete'])}}

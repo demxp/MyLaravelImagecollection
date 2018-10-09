@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 
@@ -46,7 +47,7 @@ class Images extends Model
     	$image = new static;
     	$image->fill($fields);
     	$image->user_id = 1;
-        $image->image = self::uploadImageByString($fields['image']);
+        $image->image = self::uploadImageByString($fields['image'], $image->user_id);
     	$image->save();
 
     	return $image;
@@ -57,18 +58,19 @@ class Images extends Model
     	$this->fill($fields);
         if(!is_null($fields['image'])){
             Storage::delete('uploads/'.$this->image);
-            $this->image = self::uploadImageByString($fields['image']);
+            $this->image = self::uploadImageByString($fields['image'], $this->user_id);
         }
     	$this->save();
     }
 
     public function remove()
     {
-    	Storage::delete('uploads/'.$this->image);
+    	Storage::delete('/uploads/pictures/user'.$this->user_id."/".$this->image);
+        Storage::delete('/uploads/pictures/user'.$this->user_id."/thumbnails/".$this->image);
     	$this->delete();
     }
 
-    public static function uploadImageByString($imagestring)
+    public static function uploadImageByString($imagestring, $user_id)
     {
         if(is_null($imagestring)) {return;}
         $parsed_image = preg_split("/[:;,]+/", $imagestring);
@@ -77,38 +79,73 @@ class Images extends Model
         $decodedData = base64_decode($parsed_image[3]);
 
         // Создаем изображение на сервере
-        $filename = str_random(10) . '.jpg';
-        imagejpeg(imagecreatefromstring($decodedData), 'uploads/' . $filename);
+        $filename = str_random(15) . '.jpg';
+        $userfolder = 'uploads/pictures/user'.$user_id;
+
+        Image::make(imagecreatefromstring($decodedData))->encode('jpg', 75)->save($userfolder."/".$filename);
+        Image::make($userfolder."/".$filename)->resize(200, 200, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        })->save($userfolder."/thumbnails/".$filename);        
+
         return $filename;
 
         // Надо бы как-то отлавливать косяки, если возникнут...
-        //if (imagejpeg(imagecreatefromstring($decodedData), 'uploads/' . $filename)) {
-        //    return $filename;
-        //}else{
-        //    return 1;
-        //}
     } 
 
-    public function uploadImage($image)
+    public static function externalUpload($uploaded, $user)
     {
-    	if($this->image != null){
-    		Storage::delete('uploads'.$this->image);
-    	}
-    	$filename = str_random(10) . '.' . $image->extension;
-    	$image->saveAs('uploads/', $filename);
-    	$this->image = $filename;
-    	$this->save();
+        if (is_null($uploaded)) {return null;}
+        
+        $filename = str_random(15).".".$uploaded->extension();
+        $userfolder = 'uploads/pictures/user'.$user->id;
+        $uploaded->storeAs($userfolder, $filename);
 
-    	return $filename;
-    }
+        Image::make($userfolder."/".$filename)->resize(200, 200, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        })->save($userfolder."/thumbnails/".$filename);
+
+        $image = new static;
+        $image->user_id = $user->id;
+        $image->title = "Загруженная картинка: ".$filename;
+        $image->image = $filename;
+        $image->save();
+
+        return $filename;
+    }    
 
     public function getImageFile()
     {
     	if(!is_null($this->image)){
-    		return '/uploads/'.$this->image;
+    		return '/uploads/pictures/user'.$this->user_id."/".$this->image;
     	}
     	return '/img/no_image.jpg';
     }
+
+    public function getThumbnail()
+    {
+        if(!is_null($this->image)){
+            return '/uploads/pictures/user'.$this->user_id."/thumbnails/".$this->image;
+        }
+        return '/img/no_image.jpg';
+    }  
+
+    public static function findImage($filename)
+    {
+        if(is_null($filename)) {return null;}
+
+        $image = Images::where([
+            ['image', $filename]
+        ])->first();
+
+        if(is_null($image)){return null;}
+
+        $image->views++;
+        $image->save();
+
+        return $image;        
+    }      
 
     public function setCategory($id)
     {

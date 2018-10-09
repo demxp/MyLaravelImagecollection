@@ -29,7 +29,7 @@
             
             <div class="form-group">
               <label>Категория</label>
-                {{Form::select('category_id', $categories, $image->category->id, ['class' => 'form-control select2', 'style' => 'width: 100%;', 'placeholder' => 'Выберите категорию'])}}
+                {{Form::select('category_id', $categories, $selectedCategory, ['class' => 'form-control select2', 'style' => 'width: 100%;', 'placeholder' => 'Выберите категорию'])}}
             </div>
             <div class="form-group">
               <label>Теги</label>
@@ -53,7 +53,7 @@
               <div class="form-group">
                 <div class="row">
                   <div class="col-md-10 image-preview col-md-offset-1">
-                    <a class="btn btn-success btn-xs" onclick="javascript:addpicture(this, {'nosquare': true, 'sizew':1024, 'img_element_id':'uploaded_image', 'field_element_id':'image_field'});">Загрузить</a>
+                    <a class="btn btn-success btn-xs" onclick="javascript:addpicture(this, {'nosquare': true, 'sizew':2000, 'img_element_id':'uploaded_image', 'field_element_id':'image_field'});">Загрузить</a>
                     <img src="{{$image->getImageFile()}}" alt="" class="img-responsive" id="uploaded_image">
                   </div>
                 </div>

@@ -66,8 +66,15 @@ class ImagesController extends Controller
         $categories = Category::pluck('title', 'id');
         $tags = Tag::pluck('title', 'id');
         $selectedTags = $image->tags->pluck('id')->all();
+        $selectedCategory = (is_null($image->category)) ? null : $image->category->id;
 
-        return view('admin.images.edit', ['categories' => $categories, 'tags' => $tags, 'image' => $image, 'selectedTags' => $selectedTags]); 
+        return view('admin.images.edit', [
+            'categories' => $categories, 
+            'tags' => $tags, 
+            'image' => $image, 
+            'selectedTags' => $selectedTags,
+            'selectedCategory' => $selectedCategory,
+        ]); 
     }
 
     /**

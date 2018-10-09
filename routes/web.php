@@ -22,3 +22,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function(){
 	Route::resource('/users', 'UsersController');			
 	Route::resource('/images', 'ImagesController');				
 });
+
+Route::post('/upload/gettoken', 'UsersController@getUploadToken');
+Route::post('/upload', 'UsersController@saveUploadImage');
+Route::get('/upload/getimage/{filename}/{thumbnail?}', 'UsersController@getUploadedImage');

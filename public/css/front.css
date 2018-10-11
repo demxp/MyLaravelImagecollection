@@ -15957,14 +15957,15 @@ img.mfp-img {
 }
 
 body {
-	font-family: "Varela Round", sans-serif;
-	font-size: 15px;
-	background-color: #fff;		
-	color: #777;
-	line-height: 1.8;
-	background-image: url(../img/bg.png);
-    background-position: bottom right;
-    background-repeat: no-repeat;
+    font-family: "Varela Round", sans-serif;
+    font-size: 15px;
+    background-color: #fff;
+    color: #777;
+    line-height: 1.8;
+    background: url(../img/bg.jpg) 100% 100% no-repeat;
+    background-position: center;
+    background-repeat-y: repeat;
+    background-size: cover;
 }
 
 a {		
@@ -16148,7 +16149,8 @@ select {
 
 textarea,
 input[type="text"],
-input[type="email"] {
+input[type="email"],
+input[type="password"] {
     width: 100%;
 }
 
@@ -16290,6 +16292,7 @@ a.link:hover:after {
 -------------------------------------------------------------- */
 .header {
 	background-color: #fff;
+  opacity: 0.3;
 }
 
 .header .header-wrap {

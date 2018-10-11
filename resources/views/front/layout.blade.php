@@ -25,6 +25,12 @@
         font-style: italic;
         font-weight: bold;
     }
+
+    div.loginerror{
+        color: red;
+        margin: 5px auto;
+        text-align: center;
+    }
 </style>
     <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -43,7 +49,7 @@
                     <div class="container">
                         <div class="row">
                             <div id="logo" class="logo">
-                                <a href="index.html">
+                                <a href="{{route('home')}}">
                                     <img src="/img/logo.png" alt="images">
                                 </a>
                             </div><!-- /#logo -->

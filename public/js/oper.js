@@ -117,8 +117,11 @@ jQuery(".setcattitle").on("click","button",function(e){
 			'group': 'imageOperation'
 		},
 		'oncomplete': function(){
+			var curr_cat = $(_this).closest('td').find('select').val()
 			$(_this).closest('table').find('.setcattitle').map(function(i, elem){
-				$(elem).removeClass('selected');
+				if($(elem).closest('td').find('select').val() == curr_cat){
+					$(elem).removeClass('selected');
+				}
 			});
 			$(_this).closest('.setcattitle').addClass('selected');
 			return;

@@ -21,10 +21,10 @@
                                             @foreach($category->images as $image)
                                                 @if ($image->status == 1)
                                                     <div class="project-media-item">
+                                                        <p class="image-title">{{$image->title}}</p>
                                                         <a class="flat-hover popup-gallery progressive replace" href="{{$image->getImageFile()}}">
                                                             <img src="{{$image->getImageFile()}}" class="preview" alt="images">
                                                         </a>
-                                                        <p class="image-title">{{$image->title}}</p>
                                                     </div><!-- /.project-media-item -->
                                                 @endif
                                             @endforeach

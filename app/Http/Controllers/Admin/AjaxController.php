@@ -12,7 +12,6 @@ class AjaxController extends Controller
 	protected function failedValidation(Validator $validator)
 	{
 	   throw (new ValidationException($validator))->errorBag($this->errorBag);
-		//dd($validator);
 	}
 
     public function init(Request $request)

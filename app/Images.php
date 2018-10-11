@@ -147,35 +147,61 @@ class Images extends Model
         return $image;        
     }      
 
+    public function setTitle($text)
+    {
+        if(strlen($text) < 5) { return 1;}
+
+        $this->title = $text;
+        $this->save();
+
+        return 0;
+    }
+
     public function setCategory($id)
     {
-    	if($id == null) { return;}
+    	if($id == null) { return 1;}
 
     	$this->category_id = $id;
     	$this->save();
+
+        return 0;        
+    }
+
+    public function setCategoryTitleimage($id)
+    {
+        if($id == null) { return 1;}
+
+        $this->category->setHeadImage($id);
+        return 0;                
     }
 
     public function setTags($ids)
     {
-    	if($ids == null) { return; }
+    	if($ids == null) { return 1; }
     	$this->tags()->sync($ids);
+
+        return 0;        
     }
 
     public function setPrivate()
     {
     	$this->status = 0;
     	$this->save();
+
+        return 0;        
     }
 
     public function setPublic()
     {
     	$this->status = 1;
     	$this->save();
+
+        return 0;        
     }
 
     public function toggleVisibility($value)
     {
-    	if(!is_null($value)){
+    	if(is_null($value)){
     		return $this->setPrivate();
     	}
     	return $this->setPublic();

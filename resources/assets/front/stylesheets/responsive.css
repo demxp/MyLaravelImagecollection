@@ -1,0 +1,373 @@
+/* Media Queries
+-------------------------------------------------------------- */
+
+/* Smaller than standard 1200 */
+@media only screen and (max-width: 1199px) {
+	.menu-extra {
+		display: none;
+	}
+}
+
+/* Smaller than standard 992 */
+@media only screen and (max-width: 991px) {
+	.btn-menu {
+		display: block;
+	}
+
+	.header .header-wrap .logo {
+		width: 145px;
+		height: 35px;
+	}
+
+	#mainnav,
+	.btn-menu-desk {
+		display: none;
+	}
+
+	#site-footer #footer-widgets .say-hello h3,
+	.scrollslider .swiper-container .swiper-wrapper .slide-container .slide-title {
+		font-size: 30px;
+	}
+
+	.cd-headline {
+		font-size: 42px;
+	}
+
+	.boxed,
+	.sidebars-right .projects-sidebars,
+	.sidebars-left .sidebars {
+		padding-right: 15px;
+	}
+
+	.boxed,
+	.sidebars-right .sidebars,
+	.sidebars-left .projects-sidebars {
+		padding-left: 15px;
+	}
+
+	.project-single.project-content-fullwidth .project-content-wrap .project-detail {
+		padding-left: 0;
+	}
+
+	.shortcode-blog-list,
+	.products-detail .products-detail-image {
+		padding: 0;
+	}
+
+	.woocommerce-content-top .widget {
+		padding-bottom: 15px;
+	}
+
+	.shortcode-blog-list .blog-post .entry-wrapper .entry-time {
+		padding-top: 0;
+	}
+
+	.products-detail .summary {
+		padding: 30px 0;
+	}
+
+	.scrollslider .swiper-container .swiper-wrapper .slide-container {
+		padding: 15px;
+	}
+
+	.shortcode-blog-list .blog-post .entry-wrapper .entry-header,
+	.shortcode-blog-list .blog-post .entry-wrapper .entry-content {
+		margin: 0;
+	}
+
+	.column-6 {
+		width: 33.333333%;
+	}
+
+	.flat-column-4,
+	.flat-column-3,
+	.flat-column-5 {
+		width: 50%;
+	}
+
+	.widget.widget_layered_nav.column-3,
+	.widget.widget_price_filter.column-3,
+	.products-detail .products-detail-image,
+	.products-detail .summary,
+	.woocommerce-tabs,
+	.swiper-container,
+	.sidebars-right .sidebars,
+	.sidebars-right .projects-sidebars,
+	.sidebars-left .projects-sidebars,
+	.sidebars-left .sidebars,
+	.project-single.project-content-fullwidth .project-content,
+	.project-single.project-content-fullwidth .project-content-wrap .project-header,
+	.project-single.project-content-fullwidth .project-content-wrap .project-detail,
+	.project-single.project-content-right .project-single-wrap .project-content.flat-column-2,
+	.project-gallery.project-gallery-slider.flat-column-2,
+	.project-single.project-content-left .project-single-wrap .project-content.flat-column-2,
+	.project-single.project-content-left .project-single-wrap .project-gallery {
+		width: 100%;
+	}
+
+	#site-footer #footer-widgets .say-hello h3 {
+		margin-bottom: 10px;
+	}
+
+	.woocommerce-content-top .widget .widget-title {
+		margin: 20px 0 20px 0;
+	}
+
+	.flat-iconbox .flat-iconbox-item,
+	.flat-member {
+		margin-bottom: 30px;
+	}
+
+	.social-links.style1 {
+		margin-top: 30px;
+	}
+
+	.social-links.style1 {
+		margin-right: 30px;
+	}
+
+	#footer-content .copyright-content,
+	#footer-content .social-links,
+	.social-links a,
+	.shortcode-blog-list .blog-post .entry-wrapper .entry-time,
+	.products-detail .products-detail-image,
+	.products-detail .summary,
+	.header-center .btn-menu,
+	.sidebars-right .sidebars,
+	.sidebars-left .projects-sidebars,
+	.sidebars-left .sidebars,
+	.project-single.project-content-fullwidth .project-content-wrap .project-header,
+	.project-single.project-content-fullwidth .project-content-wrap .project-detail,
+	.project-single.project-content-right .project-single-wrap .project-content,
+	.project-single.project-content-left .project-single-wrap .project-content,
+	.project-single.project-content-left .project-single-wrap .project-gallery {
+		float: none;
+	}
+
+	.sidebars {
+    	clear: both;
+	}
+
+	.header-center .btn-menu {
+		margin: 0 auto 10px auto;
+	}
+
+	#footer-content {
+		text-align: center;
+	}
+
+	.shortcode-blog-list .blog-post .entry-wrapper .entry-time,
+	.shortcode-blog-list .blog-post .entry-wrapper .entry-header {
+		border-top: none;
+	}
+
+	.shortcode-blog-list .blog-post {
+		border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    	padding-bottom: 30px;
+    	margin-bottom: 30px;
+	}
+
+	.shortcode-blog-list .blog-post .entry-wrapper .entry-header .entry-title a:hover:after {
+		width: 0;
+	}
+
+}
+
+/* Tablet Landscape */
+ @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
+
+}
+
+/* Tablet Portrait Size */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+	
+}
+
+/* All Mobile Sizes */
+@media only screen and (max-width: 767px) {	
+
+	#site-footer #footer-widgets .say-hello {
+		background: rgba(255, 255, 255, 0.8);
+	}
+
+	.products li {
+		width: 50%;
+	}
+
+	.img-single,
+	.shortcode-blog-grid .column-3,
+	.pages-header .page-title,
+	.flat-iconbox.style1 .flat-iconbox-item.flat-column-3,
+	.column-2,
+	.flat-wrapper.style1,
+	.blog.no-sidebar .main-content, 
+	.single-post.no-sidebar .main-content {
+		width: 100%;
+	}
+
+	.flat-join-team {
+		padding: 35px 15px;
+	}
+
+	.flat-about-box {
+	    padding: 15px 15px 60px 15px;
+	}
+
+	.scrollslider .swiper-container .swiper-wrapper .slide-container {
+		font-size: 14px;
+	}
+
+	.title-section.style1 h2.title {
+		font-size: 38px;
+	}
+
+	.blog-shortcode .entry-wrapper {
+		padding: 25px;
+	}
+
+	.flat-wrapper.style2 {
+		width: 100%;
+	}
+}
+
+/* Mobile Landscape Size */
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+	
+}
+
+/* Mobile Portrait Size */
+@media only screen and (max-width: 479px) {
+	.flat-column-4,
+	.flat-column-3,
+	.flat-column-2,
+	.products li,
+	.widget_price_filter .price_slider_wrapper .price_slider_amount,
+	.flat-column-5 {
+		width: 100%;
+	}
+
+	.woocommerce-content-top .widget.widget_price_filter .price_slider_wrapper .price_slider {
+		width: 90%;
+	}
+
+	.social-links.style1 {
+		display: none;
+	}
+
+	.widget_price_filter .price_slider_wrapper .price_slider_amount {
+		float: none;
+	}
+
+	.flat-projects ul.projects-filter li,
+	.woocommerce-content-top .widget.widget_price_filter .price_slider_wrapper .price_slider {
+		margin-bottom: 30px;
+	}
+
+	.social-links a {
+		margin-left: 10px;
+	}
+
+	.flat-projects ul.projects-filter.style1 {
+		padding-bottom: 10px;
+	}
+
+	.blog-shortcode .entry-wrapper {
+		padding: 15px;
+	}
+
+	blockquote {
+		margin: 15px;
+	}
+
+	#footer-content,
+	.pages-header,
+	.flat-404 .content-404,
+	.project-single.project-content-right .project-single-wrap .project-content,
+	.project-single.project-content-left .project-single-wrap .project-content {
+		padding: 15px;
+	}
+
+	.pages-header .page-title .title {
+		font-size: 2em;
+	}
+
+	.blog .hentry .entry-header .entry-title, 
+	.single-post .hentry .entry-header .entry-title {
+		font-size: 30px;
+	}
+
+	#mainnav-mobi ul > li > a {
+		padding: 0 15px;
+	}
+
+	#mainnav-mobi ul.submenu > li > a {
+		padding: 0 25px;
+	}
+
+	#mainnav-mobi .mega-title .btn-mega {
+		padding: 0 15px;
+	}
+
+	#mainnav-mobi ul.mega-menu-sub > li > a {
+		padding: 0 30px;
+	}
+
+	.cd-headline {
+		font-size: 22px;
+	} 
+
+	.flat-projects ul.projects-filter.style1 {
+		padding: 30px 0 30px 0;
+	}
+
+	.flat-projects ul.projects-filter li {
+		margin-right: 13px;
+	}
+
+	.flat-projects ul.projects-filter.style1 li a {
+	    padding: 8px 0;
+	}
+
+	.flat-projects ul.projects-filter li {
+		margin-bottom: 10px;
+	}
+
+	.go-top.show {
+		right: 15px;
+	}
+
+	.flat-divider.d100px {
+		height: 40px;
+	}
+
+}
+
+@media (max-width: 320px) {	
+	
+}
+
+/* Retina Devices */
+	@media 
+	only screen and (-webkit-min-device-pixel-ratio: 2),
+	only screen and (   min--moz-device-pixel-ratio: 2),
+	only screen and (   -moz-min-device-pixel-ratio: 2),
+	only screen and (     -o-min-device-pixel-ratio: 2/1),
+	only screen and (        min-device-pixel-ratio: 2),
+	only screen and (                min-resolution: 192dpi),
+	only screen and (                min-resolution: 2dppx) {
+	
+	.flat-accordion .toggle-title.active:after {
+		background: url("../img/icon/sub@2x.png");
+		background-size: 26px 10px;
+	}
+
+	.flat-accordion .toggle-title:after {
+		background: url("../img/icon/add@2x.png");
+		background-size: 26px 26px;
+	}
+
+	.widget_search .search-form .search-submit {
+		background: url("../img/icon/search-icon@2x.png");
+		background-size: 30px 30px;
+	}
+}

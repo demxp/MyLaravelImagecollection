@@ -1,0 +1,17 @@
+.flex-images { 
+	overflow: hidden; 
+}
+
+.flex-images .item { 
+	float: left; 
+	margin: 0 0.5px 1px 0.5px; 
+	box-sizing: content-box; 
+	overflow: hidden; 
+	position: relative;  
+}
+
+.flex-images .item img { 
+	display: block;
+	width: auto; 
+	height: 100%; 
+}

@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>AdminLTE 2 | Blank Page</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -50,8 +51,81 @@
   .image-preview img {
       width: 100%;
       height: auto;
-  }   
-      
+  }  
+
+/*Чекбокс - вынести в CSS*/
+/* switcher */
+.switcher{
+    display: block;
+    margin: 5px auto;
+    width: 50px;
+    height: 26px;
+}
+.switcher input {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+  margin: 10px 0 0 20px;
+}
+.switcher__text {
+  position: relative;
+  padding: 0 0 0 60px;
+  cursor: pointer;
+}
+.switcher__text:before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 0;
+  width: 50px;
+  height: 26px;
+  border-radius: 13px;
+  background: #CDD1DA;
+  transition: .2s;
+}
+.switcher__text:after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 10px;
+  background: #FFF;
+  transition: .2s;
+}
+.switcher input:checked + .switcher__text:before {
+  background: #49d475;
+}
+.switcher input:checked + .switcher__text:after {
+  left: 26px;
+}
+
+/* end switcher */
+.setcattitle {
+    text-align: center;
+}
+
+.setcattitle span {
+    border: 1px solid #0acc29;
+    color: #2c68f5;
+    padding: 3px;
+    border-radius: 3px;
+    margin: 5px auto;
+    display: none;
+}
+
+.setcattitle button {
+    margin: 5px auto;
+}
+
+.setcattitle.selected button{
+    display: none;
+}
+
+.setcattitle.selected span{
+    display: inline-block;
+}
 </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -384,7 +458,7 @@
           <div class="form-group">
             <label class="control-sidebar-subheading">
               Report panel usage
-              <input type="checkbox" class="pull-right" checked>
+              <input type="switcher" class="pull-right" checked>
             </label>
 
             <p>
@@ -396,7 +470,7 @@
           <div class="form-group">
             <label class="control-sidebar-subheading">
               Allow mail redirect
-              <input type="checkbox" class="pull-right" checked>
+              <input type="switcher" class="pull-right" checked>
             </label>
 
             <p>
@@ -408,7 +482,7 @@
           <div class="form-group">
             <label class="control-sidebar-subheading">
               Expose author name in posts
-              <input type="checkbox" class="pull-right" checked>
+              <input type="switcher" class="pull-right" checked>
             </label>
 
             <p>
@@ -422,7 +496,7 @@
           <div class="form-group">
             <label class="control-sidebar-subheading">
               Show me as online
-              <input type="checkbox" class="pull-right" checked>
+              <input type="switcher" class="pull-right" checked>
             </label>
           </div>
           <!-- /.form-group -->
@@ -430,7 +504,7 @@
           <div class="form-group">
             <label class="control-sidebar-subheading">
               Turn off notifications
-              <input type="checkbox" class="pull-right">
+              <input type="switcher" class="pull-right">
             </label>
           </div>
           <!-- /.form-group -->
@@ -455,5 +529,6 @@
 <!-- ./wrapper -->
 
 <script type="text/javascript" src="/js/admin.js"></script>
+<script type="text/javascript" src="/js/oper.js"></script>
 </body>
 </html>

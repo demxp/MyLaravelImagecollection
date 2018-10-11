@@ -17,8 +17,9 @@ class ImagesController extends Controller
      */
     public function index()
     {
-        $images = Images::all();
-        return view('admin.images.index', ['images' => $images]);
+        $categories = Category::pluck('title', 'id');
+        $images = Images::paginate(20);
+        return view('admin.images.index', ['images' => $images, 'categories' => $categories]);
     }
 
     /**

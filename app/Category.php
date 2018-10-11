@@ -16,6 +16,11 @@ class Category extends Model
     	return $this->hasMany(Images::class);
     }
 
+    public function headimage()
+    {
+        return $this->hasOne(Images::class, 'id', 'titleimage');
+    }
+
     public function sluggable()
     {
         return [
@@ -23,5 +28,42 @@ class Category extends Model
                 'source' => 'title'
             ]
         ];
+    }
+
+    public function getTitleImage()
+    {
+        if(is_null($this->titleimage)){
+            return "/img/no_picture.jpg";
+        }
+
+        return $this->headimage->getImageFile();
+    }
+
+    public function hasPrevious()
+    {
+        return self::where('id', '<', $this->id)->max('id');
+    }
+
+    public function hasNext()
+    {
+        return self::where('id', '>', $this->id)->min('id');
+    }    
+
+    public function getPrevious()
+    {
+        $catId = $this->hasPrevious();
+        return self::find($catId);
+    }
+
+    public function getNext()
+    {
+        $catId = $this->hasNext();
+        return self::find($catId);
+    }    
+
+    public function setHeadImage($id)
+    {
+        $this->titleimage = $id;
+        $this->save();
     }
 }

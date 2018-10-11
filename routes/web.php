@@ -11,18 +11,24 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [
+	'as' => 'home',
+ 	'uses' => 'HomeController@index'
+ ]);
+Route::get('/category/{slug}', [
+		'as' => 'showcategory', 
+		'uses' => 'HomeController@showCategory'
+]);
 
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function(){
 	Route::get('/', 'DashboardController@index'); 
 	Route::resource('/categories', 'CategoriesController');	
 	Route::resource('/tags', 'TagsController');		
 	Route::resource('/users', 'UsersController');			
-	Route::resource('/images', 'ImagesController');				
+	Route::resource('/images', 'ImagesController');	
+	Route::post('/ajax', 'AjaxController@init');			
 });
 
 Route::post('/upload/gettoken', 'UsersController@getUploadToken');
-Route::post('/upload', 'UsersController@saveUploadImage');
-Route::get('/upload/getimage/{filename}/{thumbnail?}', 'UsersController@getUploadedImage');
+Route::post('/upload', 'ImageController@saveUploadImage');
+Route::get('/upload/getimage/{filename}/{thumbnail?}', 'ImageController@getUploadedImage');

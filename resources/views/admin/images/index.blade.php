@@ -29,26 +29,52 @@
               <div class="form-group">
                 <a href="{{route('images.create')}}" class="btn btn-success">Добавить</a>
               </div>
-              <table id="example1" class="table table-bordered table-striped">
+              <table class="table table-bordered table-striped">
                 <thead>
                 <tr>
                   <th>ID</th>
                   <th>Название</th>
+                  <th>Открытая</th>
                   <th>Категория</th>
-                  <th>Теги</th>
                   <th>Картинка</th>
                   <th>Действия</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($images as $image)
-                <tr>
+                <tr data-imid="{{$image->id}}">
                   <td>{{$image->id}}</td>
-                  <td>{{$image->title}}</td>
-                  <td>{{$image->getCategoryTitle()}}</td>
-                  <td>{{$image->getTags()}}</td>
+                  <td><div class="imtitle">{{$image->title}}</div></td>
                   <td>
+                      <label class="switcher">
+                        @if($image->status == 0)
+                          <input type="checkbox" class="toggleimgvisible" name="isvisible" required />
+                        @else
+                          <input type="checkbox" class="toggleimgvisible" name="isvisible" checked="checked" required />
+                        @endif
+                          <div class="switcher__text"></div>
+                      </label>
+                    </div>                    
+                  </td>
+                  <td>
+                    {{Form::select('category_id', $categories, $image->category_id, ['class' => 'form-control select2 selectcat', 'style' => 'width: 100%;', 'placeholder' => 'Выберите категорию'])}}
+                    @if($image->category_id != null)
+                      @if($image->category->titleimage == $image->id)
+                      <div class="setcattitle selected">
+                        <button type="button" class="btn btn-info btn-xs">Иконка</button>                      
+                        <span>Иконка</span>
+                      @else
+                      <div class="setcattitle">
+                        <button type="button" class="btn btn-info btn-xs">Иконка</button>
+                        <span>Иконка</span>
+                      @endif
+                      </div>
+                    @endif
+                  </td>
+                  <td>  
+                    <a href="{{$image->getImageFile()}}" target="_blank">
                     <img src="{{$image->getThumbnail()}}" alt="" width="100">
+                    </a>
                   </td>
                   <td><a href="{{route('images.edit', $image->id)}}" class="fa fa-pencil"></a>
                     {{Form::open(['route' => ['images.destroy', $image->id], 'method' => 'delete'])}}
@@ -61,6 +87,9 @@
                 @endforeach                
                 </tbody>
               </table>
+              <div style="text-align: right;">
+                {{$images->links()}}
+              </div>
             </div>
             <!-- /.box-body -->
           </div>

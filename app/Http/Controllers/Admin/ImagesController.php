@@ -18,7 +18,11 @@ class ImagesController extends Controller
     public function index()
     {
         $categories = Category::pluck('title', 'id');
-        $images = Images::paginate(20);
+        if(\Auth::user()->is_admin == 1){
+            $images = Images::paginate(20);
+        }else{
+            $images = Images::where('user_id', \Auth::user()->id)->paginate(20);
+        }
         return view('admin.images.index', ['images' => $images, 'categories' => $categories]);
     }
 
@@ -110,6 +114,6 @@ class ImagesController extends Controller
     {
         Images::find($id)->remove();
 
-        return redirect()->route('images.index');
+        return redirect()->back();
     }
 }

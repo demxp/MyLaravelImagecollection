@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Images;
+use Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
@@ -19,7 +20,7 @@ class AjaxController extends Controller
 		$data = $request->json();
 		$group = $data->get('group');
 		if(!method_exists($this, $group)){
-			return json_encode(["status" => "error", "message" => "error operation"]);
+			return json_encode(["status" => "error", "message" => "ErrorOperation"]);
 		}
 
 		return json_encode($this->$group($data));
@@ -30,6 +31,7 @@ class AjaxController extends Controller
     	$id = $data->get('id');
     	$val = $data->get('data');
     	$command = $data->get('command');
+        $needAdminRights = false;
 
     	switch($data->get('command')){
     		case("setTitle"):
@@ -54,11 +56,18 @@ class AjaxController extends Controller
         			'id' => 'required|integer',
         			'data' => 'required|integer',
     			]);
-    			break;    		
+                $needAdminRights = true;
+    			break;
+            case("delImage"):
+                $validator = Validator::make($data->all(), [
+                    'id' => 'required|integer'
+                ]);
+                $command = "remove";                
+                break;
     		default:
     			return [
     				"status" => "error",
-    				"message" => "incorrect input data"
+    				"message" => "IncorrectInputData"
     			];
 
     	}
@@ -66,15 +75,30 @@ class AjaxController extends Controller
     	if($validator->fails()) {
     		return [
     			"status" => "error",
-    			"message" => "incorrect input data"
+    			"message" => "IncorrectInputData"
     		];
  		}
 
-    	Images::find($id)->$command($val);
+        $image = Images::find($id);
 
-    	return [
-    		"status" => "ok"
-    	];
+        if($needAdminRights && Auth::user()->is_admin == 0){
+            return [
+                "status" => "error",
+                "message" => "NotEnoughRights"
+            ];
+        }
+
+        if(($image->user_id != Auth::user()->id) && (Auth::user()->is_admin == 0)){
+            return [
+                "status" => "error",
+                "message" => "NotEnoughRights"
+            ];            
+        }
+
+        $image->$command($val);
+        return [
+            "status" => "ok"
+        ];                    
     }
 }
 

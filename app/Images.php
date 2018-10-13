@@ -46,7 +46,7 @@ class Images extends Model
     {
     	$image = new static;
     	$image->fill($fields);
-    	$image->user_id = 1;
+    	$image->user_id = \Auth::user()->id;
         $image->image = self::uploadImageByString($fields['image'], $image->user_id);
     	$image->save();
 
@@ -114,6 +114,14 @@ class Images extends Model
 
         return $filename;
     }    
+
+    public function getImageLink()
+    {
+        if(!is_null($this->image)){
+            return '/upload/getimage/'.$this->image;
+        }
+        return '/img/no_image.jpg';
+    }
 
     public function getImageFile()
     {
@@ -201,7 +209,7 @@ class Images extends Model
 
     public function toggleVisibility($value)
     {
-    	if(is_null($value)){
+    	if(!is_null($value)){
     		return $this->setPrivate();
     	}
     	return $this->setPublic();

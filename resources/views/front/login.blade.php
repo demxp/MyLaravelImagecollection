@@ -22,22 +22,19 @@
                                         </article><!-- /.blog-post -->
                                     </div><!-- /.content-inner -->
 
-                                    <div id="comments" class="comments-area">
+                                    <div id="login" class="login-area">
 									    @include('admin.errors')
                                         @if(session('status'))
                                         <div class="loginerror">
                                             {{session('status')}}
                                         </div>
                                         @endif
-                                        <div id="respond" class="comment-respond">
 									        <form id="loginform" class="login-form" method="POST" action="/login">
 									        	{{csrf_field()}}
-                                                <p class="comment-form-email"><label>Email <span class="required">*</span></label> <input id="email" name="email" type="text" value="{{old('email')}}"></p>
-
-                                                <p class="comment-form-password"><label>Пароль <span class="required">*</span></label> <input id="password" name="password" type="password" value=""></p>                                                
-                                                <p class="form-submit"><input type="submit" id="submit" class="submit" value="Войти"></p>
+                                                <p><label>Email <span class="required">*</span></label> <input id="email" name="email" type="text" value="{{old('email')}}"></p>
+                                                <p><label>Пароль <span class="required">*</span></label> <input id="password" name="password" type="password" value=""></p>
+                                                <p><input type="submit" id="submit" class="submit" value="Войти"></p>
                                             </form>
-                                        </div><!-- /.comment-respond -->
                                     </div><!-- /.comments-area -->                                    
                                 </div><!-- /.main-content-wrap -->
                             </div><!-- /.main-content -->

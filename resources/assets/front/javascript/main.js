@@ -632,6 +632,22 @@
         retinaLogos(); 
         parallax();
         removePreloader();
+
+    	$('#iview').iView({
+    		pauseTime: 7000,
+    		pauseOnHover: true,
+    		directionNav: true,
+    		directionNavHide: false,
+    		directionNavHoverOpacity: 0,
+    		controlNav: false,
+    		nextLabel: "Следующий",
+    		previousLabel: "Предыдущий",
+    		playLabel: "Запустить",
+    		pauseLabel: "Пауза",
+    		timer: "360Bar",
+    		timerPadding: 3,
+    		timerColor: "#0F0"
+    	});
    	});
 
 })(jQuery);

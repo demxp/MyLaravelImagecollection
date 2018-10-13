@@ -14,11 +14,20 @@
 Route::get('/', [
 	'as' => 'home',
  	'uses' => 'HomeController@index'
- ]);
+]);
+Route::get('/category', [
+	'as' => 'categories',
+ 	'uses' => 'HomeController@allCategories'
+]);
 Route::get('/category/{slug}', [
 		'as' => 'showcategory', 
 		'uses' => 'HomeController@showCategory'
 ]);
+Route::get('/category/{slug}/list', [
+		'as' => 'showcategoryaslist', 
+		'uses' => 'HomeController@showCategoryAsList'
+]);
+
 Route::get('/register', 'AuthController@registerForm');
 Route::post('/register', 'AuthController@register');
 
@@ -26,7 +35,7 @@ Route::get('/login', 'AuthController@loginForm');
 Route::post('/login', 'AuthController@login');
 Route::get('/logout', 'AuthController@logout');
 
-Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function(){
+Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admin'], function(){
 	Route::get('/', 'DashboardController@index'); 
 	Route::resource('/categories', 'CategoriesController');	
 	Route::resource('/tags', 'TagsController');		

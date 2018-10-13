@@ -42,7 +42,7 @@ class AuthController extends Controller
     		'password' => $request->get('password')
     	]))
     	{
-    		return redirect("/");
+    		return redirect("/admin");
     	}
 
     	return redirect()->back()->with('status', 'Неправильный Email или пароль');

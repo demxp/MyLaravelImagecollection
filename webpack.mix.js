@@ -65,7 +65,9 @@ mix.styles([
 	'resources/assets/front/stylesheets/responsive.css',
 	'resources/assets/front/stylesheets/colors/color5.css',
 	'resources/assets/front/stylesheets/animate.css',
-	'resources/assets/front/stylesheets/progressive-image.min.css'
+	'resources/assets/front/stylesheets/progressive-image.min.css',
+	'resources/assets/front/stylesheets/iview.css',
+	'resources/assets/front/stylesheets/iview.custom.css'
 ], 'public/css/front.css');
 
 
@@ -81,10 +83,13 @@ mix.scripts([
 	'resources/assets/front/javascript/parallax.js',
 	'resources/assets/front/javascript/jquery.magnific-popup.min.js',
 	'resources/assets/front/javascript/progressive-image.min.js',
-	'resources/assets/front/javascript/main.js'
+	'resources/assets/front/javascript/raphael-min.js',
+	'resources/assets/front/javascript/main.js',
+	'resources/assets/front/javascript/iview.js'
 ], 'public/js/front.js');
 
 
 mix.copy('resources/assets/front/icon','public/icon');
 mix.copy('resources/assets/front/images','public/img');
 mix.copy('resources/assets/front/fonts','public/fonts');
+mix.copy('resources/assets/front/javascript/sliderBackground.js','public/js');

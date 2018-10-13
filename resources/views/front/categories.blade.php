@@ -21,14 +21,14 @@
                                 <div class="projects flat-column-2 hentry">
                                     <div class="project-wrap">
                                         <div class="project-thumbnail">
-                                            <a href="{{route('showcategory', $category->slug)}}">
+                                            <a href="{{route('showcategoryaslist', $category->slug)}}">
                                                 <img src="{{$category->getTitleImage()}}" alt="images">
                                             </a>
                                         </div>
                                         <div class="project-info">
                                             <div class="project-info-wrap">
                                                 <h3 class="project-title">
-                                                    <a href="{{route('showcategory', $category->slug)}}">{{$category->title}}</a>
+                                                    <a href="{{route('showcategoryaslist', $category->slug)}}">{{$category->title}}</a>
                                                 </h3>
                                                 <h6 class="project-buttons">
                                                     <a href="{{route('showcategory', $category->slug)}}" class="flat-button outline white">Открыть</a>

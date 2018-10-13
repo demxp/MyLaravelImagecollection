@@ -32,7 +32,7 @@ class Category extends Model
 
     public function getTitleImage()
     {
-        if(is_null($this->titleimage)){
+        if(is_null($this->titleimage) || is_null($this->headimage)){
             return "/img/no_picture.jpg";
         }
 

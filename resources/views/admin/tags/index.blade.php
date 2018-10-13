@@ -6,14 +6,8 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Blank page
-        <small>it all starts here</small>
+        Тэги
       </h1>
-      <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="#">Examples</a></li>
-        <li class="active">Blank page</li>
-      </ol>
     </section>
 
     <!-- Main content -->
@@ -21,10 +15,6 @@
 
       <!-- Default box -->
       <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">Листинг сущности</h3>
-            </div>
-            <!-- /.box-header -->
             <div class="box-body">
               <div class="form-group">
                 <a href="{{route('tags.create')}}" class="btn btn-success">Добавить</a>
@@ -42,12 +32,15 @@
                   <tr>
                     <td>{{$tag->id}}</td>
                     <td>{{$tag->title}}</td>
-                    <td><a href="{{route('tags.edit', $tag->id)}}" class="fa fa-pencil"></a> 
-                    {{Form::open(['route' => ['tags.destroy', $tag->id], 'method' => 'delete'])}}
-                      <button type="submit" class="delete" onclick="return confirm('Вы уверены?');">
-                        <a class="fa fa-remove"></a>
-                      </button>
-                    {{Form::close()}}
+                    <td>
+                    @if(\Auth::user()->is_admin == 1)
+                      <a href="{{route('tags.edit', $tag->id)}}" class="fa fa-pencil"></a> 
+                      {{Form::open(['route' => ['tags.destroy', $tag->id], 'method' => 'delete'])}}
+                        <button type="submit" class="delete" onclick="return confirm('Вы уверены?');">
+                          <a class="fa fa-remove"></a>
+                        </button>
+                      {{Form::close()}}
+                    @endif
                     </td>
                   </tr>
                 @endforeach                

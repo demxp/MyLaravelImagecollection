@@ -5,5 +5,6 @@
     "/js/imageResizer.js": "/js/imageResizer.js",
     "/img/loading.gif": "/img/loading.gif",
     "/css/front.css": "/css/front.css",
-    "/js/front.js": "/js/front.js"
+    "/js/front.js": "/js/front.js",
+    "/js/sliderBackground.js": "/js/sliderBackground.js"
 }

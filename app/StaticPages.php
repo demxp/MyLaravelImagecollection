@@ -29,7 +29,7 @@ class StaticPages extends Model
     {
     	$static_page = new static;
     	$static_page->fill($fields);
-    	$static_page->user_id = 1;
+    	$static_page->user_id = \Auth::user()->id;
     	$static_page->save();
     }
 

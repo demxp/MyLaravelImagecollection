@@ -166,4 +166,9 @@ class User extends Authenticatable
 
         return $user;
     }
+
+    public function getCreatedAtAttribute($value)
+    {
+        return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $value)->format('d.m.Y');;
+    }
 }

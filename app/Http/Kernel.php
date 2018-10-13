@@ -40,6 +40,11 @@ class Kernel extends HttpKernel
             'throttle:60,1',
             'bindings',
         ],
+
+        'admin' => [
+            \App\Http\Middleware\AdminMiddleware::class,
+            \App\Http\Middleware\CheckAdminLevel::class,
+        ],
     ];
 
     /**
@@ -56,5 +61,7 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'checkadmin' => \App\Http\Middleware\AdminMiddleware::class,
+        'checklevel' => \App\Http\Middleware\CheckAdminLevel::class,
     ];
 }

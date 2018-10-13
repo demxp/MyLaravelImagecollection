@@ -19,7 +19,7 @@
         <div class="box-header with-border">
           <h3 class="box-title">Изменяем картинку</h3>
         </div>
-      @include('admin.errors')          
+      @include('admin.errors')
         <div class="box-body">
           <div class="col-md-6">
             <div class="form-group">

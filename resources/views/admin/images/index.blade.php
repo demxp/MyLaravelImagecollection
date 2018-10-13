@@ -6,14 +6,8 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Blank page
-        <small>it all starts here</small>
+        Картинки
       </h1>
-      <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="#">Examples</a></li>
-        <li class="active">Blank page</li>
-      </ol>
     </section>
 
     <!-- Main content -->
@@ -21,10 +15,6 @@
 
       <!-- Default box -->
       <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">Листинг сущности</h3>
-            </div>
-            <!-- /.box-header -->
             <div class="box-body">
               <div class="form-group">
                 <a href="{{route('images.create')}}" class="btn btn-success">Добавить</a>
@@ -58,30 +48,35 @@
                   </td>
                   <td>
                     {{Form::select('category_id', $categories, $image->category_id, ['class' => 'form-control select2 selectcat', 'style' => 'width: 100%;', 'placeholder' => 'Выберите категорию'])}}
-                    @if($image->category_id != null)
-                      @if($image->category->titleimage == $image->id)
-                      <div class="setcattitle selected">
-                        <button type="button" class="btn btn-info btn-xs">Иконка</button>                      
-                        <span>Иконка</span>
-                      @else
-                      <div class="setcattitle">
-                        <button type="button" class="btn btn-info btn-xs">Иконка</button>
-                        <span>Иконка</span>
+                      @if($image->category_id != null)
+                        @if($image->category->titleimage == $image->id)
+                        <div class="setcattitle selected">
+                          <button type="button" class="btn btn-info btn-xs">Иконка</button>                      
+                          <span>Иконка</span>
+                        @else
+                        <div class="setcattitle">
+                          <button type="button" class="btn btn-info btn-xs">Иконка</button>
+                          <span>Иконка</span>
+                        @endif
+                        </div>
                       @endif
-                      </div>
-                    @endif
                   </td>
                   <td>  
-                    <a href="{{$image->getImageFile()}}" target="_blank">
+                    <a href="{{$image->getImageLink()}}" target="_blank">
                     <img src="{{$image->getThumbnail()}}" alt="" width="100">
                     </a>
                   </td>
-                  <td><a href="{{route('images.edit', $image->id)}}" class="fa fa-pencil"></a>
+                  <td class="imgactions">
+                  @if(\Auth::user()->is_admin == 1)
+                    <a href="{{route('images.edit', $image->id)}}" class="fa fa-pencil"></a>
                     {{Form::open(['route' => ['images.destroy', $image->id], 'method' => 'delete'])}}
                       <button type="submit" class="delete" onclick="return confirm('Вы уверены?');">
                         <a class="fa fa-remove"></a>
                       </button>
                     {{Form::close()}}
+                  @else
+                    <button type="button" class="btn btn-danger btn-xs delimage">УДАЛИТЬ</button>
+                  @endif
                   </td>
                 </tr>
                 @endforeach                

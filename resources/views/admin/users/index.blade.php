@@ -7,14 +7,8 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Blank page
-        <small>it all starts here</small>
+        Пользователи
       </h1>
-      <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="#">Examples</a></li>
-        <li class="active">Blank page</li>
-      </ol>
     </section>
 
     <!-- Main content -->
@@ -22,10 +16,6 @@
 
       <!-- Default box -->
       <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">Листинг сущности</h3>
-            </div>
-            <!-- /.box-header -->
             <div class="box-body">
               <div class="form-group">
                 <a href="{{route('users.create')}}" class="btn btn-success">Добавить</a>
@@ -49,12 +39,15 @@
                   <td class="user-avatar">
                     <img src="{{$user->getAvatar()}}" alt="" class="img-circle">
                   </td>
-                  <td><a href="{{route('users.edit', $user->id)}}" class="fa fa-pencil"></a>
+                  <td>
+                  @if(\Auth::user()->is_admin == 1)
+                    <a href="{{route('users.edit', $user->id)}}" class="fa fa-pencil"></a>
                     {{Form::open(['route' => ['users.destroy', $user->id], 'method' => 'delete'])}}
                       <button type="submit" class="delete" onclick="return confirm('Вы уверены?');">
                         <a class="fa fa-remove"></a>
                       </button>
                     {{Form::close()}}
+                  @endif
                   </td>
                 </tr>                
                 @endforeach                

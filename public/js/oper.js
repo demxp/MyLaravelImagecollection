@@ -1,3 +1,7 @@
+function showMessage(data){
+	alert(data);
+}
+
 function fl(el, md){
 	x = 500, originalColor = el.style.backgroundColor;
 	el.style.backgroundColor = md;
@@ -25,7 +29,24 @@ function conn(data){
     		data.onerror();
     		throw(req.message);
     	}
-	}).catch( alert );	
+	}).catch(function(e){
+		switch(e){
+			case('ErrorOperation'):
+				showMessage("Ошибочная операция");
+				break;
+			case('IncorrectInputData'):
+				showMessage("Некорректные входные данные");
+				break;
+			case('NotEnoughRights'):
+				showMessage("Не хватает прав для выполнения операции");
+				break;
+			default:
+				showMessage(e);
+				console.log(e);
+				break;
+		}
+		return false;
+	});	
 }
 
 jQuery(document.body).on("change",".selectcat",function(e){
@@ -92,7 +113,7 @@ jQuery(document.body).on("change",".toggleimgvisible",function(e){
 	var dataobj = {
 		params: {
 			'id': $(e.target).closest('tr').data('imid'),
-			'data': (_this.checked) ? "on" : null,
+			'data': (_this.checked) ? null : "on",
 			'command': 'toggleVisibility',
 			'group': 'imageOperation'
 		},
@@ -124,6 +145,30 @@ jQuery(".setcattitle").on("click","button",function(e){
 				}
 			});
 			$(_this).closest('.setcattitle').addClass('selected');
+			return;
+		},
+		'onerror': function(){
+			return;
+		}
+	};
+
+	conn(dataobj);
+});
+
+jQuery(".imgactions").on("click",".delimage",function(e){
+	if(!confirm("Вы уверены?")){
+		return false;
+	}
+	var _this = this;
+	var dataobj = {
+		params: {
+			'id': $(e.target).closest('tr').data('imid'),
+			'data': '',
+			'command': 'delImage',
+			'group': 'imageOperation'
+		},
+		'oncomplete': function(){
+			location.reload();
 			return;
 		},
 		'onerror': function(){

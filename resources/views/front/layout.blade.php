@@ -45,6 +45,19 @@
         width: 150px;
         text-align: center;
     }
+
+    .entry-content blockquote {
+        color: chocolate;
+    }    
+
+    .single-post .hentry .entry-content {
+        font-size: 16px;
+        line-height: 2;
+        border: 1px solid tomato;
+        padding: 15px;
+        background: black;
+        color: white !important;
+    }    
 </style>
     <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>

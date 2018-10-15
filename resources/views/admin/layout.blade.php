@@ -432,6 +432,13 @@
 
 <script type="text/javascript" src="/js/admin.js?sdfsdf"></script>
 <script type="text/javascript" src="/js/oper.js?sdfsdf"></script>
+<script src="/js/nicEdit.js"></script>
+<script type="text/javascript">
+nicEditors.allTextAreas({
+    fullPanel: true,
+    iconsPath: '/img/nicEditorIcons.gif'
+});
+</script>
 @if(session('status'))
   @switch(session('status'))
     @case('NotEnoughRights')

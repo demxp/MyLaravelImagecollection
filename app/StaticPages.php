@@ -7,22 +7,11 @@ use Cviebrock\EloquentSluggable\Sluggable;
 
 class StaticPages extends Model
 {
-	use Sluggable;
-
-	protected $fillable = ['title', 'content'];
+	protected $fillable = ['slug', 'title', 'content'];
 
     public function author()
     {
     	return $this->hasOne(User::class);
-    }
-
-    public function sluggable()
-    {
-        return [
-            'slug' => [
-                'source' => 'title'
-            ]
-        ];
     }
 
     public static function add($fields)
@@ -37,17 +26,5 @@ class StaticPages extends Model
     {
     	$this->fill($fields);
     	$this->save();
-    }
-
-    public function remove()
-    {
-    	$this->delete();
-    }
-
-    public function changeLink($value)
-    {
-    	if(isNull($value)) {return;}
-    	// написать проверку на уникальнсть и далее сохранение 
-    	return;
     }
 }

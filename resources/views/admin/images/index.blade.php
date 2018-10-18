@@ -15,11 +15,11 @@
 
       <!-- Default box -->
       <div class="box">
-            <div class="box-body">
+            <div class="box-body" id="vueapp">
               <div class="form-group">
                 <a href="{{route('images.create')}}" class="btn btn-success">Добавить</a>
               </div>
-              <table class="table table-bordered table-striped">
+<!--               <table class="table table-bordered table-striped">
                 <thead>
                 <tr>
                   <th>ID</th>
@@ -84,8 +84,65 @@
               </table>
               <div style="text-align: right;">
                 {{$images->links()}}
-              </div>
+              </div> -->
+              <table class="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Название</th>
+                    <th>Открытая</th>
+                    <th>Категория</th>
+                    <th>Картинка</th>
+                    <th>Действия</th>
+                  </tr>
+                </thead>
+                <tbody v-if="imgs.length == 0">
+                  <tr>
+                    <td colspan=6><center><h3>НЕТ ДАННЫХ</h3></center></td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr v-for="img in imgs">
+                    <td>@{{ img.id }}</td>
+                    <td>@{{ img.title }}</td>
+                    <td>@{{ img.status }}</td>
+                    <td>@{{ img.category_id }}</td>
+                    <td><a :href="img.link" target="_blank"><img :src="img.thumbnail" alt="" width="100"></a></td>
+                    <td><button class="btn btn-xs btn-info">Правка</button><button class="btn btn-xs btn-danger">Удалить</button></td>                    
+                </tbody>
+              </table>
             </div>
+
+<script type="text/javascript">
+const app = new Vue({
+    el: '#vueapp',
+    data(){
+      return{
+        imgs: [],
+        serv: null
+      }
+    },
+    mounted(){
+      fetch('/api/v1/images', {
+        method: 'get',
+        headers: {  
+              "Content-type": "application/json; charset=UTF-8",
+              'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]')
+          }
+      }).then(response => {
+          return response.json();
+      }).then(req => {
+          let imgarr = JSON.parse(req.images);
+          imgarr.data.map((item) => this.imgs.push(item));
+      }).catch(e => {
+          console.log(e);
+      }); 
+    },
+    methods:{
+
+    },
+});  
+</script>
             <!-- /.box-body -->
           </div>
       <!-- /.box -->

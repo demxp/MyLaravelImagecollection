@@ -16,6 +16,10 @@ Route::get('/', [
  	'uses' => 'HomeController@index'
 ]);
 
+Route::group(['prefix' => 'api/v1', 'namespace' => 'ApiV1', 'middleware' => 'admin'], function(){
+	Route::resource('/images', 'ImageController');	
+});
+
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admin'], function(){
 	Route::get('/', 'DashboardController@index'); 
 	Route::resource('/categories', 'CategoriesController');	

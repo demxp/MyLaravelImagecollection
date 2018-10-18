@@ -1,4 +1,4 @@
-window.Vue = require('vue');
+// window.Vue = require('vue');
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -30,8 +30,9 @@ if (token) {
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example', require('./components/Example.vue'));
+// Vue.component('example', require('./components/Example.vue'));
+// Vue.component('vue-table', require('./components/VueTable.vue'));
 
-const app = new Vue({
-    el: '#app'
-});
+//const app = new Vue({
+//    el: '#vueapp'
+//});

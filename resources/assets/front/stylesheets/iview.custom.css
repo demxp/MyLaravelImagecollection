@@ -29,41 +29,41 @@
 }
 
 #iview div.iview-directionNav {
-	position: absolute;
-	top: 187px;
-	left: 0px;
-	z-index: 9;
-	width: 100%;
+  position: absolute;
+  top: 187px;
+  left: 0px;
+  z-index: 9;
+  width: 100%;
 }
 
 #iview div.iview-directionNav a {
-	display: block;
-	cursor: pointer;
-	position: absolute;
-	width: 60px;
-	height: 60px;
-	background-image: url(/img/bg_direction_nav.png);
-	text-indent: -9999px;
-	-webkit-transition: left 0.3s ease-in-out;
-	-webkit-transition-property: left,right;
-	-moz-transition: left 0.3s ease-in-out;
-	-moz-transition-property: left,right;
-	-o-transition: left 0.3s ease-in-out;
-	-o-transition-property: left,right;
-	-ms-transition: left 0.3s ease-in-out;
-	-ms-transition-property: left,right;
-	transition: left 0.3s ease-in-out;
-	transition-property: left,right;
+  display: block;
+  cursor: pointer;
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background-image: url(/img/bg_direction_nav.png);
+  text-indent: -9999px;
+  -webkit-transition: left 0.3s ease-in-out;
+  -webkit-transition-property: left,right;
+  -moz-transition: left 0.3s ease-in-out;
+  -moz-transition-property: left,right;
+  -o-transition: left 0.3s ease-in-out;
+  -o-transition-property: left,right;
+  -ms-transition: left 0.3s ease-in-out;
+  -ms-transition-property: left,right;
+  transition: left 0.3s ease-in-out;
+  transition-property: left,right;
 }
 
 #iview div.iview-directionNav a.iview-nextNav {
-	right: -60px;
-	background-position: 60px 0px;
+  right: -60px;
+  background-position: 60px 0px;
 }
 
 #iview div.iview-directionNav a.iview-prevNav {
-	left: -60px;
-	background-position: 0px 0px
+  left: -60px;
+  background-position: 0px 0px
 }
 
 #iview.iview-hover div.iview-directionNav a.iview-nextNav {

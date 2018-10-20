@@ -1,10 +1,9 @@
 {
-    "/css/admin.css": "/css/admin.css",
-    "/js/admin.js": "/js/admin.js",
-    "/css/blue.png": "/css/blue.png",
-    "/js/imageResizer.js": "/js/imageResizer.js",
-    "/img/loading.gif": "/img/loading.gif",
-    "/css/front.css": "/css/front.css",
-    "/js/front.js": "/js/front.js",
-    "/js/sliderBackground.js": "/js/sliderBackground.js"
+    "/js/app.js": "/js/app.js?id=032c6c594b30bd638e0f",
+    "/css/admin.css": "/css/admin.css?id=c4f9fc41eb233982c2bb",
+    "/js/admin.js": "/js/admin.js?id=3b29f6f5dbd13403171e",
+    "/img/loading.gif": "/img/loading.gif?id=9827a415349ea9a0a718",
+    "/css/front.css": "/css/front.css?id=bb438079ffb9b31299fe",
+    "/js/front.js": "/js/front.js?id=f358511eb6f7e75b850e",
+    "/js/sliderBackground.js": "/js/sliderBackground.js?id=4cbeddba5f445a3a7937"
 }

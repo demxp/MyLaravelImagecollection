@@ -11,48 +11,40 @@
     </section>
 
     <!-- Main content -->
-    <section class="content">
-
-      <!-- Default box -->
-      <div class="box">
-            <!-- /.box-header -->
-            <div class="box-body">
-              <div class="form-group">
-                <a href="{{route('categories.create')}}" class="btn btn-success">Добавить</a>
-              </div>
-              <table id="example1" class="table table-bordered table-striped">
-                <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Название</th>
-                  <th>Действия</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($categories as $category)
-                  <tr>
-                    <td>{{$category->id}}</td>
-                    <td>{{$category->title}}</td>
-                    <td>
-                    @if(\Auth::user()->is_admin == 1)
-                      <a href="{{route('categories.edit', $category->id)}}" class="fa fa-pencil"></a> 
-                      {{Form::open(['route' => ['categories.destroy', $category->id], 'method' => 'delete'])}}
-                        <button type="submit" class="delete" onclick="return confirm('Вы уверены?');">
-                          <a class="fa fa-remove"></a>
-                        </button>
-                      {{Form::close()}}
-                    @endif
-                    </td>
-                  </tr>
-                @endforeach
-                </tbody>
-              </table>
-            </div>
-            <!-- /.box-body -->
-          </div>
-      <!-- /.box -->
-
+    <section class="content" id="vueapp">
+      <categories-index v-if="checkMode('index')"></categories-index>
+      <categories-edit v-if="checkMode('edit')"></categories-edit>
     </section>
+@include('admin.categories.index-component')
+@include('admin.categories.edit-component')
+
+<script type="text/javascript">
+const app = new Vue({
+  el: '#vueapp',
+  data(){
+    return{
+      modes:[
+        'index',
+        'edit'
+      ],
+      current: 'index' 
+    }
+  },
+  mounted(){
+    this.$on('switch-mode', this.setMode);
+  },
+  methods:{
+    setMode(event){
+      if(!!this.modes.find((el) => el === event.mode)){
+        this.current = event.mode;
+      }
+    },
+    checkMode(mode){
+      return this.current == mode;
+    }
+  },
+})
+</script>
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->

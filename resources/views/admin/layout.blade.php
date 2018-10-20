@@ -10,6 +10,8 @@
 
   <link rel="stylesheet" type="text/css" href="/css/admin.css" />
   <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <script type="text/javascript" src="/js/admin.js?sdfsdf"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -127,6 +129,16 @@
 .setcattitle.selected span{
     display: inline-block;
 }
+
+tr.tr__green td{
+    background-color: #9cff9c !important;
+    transition: .3s;
+}
+
+tr.tr__red td{
+    background-color: #ff9c9c !important;
+    transition: .3s;
+}
 </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -151,7 +163,6 @@
     </section>
     <!-- /.sidebar -->
   </aside>
-
   <!-- =============================================== -->
 
   <!-- Content Wrapper. Contains page content -->
@@ -168,11 +179,7 @@
 </div>
 <!-- ./wrapper -->
 
-<script type="text/javascript" src="/js/admin.js?sdfsdf"></script>
 <script type="text/javascript" src="/js/oper.js?sdfsdf"></script>
-<script type="text/javascript">
-
-</script>
 @if(session('status'))
   @switch(session('status'))
     @case('NotEnoughRights')

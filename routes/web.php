@@ -17,7 +17,8 @@ Route::get('/', [
 ]);
 
 Route::group(['prefix' => 'api/v1', 'namespace' => 'ApiV1', 'middleware' => 'admin'], function(){
-	Route::resource('/images', 'ImageController');	
+	Route::resource('/images', 'ImagesController');	
+	Route::resource('/categories', 'CategoriesController');		
 });
 
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admin'], function(){

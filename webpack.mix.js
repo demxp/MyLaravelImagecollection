@@ -27,14 +27,13 @@ mix.scripts([
 	'resources/assets/admin/plugins/jQuery/jquery-2.2.3.min.js',
 	'resources/assets/admin/bootstrap/js/bootstrap.min.js',
 	'resources/assets/admin/dist/js/app.min.js',
-	'resources/assets/admin/plugins/select2/select2.full.min.js',
+	'resources/assets/admin/plugins/select2/select2.full.js',
 	'resources/assets/admin/dist/js/script.js',
 	'resources/assets/admin/dist/js/promise.js',
 	'resources/assets/admin/dist/js/nicEdit.js',
 ], 'public/js/admin.js');
 
 mix.copy('resources/assets/admin/bootstrap/fonts','public/fonts');
-mix.copy('resources/assets/admin/dist/js/imageResizer.js','public/js');
 mix.copy('resources/assets/admin/dist/img/loading.gif', 'public/img');
 
 mix.styles([

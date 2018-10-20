@@ -5,10 +5,12 @@ namespace App\Http\Controllers\ApiV1;
 use App\Images;
 use App\Category;
 use App\Tag;
+use Validator;
+use Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class ImageController extends Controller
+class ImagesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,26 +20,18 @@ class ImageController extends Controller
     public function index()
     {
         if(\Auth::user()->is_admin == 1){
-            $images = Images::paginate(20)->toJson();
+            $images = Images::paginate(20)->toArray();
         }else{
-            $images = Images::where('user_id', \Auth::user()->id)->pluck('id', 'title', 'status', 'image')->paginate(20);
+            $images = Images::where('user_id', \Auth::user()->id)->paginate(20)->toArray();
         }
 
-        $categories = Category::pluck('title', 'id');
+        $categories = Category::all();
 
-        return response()->json(['images' => $images, 'categories' => $categories]);
-    }
+        $images_array = $images['data'];
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        $categories = Category::pluck('title', 'id');
-        $tags = Tag::pluck('title', 'id');
-        return view('admin.images.create', ['categories' => $categories, 'tags' => $tags]);
+        unset($images['data']);
+
+        return ['images' => $images_array, 'categories' => $categories, 'pagesinfo' => $images];
     }
 
     /**
@@ -58,7 +52,9 @@ class ImageController extends Controller
         $newimage->setTags($request->get('tag'));
         $newimage->toggleVisibility($request->get('status'));
         
-        return redirect()->route('images.index');
+        return [
+        	'status' => 'ok'
+        ];
     }
 
     /**
@@ -93,17 +89,30 @@ class ImageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'title' => 'required'
-        ]);
+		$validator = Validator::make($request->all(), [
+			'title' => 'required|min:5',
+		]);
 
+    	if($validator->fails()) {
+    		return [
+    			"status" => "error",
+    			"message" => "IncorrectInputData"
+    		];
+ 		}
         $image = Images::find($id);
+        if(($image->user_id != Auth::user()->id) && (Auth::user()->is_admin == 0)){
+            return [
+                "status" => "error",
+                "message" => "NotEnoughRights"
+            ];            
+        }
+
         $image->edit($request->all());
         $image->setCategory($request->get('category_id'));
-        $image->setTags($request->get('tag'));
         $image->toggleVisibility($request->get('status'));
-        
-        return redirect()->route('images.index');
+        return [
+            "status" => "ok"
+        ]; 
     }
 
     /**
@@ -114,8 +123,16 @@ class ImageController extends Controller
      */
     public function destroy($id)
     {
-        Images::find($id)->remove();
-
-        return redirect()->back();
+        $image = Images::find($id);
+        if(($image->user_id != Auth::user()->id) && (Auth::user()->is_admin == 0)){
+            return [
+                "status" => "error",
+                "message" => "NotEnoughRights"
+            ];            
+        }
+        $image->remove();
+        return [
+        	"status" => "ok"
+        ];
     }
 }

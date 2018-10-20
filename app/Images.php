@@ -12,6 +12,7 @@ class Images extends Model
 	use Sluggable;
 
 	protected $fillable = ['title'];
+    protected $appends = array('thumbnail', 'fullimage', 'getlink');
 
 	public function category()
 	{
@@ -226,5 +227,20 @@ class Images extends Model
     public function getTags()
     {
         return implode(', ', $this->tags->pluck('title')->all());
-    }    
+    } 
+
+    public function getThumbnailAttribute()
+    {
+        return $this->getThumbnail();  
+    } 
+
+    public function getFullimageAttribute()
+    {
+        return $this->getImageFile();  
+    }   
+
+    public function getGetlinkAttribute()
+    {
+        return $this->getImageLink();  
+    } 
 }

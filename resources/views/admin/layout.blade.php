@@ -178,17 +178,5 @@ tr.tr__red td{
   </footer>
 </div>
 <!-- ./wrapper -->
-
-<script type="text/javascript" src="/js/oper.js?sdfsdf"></script>
-@if(session('status'))
-  @switch(session('status'))
-    @case('NotEnoughRights')
-      <script type="text/javascript">alert("Не хватает прав для данного действия!");</script>
-    @break
-    @default
-      <script type="text/javascript">alert("{{session('status')}}");</script>
-    @break
-  @endswitch
-@endif 
 </body>
 </html>

@@ -18,7 +18,6 @@ class CategoriesController extends Controller
     public function index()
     {
         return Category::all()->toArray();
-        //return view('admin.categories.index', ['categories' => $categories]);
     }
 
     /**
@@ -43,22 +42,11 @@ class CategoriesController extends Controller
             'title' => 'required'
         ]);
         Category::create($request->all());
-        return redirect()->route('categories.index');
+        return [
+            'status' => 'ok'
+        ];
     }
 
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $category = Category::find($id);
-
-        return view('admin.categories.edit', ['category' => $category]);
-    }
 
     /**
      * Update the specified resource in storage.
@@ -71,14 +59,15 @@ class CategoriesController extends Controller
     {
         if(is_null($request->get('titleimage'))){
             $validator = Validator::make($request->all(), [
-                'title' => 'required|min:5',
+                'title' => 'required|min:3',
+                'hidden' => 'required'
             ]);
-            $editparam = 'title';
+            $editparams = ['title', 'hidden'];
         }else{
             $validator = Validator::make($request->all(), [
                 'titleimage' => 'required|integer',
             ]);
-            $editparam = 'titleimage';
+            $editparams = ['titleimage'];
         }
 
         if($validator->fails()) {
@@ -89,7 +78,9 @@ class CategoriesController extends Controller
         }
 
         $category = Category::find($id);
-        $category->$editparam = $request->get($editparam);
+        foreach($editparams as $param){
+            $category->$param = $request->get($param);    
+        }
         $category->save();
 
         return [
@@ -106,6 +97,8 @@ class CategoriesController extends Controller
     public function destroy($id)
     {
         Category::find($id)->delete();
-        return redirect()->route('categories.index');
+        return [
+            "status" => "ok"
+        ]; 
     }
 }

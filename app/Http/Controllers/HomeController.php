@@ -15,7 +15,7 @@ class HomeController extends Controller
     
     public function allCategories()
     {
-    	$categories = Category::all();
+    	$categories = Category::where('hidden', 0)->get();
     	return view('front.categories', ['categories' => $categories]);
     }
 

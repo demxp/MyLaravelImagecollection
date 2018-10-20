@@ -58,29 +58,6 @@ class ImagesController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $image = Images::find($id);
-        $categories = Category::pluck('title', 'id');
-        $tags = Tag::pluck('title', 'id');
-        $selectedTags = $image->tags->pluck('id')->all();
-        $selectedCategory = (is_null($image->category)) ? null : $image->category->id;
-
-        return view('admin.images.edit', [
-            'categories' => $categories, 
-            'tags' => $tags, 
-            'image' => $image, 
-            'selectedTags' => $selectedTags,
-            'selectedCategory' => $selectedCategory,
-        ]); 
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request

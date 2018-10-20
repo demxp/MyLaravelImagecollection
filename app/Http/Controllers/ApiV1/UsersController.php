@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\ApiV1;
 
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Category;
+use Illuminate\Validation\Rule;
 use Validator;
 
-class CategoriesController extends Controller
+class UsersController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +17,7 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        return Category::all()->toArray();
+        return User::all()->toArray();
     }
 
     /**
@@ -28,7 +29,10 @@ class CategoriesController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => 'required|min:3',
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:5',
+            'avatar' => 'nullable'
         ]);
 
         if($validator->fails()) {
@@ -37,12 +41,25 @@ class CategoriesController extends Controller
                 "message" => "ValidateError",
                 "errors" => $validator->messages()->all()
             ];
-        }
-        
-        Category::create($request->all());
+        }        
+
+        $user = User::add($request->all());
+        $user->uploadAvatar($request->get('avatar'));
+
         return [
-            'status' => 'ok'
+            "status" => "ok"
         ];
+    }
+
+    /**
+     * Get user data.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        return User::find($id)->toArray();
     }
 
     /**
@@ -54,18 +71,16 @@ class CategoriesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if(is_null($request->get('titleimage'))){
-            $validator = Validator::make($request->all(), [
-                'title' => 'required|min:3',
-                'hidden' => 'required'
-            ]);
-            $editparams = ['title', 'hidden'];
-        }else{
-            $validator = Validator::make($request->all(), [
-                'titleimage' => 'required|integer',
-            ]);
-            $editparams = ['titleimage'];
-        }
+        $user = User::find($id);
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users')->ignore($user->id),
+            ],
+            'avatar' => 'nullable'
+        ]);
 
         if($validator->fails()) {
             return [
@@ -73,17 +88,14 @@ class CategoriesController extends Controller
                 "message" => "ValidateError",
                 "errors" => $validator->messages()->all()
             ];
-        }
+        }           
 
-        $category = Category::find($id);
-        foreach($editparams as $param){
-            $category->$param = $request->get($param);    
-        }
-        $category->save();
+        $user->edit($request->all());
+        $user->uploadAvatar($request->get('avatar'));
 
         return [
             "status" => "ok"
-        ]; 
+        ];
     }
 
     /**
@@ -94,9 +106,9 @@ class CategoriesController extends Controller
      */
     public function destroy($id)
     {
-        Category::find($id)->delete();
+        User::find($id)->remove();
         return [
             "status" => "ok"
-        ]; 
+        ];
     }
 }

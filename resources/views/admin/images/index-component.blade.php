@@ -30,7 +30,7 @@
         <thead>
           <tr>
             <th>ID</th>
-            <th>Название</th>
+            <th style="width:50%;">Название</th>
             <th>Открытая</th>
             <th>Категория</th>
             <th>Картинка</th>

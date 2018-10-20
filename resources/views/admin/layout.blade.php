@@ -142,6 +142,41 @@ tr.tr__red td{
 </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
+
+<script type="text/javascript">
+  (function(window){
+    let al = alert;
+    let errors = {
+      'IncorrectInputData':{
+        'parseFunc':(resp) => {
+          al("Некорректные данные");
+        }
+      },
+      'ValidateError':{
+        'parseFunc':(resp) => {
+          al(resp.errors.reduce((acc, item) => {
+            return acc += item + '\n';
+          }, ""));
+        }
+      },
+      'NotEnoughRights':{
+        'parseFunc':(resp) => {
+          al("Не хватает прав для выполнения");
+        }
+      }
+    };
+    window.customAlert = (resp) => {
+      if(!!errors[resp.message]){
+        errors[resp.message].parseFunc(resp);
+      }else{
+        al("Неизвестная ошибка!");
+      }
+      console.log(resp);
+      return;
+    };
+  })(window);
+</script>
+
 <!-- Site wrapper -->
 <div class="wrapper">
   @include('admin.header')

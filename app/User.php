@@ -29,6 +29,8 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    protected $appends = array('avatarimage');
+
     public function images()
     {
         return $this->hasMany(Images::class);
@@ -65,6 +67,7 @@ class User extends Authenticatable
     public function remove()
     {
         $this->removeAvatar();
+        $this->removeUserUploadFolder();
         $this->delete();
     }
 
@@ -134,6 +137,14 @@ class User extends Authenticatable
         Storage::makeDirectory($dirname.'/thumbnails');
     }
 
+    public function removeUserUploadFolder()
+    {
+        $dirname = 'uploads/pictures/user'.$this->id;
+        if(count(Storage::files($dirname)) == 0){
+            Storage::deleteDirectory($dirname);
+        }
+    }
+
     public static function createApiAccess($key)
     {
         if(is_null($key)) {return null;}
@@ -171,4 +182,9 @@ class User extends Authenticatable
     {
         return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $value)->format('d.m.Y');;
     }
+
+    public function getAvatarimageAttribute()
+    {
+        return $this->getAvatar();  
+    }     
 }

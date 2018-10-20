@@ -2,7 +2,7 @@
   <div class="box">
     <div class="box-body">
       <div class="form-group">
-        <a class="btn btn-success" @click="$parent.$emit('switch-mode', {'mode': 'edit', 'id': null})">Добавить</a>
+        <a class="btn btn-success" @click="$parent.$emit('switch-mode', {'mode': 'editcategories', 'id': null})">Добавить</a>
       </div>      
       <table class="table table-bordered table-striped">
         <thead>

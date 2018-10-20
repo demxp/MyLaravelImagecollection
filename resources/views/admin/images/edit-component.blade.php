@@ -322,7 +322,7 @@ Vue.component('picture-loader', {
           </div>
         </div>
         <div class="box-footer">
-          <a class="btn btn-default" @click="$parent.$emit('switch-mode', {'mode': 'index', 'id': null})">Назад</a>
+          <a class="btn btn-default" @click="$parent.$emit('switch-mode', {'mode': 'indeximages', 'id': null})">Назад</a>
           <button class="btn btn-success pull-right" @click="addimage">Добавить</button>
         </div>
       </div>
@@ -399,7 +399,7 @@ Vue.component('images-upload', {
         image: this.img.encoded
       }, (req) => {
         if(req.status == 'ok'){
-          this.$parent.$emit('switch-mode', {'mode': 'index', 'id': null});
+          this.$parent.$emit('switch-mode', {'mode': 'indeximages', 'id': null});
           return true;
         }
         alert("Упс... Какая-то ошибка...");

@@ -178,7 +178,7 @@ tr.tr__red td{
 </script>
 
 <!-- Site wrapper -->
-<div class="wrapper">
+<div class="wrapper" id="vueapp">
   @include('admin.header')
   <!-- Left side column. contains the sidebar -->
   <aside class="main-sidebar">
@@ -201,7 +201,25 @@ tr.tr__red td{
   <!-- =============================================== -->
 
   <!-- Content Wrapper. Contains page content -->
-@yield('content')
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Привет! Это админка. Выберите раздел слева...
+      </h1>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <images-index v-if="checkMode('indeximages')"></images-index>
+      <images-upload v-if="checkMode('uploadimages')"></images-upload>    
+      <categories-index v-if="checkMode('indexcategories')"></categories-index>
+      <categories-edit v-if="checkMode('editcategories')"></categories-edit>
+      <users-index v-if="checkMode('indexusers')"></users-index>
+      <users-edit v-if="checkMode('editusers')" :user-id="id"></users-edit>      
+    </section>
+    <!-- /.content -->
+  </div>
   <!-- /.content-wrapper -->
 
   <footer class="main-footer">
@@ -212,6 +230,50 @@ tr.tr__red td{
     reserved.
   </footer>
 </div>
+@include('admin.images.index-component')
+@include('admin.images.edit-component')
+@include('admin.categories.index-component')
+@include('admin.categories.edit-component')
+@include('admin.users.index-component')
+@include('admin.users.edit-component')
+
+<script type="text/javascript">
+const app = new Vue({
+  el: '#vueapp',
+  data(){
+    return{
+      modes:[
+        'indeximages',
+        'uploadimages',
+        'indexcategories',
+        'editcategories',
+        'indexusers',
+        'editusers'
+      ],
+      current: 'index',
+      id: null 
+    }
+  },
+  mounted(){
+    this.$on('switch-mode', this.setMode);
+  },
+  methods:{
+    setMode(event){
+      if(!!this.modes.find((el) => el === event.mode)){
+        this.current = event.mode;
+        if(event.id !== null){
+          this.id = event.id;
+        }else{
+          this.id = null;
+        }
+      }
+    },
+    checkMode(mode){
+      return this.current == mode;
+    }
+  },
+})
+</script>
 <!-- ./wrapper -->
 </body>
 </html>

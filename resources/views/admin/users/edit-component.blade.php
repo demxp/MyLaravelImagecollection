@@ -30,7 +30,7 @@ div#floater {
 }
 </style>
 
-<script type="text/x-template" id="picture-loader">
+<script type="text/x-template" id="picture-loader-users">
   <div class="form-group">
     <div class="row">
       <div class="col-md-10 user-avatar col-md-offset-1">
@@ -50,7 +50,7 @@ div#floater {
   </div>  
 </script> 
 <script type="text/javascript">
-Vue.component('picture-loader', {
+Vue.component('picture-loader-users', {
   props: {
     nosquare: {
       type: Boolean,
@@ -78,7 +78,7 @@ Vue.component('picture-loader', {
       default: "/img/no_avatar.jpg"      
     }
   },
-  template: '#picture-loader',
+  template: '#picture-loader-users',
   data(){
     return {
       img: {
@@ -287,13 +287,13 @@ Vue.component('picture-loader', {
               </div>
               <div class="form-group">
                 <label for="exampleInputFile">Аватар</label>
-                <picture-loader :size="220" @imgselected="user.encoded=$event" :avatar="user.avatarimage"></picture-loader>
+                <picture-loader-users :size="220" @imgselected="user.encoded=$event" :avatar="user.avatarimage"></picture-loader-users>
               </div>
             </div>
           </div>
         </div>
         <div class="box-footer">
-          <a class="btn btn-default" @click="$parent.$emit('switch-mode', {'mode': 'index', 'id': null})">Назад</a>
+          <a class="btn btn-default" @click="$parent.$emit('switch-mode', {'mode': 'indexusers', 'id': null})">Назад</a>
           <button class="btn pull-right" :class="{'btn-success':mode.submit_style_success, 'btn-warning':mode.submit_style_warning}" @click="edituser" v-text="mode.submit_text"></button>
         </div>
       </div>
@@ -390,7 +390,7 @@ Vue.component('users-edit', {
       
       this.ajaxfun(url, method, request_data, (req) => {
         if(req.status == 'ok'){
-          this.$parent.$emit('switch-mode', {'mode': 'index', 'id': null});
+          this.$parent.$emit('switch-mode', {'mode': 'indexusers', 'id': null});
           return true;
         }
         customAlert(req);

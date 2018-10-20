@@ -2,7 +2,7 @@
   <div class="box">
     <div class="box-body">
       <div class="form-group">
-        <a class="btn btn-success" @click="$parent.$emit('switch-mode', {'mode': 'edit', 'id': null})">Добавить</a>
+        <a class="btn btn-success" @click="$parent.$emit('switch-mode', {'mode': 'editusers', 'id': null})">Добавить</a>
       </div>      
       <table class="table table-bordered table-striped">
         <thead>
@@ -80,7 +80,7 @@ Vue.component('users-index', {
       }
     },
     editUser(user){
-      this.$parent.$emit('switch-mode', {'mode': 'edit', 'id': user.id});      
+      this.$parent.$emit('switch-mode', {'mode': 'editusers', 'id': user.id});      
     },
     deleteUser(user){
       if(!confirm("Вы уверены?")){return false;}

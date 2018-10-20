@@ -1,35 +1,63 @@
 @extends('admin.layout')
 
 @section('content')
-  <div class="content-wrapper">
+  <div class="content-wrapper" id="vueapp">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Привет! Это админка
-        <small>приятные слова..</small>
+        Привет! Это админка. Выберите раздел слева...
       </h1>
     </section>
 
     <!-- Main content -->
     <section class="content">
-
-      <!-- Default box -->
-      <div class="box">
-        <div class="box-header with-border">
-          <h3 class="box-title">Главная страница</h3>
-        </div>
-        <div class="box-body">
-          Текст инструкции по пользованию админкой
-        </div>
-        <!-- /.box-body -->
-        <div class="box-footer">
-          и здесь есть место для какого-нибудь текста
-        </div>
-        <!-- /.box-footer-->
-      </div>
-      <!-- /.box -->
-
+      <images-index v-if="checkMode('indeximages')"></images-index>
+      <images-upload v-if="checkMode('uploadimages')"></images-upload>    
+      <categories-index v-if="checkMode('indexcategories')"></categories-index>
+      <categories-edit v-if="checkMode('editcategories')"></categories-edit>
+      <users-index v-if="checkMode('indexusers')"></users-index>
+      <users-edit v-if="checkMode('editusers')" :user-id="userid"></users-edit>      
     </section>
     <!-- /.content -->
   </div>
+
+@include('admin.images.index-component')
+@include('admin.images.edit-component')
+@include('admin.categories.index-component')
+@include('admin.categories.edit-component')
+@include('admin.users.index-component')
+@include('admin.users.edit-component')
+
+<script type="text/javascript">
+const app = new Vue({
+  el: '#vueapp',
+  data(){
+    return{
+      modes:[
+        'indeximages',
+        'uploadimages',
+        'indexcategories',
+        'editcategories',
+        'indexusers',
+        'editusers'
+      ],
+      current: 'index' 
+    }
+  },
+  mounted(){
+    this.$on('switch-mode', this.setMode);
+  },
+  methods:{
+    setMode(event){
+      if(!!this.modes.find((el) => el === event.mode)){
+        this.current = event.mode;
+      }
+    },
+    checkMode(mode){
+      return this.current == mode;
+    }
+  },
+})
+</script>
+
 @endsection

@@ -2,7 +2,7 @@
   <div class="box">
     <div class="box-body">
       <div class="form-group">
-        <a class="btn btn-success" @click="$parent.$emit('switch-mode', {'mode': 'upload', 'id': null})">Добавить</a>
+        <a class="btn btn-success" @click="$parent.$emit('switch-mode', {'mode': 'uploadimages', 'id': null})">Добавить</a>
       </div>      
       <div style="text-align: right;">
         <div class="row pagination">

@@ -9,9 +9,8 @@
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
   <link rel="stylesheet" type="text/css" href="/css/admin.css" />
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
   <script type="text/javascript" src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
-  <script type="text/javascript" src="/js/admin.js?sdfsdf"></script>
+
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -29,32 +28,6 @@
     border: none;
     padding: 0px;
   }
-
-  .user-avatar{
-    text-align: center;
-    max-width: 120px;
-  }
-
-  .user-avatar img {
-      width: 100%;
-      max-width: 70px;
-      height: auto;
-  }  
-
-  .user-avatar a{
-    display: inline-block;
-    margin: 5px auto;
-  }
-
-  .image-preview a{
-    margin: 10px auto;
-    display: block;
-  }
-
-  .image-preview img {
-      width: 100%;
-      height: auto;
-  }  
 
 /*Чекбокс - вынести в CSS*/
 /* switcher */
@@ -139,6 +112,17 @@ tr.tr__red td{
     background-color: #ff9c9c !important;
     transition: .3s;
 }
+
+.user-avatar{
+  text-align: center;
+  max-width: 120px;
+}
+
+.user-avatar img {
+    width: 100%;
+    max-width: 70px;
+    height: auto;
+}  
 </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -178,7 +162,7 @@ tr.tr__red td{
 </script>
 
 <!-- Site wrapper -->
-<div class="wrapper">
+<div class="wrapper" id="vueapp">
   @include('admin.header')
   <!-- Left side column. contains the sidebar -->
   <aside class="main-sidebar">
@@ -201,7 +185,25 @@ tr.tr__red td{
   <!-- =============================================== -->
 
   <!-- Content Wrapper. Contains page content -->
-@yield('content')
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Привет! Это админка. Выберите раздел слева...
+      </h1>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <images-index v-if="checkMode('indeximages')"></images-index>
+      <images-upload v-if="checkMode('uploadimages')"></images-upload>    
+      <categories-index v-if="checkMode('indexcategories')"></categories-index>
+      <categories-edit v-if="checkMode('editcategories')"></categories-edit>
+      <users-index v-if="checkMode('indexusers')"></users-index>
+      <users-edit v-if="checkMode('editusers')" :user-id="id"></users-edit>      
+    </section>
+    <!-- /.content -->
+  </div>
   <!-- /.content-wrapper -->
 
   <footer class="main-footer">
@@ -213,5 +215,7 @@ tr.tr__red td{
   </footer>
 </div>
 <!-- ./wrapper -->
+<script type="text/javascript" src="/js/admin.js?sdfsdf"></script>
+<script type="text/javascript" src="/js/app.js"></script>
 </body>
 </html>

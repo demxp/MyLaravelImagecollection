@@ -225,7 +225,13 @@
           let url = '/api/v1/images/'+img.id;
           this.ajaxfun(url, 'delete', {
             id: img.id
-          }, () => {this.setPage()});         
+          }, () => {
+            if(req.status == 'ok'){
+              this.setPage();          
+            }else{
+              customAlert(req);
+            }           
+          });         
         },
         createCallback(obj){
           return function(req){
@@ -233,6 +239,7 @@
               obj.success = true;
               setTimeout(() => {obj.success = false;},1000);
             }else{
+              customAlert(req);
               obj.danger = true;
               setTimeout(() => {obj.danger = false;},1000);            
             }

@@ -30,6 +30,16 @@ class Category extends Model
         ];
     }
 
+    public static function add($fields)
+    {
+        $category = new static;
+        $category->fill($fields);
+        $category->user_id = \Auth::user()->id;
+        $category->save();
+
+        return $category;
+    }
+
     public function getTitleImage()
     {
         if(is_null($this->titleimage) || is_null($this->headimage)){

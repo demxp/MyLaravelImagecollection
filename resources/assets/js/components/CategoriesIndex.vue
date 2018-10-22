@@ -102,7 +102,13 @@
           let url = '/api/v1/categories/'+cat.id;
           this.ajaxfun(url, 'delete', {
             id: cat.id
-          }, () => {this.ajaxfun('/api/v1/categories', 'get', null, this.fillTable)});         
+          }, (req) => {
+            if(req.status == 'ok'){
+              this.ajaxfun('/api/v1/categories', 'get', null, this.fillTable);
+            }else{
+              customAlert(req);
+            }            
+          });
         },
         createCallback(obj){
           return function(req){
@@ -110,8 +116,10 @@
               obj.success = true;
               setTimeout(() => {obj.success = false;},1000);
             }else{
+              customAlert(req);
               obj.danger = true;
-              setTimeout(() => {obj.danger = false;},1000);            
+              setTimeout(() => {obj.danger = false;},1000);
+              return false;
             }
           };        
         }

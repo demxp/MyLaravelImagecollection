@@ -24,16 +24,6 @@ class Images extends Model
 	    return $this->belongsTo(User::class, 'user_id');
 	}
 
-	public function tags()	
-	{
-	    return $this->belongsToMany(
-	    	Tag::class,
-	    	'images_tags',
-	    	'image_id',
-	    	'tag_id'
-	    );
-	}  
-
 	public function sluggable()
     {
         return [
@@ -184,14 +174,6 @@ class Images extends Model
         return 0;                
     }
 
-    public function setTags($ids)
-    {
-    	if($ids == null) { return 1; }
-    	$this->tags()->sync($ids);
-
-        return 0;        
-    }
-
     public function setPrivate()
     {
     	$this->status = 0;
@@ -223,11 +205,6 @@ class Images extends Model
         }
         return $this->category->title;
     }
-
-    public function getTags()
-    {
-        return implode(', ', $this->tags->pluck('title')->all());
-    } 
 
     public function getThumbnailAttribute()
     {

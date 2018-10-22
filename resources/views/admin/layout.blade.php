@@ -160,7 +160,8 @@ tr.tr__red td{
     };
   })(window);
 </script>
-
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+@include('admin.categories.users-rules')
 <!-- Site wrapper -->
 <div class="wrapper" id="vueapp">
   @include('admin.header')
@@ -200,7 +201,8 @@ tr.tr__red td{
       <categories-index v-if="checkMode('indexcategories')"></categories-index>
       <categories-edit v-if="checkMode('editcategories')"></categories-edit>
       <users-index v-if="checkMode('indexusers')"></users-index>
-      <users-edit v-if="checkMode('editusers')" :user-id="id"></users-edit>      
+      <users-edit v-if="checkMode('editusers')" :user-id="id"></users-edit>
+      <users-rules v-if="checkMode('userrules')" :user-id="id"></users-rules>      
     </section>
     <!-- /.content -->
   </div>

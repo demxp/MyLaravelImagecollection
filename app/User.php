@@ -41,6 +41,11 @@ class User extends Authenticatable
         return $this->hasMany(StaticPages::class);
     }
 
+    public function apiRules()
+    {
+        return $this->hasMany(UserRules::class);
+    }
+
     public static function add($fields)
     {
         $user = new static;

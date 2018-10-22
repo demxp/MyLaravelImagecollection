@@ -6,9 +6,27 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Category;
 use Validator;
+use Auth;
 
 class CategoriesController extends Controller
 {
+    /**
+     * Проверка прав доступа.
+     */    
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if(\App\UserRules::checkAccess($request, new Category)){
+                return $next($request);
+            }
+
+            return response([
+                "status" => "error",
+                "message" => "NotEnoughRights"
+            ], 403)->header('Content-Type', 'application/json');
+        });
+    }  
+
     /**
      * Display a listing of the resource.
      *
@@ -38,8 +56,8 @@ class CategoriesController extends Controller
                 "errors" => $validator->messages()->all()
             ];
         }
-        
-        Category::create($request->all());
+
+        Category::add($request->all());
         return [
             'status' => 'ok'
         ];

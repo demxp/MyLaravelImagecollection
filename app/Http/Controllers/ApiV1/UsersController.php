@@ -11,6 +11,23 @@ use Validator;
 class UsersController extends Controller
 {
     /**
+     * Проверка прав доступа.
+     */    
+    public function __construct()
+    {
+        $this->middleware(function($request, $next) {
+            if(\App\UserRules::checkAccess($request, new User, true)){
+                return $next($request);
+            }
+
+            return response([
+                "status" => "error",
+                "message" => "NotEnoughRights"
+            ], 403)->header('Content-Type', 'application/json');
+        });
+    }  
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

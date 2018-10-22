@@ -18,18 +18,19 @@ Route::get('/', [
 
 Route::group(['prefix' => 'api/v1', 'namespace' => 'ApiV1', 'middleware' => 'admin'], function(){
 	Route::resource('/images', 'ImagesController');	
-	Route::resource('/categories', 'CategoriesController');		
-	Route::resource('/users', 'UsersController');	
+	Route::resource('/categories', 'CategoriesController');
+	Route::resource('/users', 'UsersController');
+	Route::get('/users/{id}/rules', 'RulesController@getRules');
+	Route::put('/users/{id}/rules', 'RulesController@setRules');
 });
 
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admin'], function(){
 	Route::get('/', 'DashboardController@index'); 
 	Route::resource('/categories', 'CategoriesController');	
-	Route::resource('/tags', 'TagsController');		
 	Route::resource('/users', 'UsersController');			
 	Route::resource('/images', 'ImagesController');	
-	Route::resource('/staticpages', 'StaticPagesController');		
-	Route::post('/ajax', 'AjaxController@init');			
+	Route::resource('/staticpages', 'StaticPagesController');
+	Route::post('/ajax', 'AjaxController@init');
 });
 
 Route::post('/upload/gettoken', 'UsersController@getUploadToken');

@@ -25,7 +25,6 @@ Route::group(['prefix' => 'api/v1', 'namespace' => 'ApiV1', 'middleware' => 'adm
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admin'], function(){
 	Route::get('/', 'DashboardController@index'); 
 	Route::resource('/categories', 'CategoriesController');	
-	Route::resource('/tags', 'TagsController');		
 	Route::resource('/users', 'UsersController');			
 	Route::resource('/images', 'ImagesController');	
 	Route::resource('/staticpages', 'StaticPagesController');		

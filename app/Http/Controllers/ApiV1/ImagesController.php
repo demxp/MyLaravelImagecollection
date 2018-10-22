@@ -26,11 +26,8 @@ class ImagesController extends Controller
         }
 
         $categories = Category::all();
-
         $images_array = $images['data'];
-
         unset($images['data']);
-
         return ['images' => $images_array, 'categories' => $categories, 'pagesinfo' => $images];
     }
 
@@ -49,7 +46,6 @@ class ImagesController extends Controller
 
         $newimage = Images::add($request->all());
         $newimage->setCategory($request->get('category_id'));
-        $newimage->setTags($request->get('tag'));
         $newimage->toggleVisibility($request->get('status'));
         
         return [

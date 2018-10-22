@@ -160,8 +160,7 @@ tr.tr__red td{
     };
   })(window);
 </script>
-<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
-@include('admin.categories.users-rules')
+
 <!-- Site wrapper -->
 <div class="wrapper" id="vueapp">
   @include('admin.header')

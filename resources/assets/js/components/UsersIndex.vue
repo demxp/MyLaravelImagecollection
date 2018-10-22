@@ -26,8 +26,9 @@
             <td><span v-text="user.email"></span></td>            
             <td class="user-avatar"><img :src="user.avatarimage" class="img-circle" /></td>
             <td>
-              <button class="btn btn-xs btn-info" @click="editUser(user)">Изменить</button>
-              <button class="btn btn-xs btn-danger" @click="deleteUser(user)">Удалить</button>
+              <button class="btn btn-xs btn-warning btn-block" @click="editUserRules(user)">Права</button>            
+              <button class="btn btn-xs btn-info btn-block" @click="editUser(user)">Изменить</button>
+              <button class="btn btn-xs btn-danger btn-block" @click="deleteUser(user)">Удалить</button>
             </td>   
           </tr>                 
         </tbody>
@@ -80,6 +81,9 @@
         editUser(user){
           this.$parent.$emit('switch-mode', {'mode': 'editusers', 'id': user.id});      
         },
+        editUserRules(user){
+          this.$parent.$emit('switch-mode', {'mode': 'userrules', 'id': user.id});      
+        },        
         deleteUser(user){
           if(!confirm("Вы уверены?")){return false;}
           let url = '/api/v1/users/'+user.id;

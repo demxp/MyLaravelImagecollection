@@ -4,7 +4,6 @@ namespace App\Http\Controllers\ApiV1;
 
 use App\Images;
 use App\Category;
-use App\Tag;
 use Validator;
 use Auth;
 use Illuminate\Http\Request;
@@ -12,6 +11,23 @@ use App\Http\Controllers\Controller;
 
 class ImagesController extends Controller
 {
+    /**
+     * Проверка прав доступа.
+     */    
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if(\App\UserRules::checkAccess($request, new Images)){
+                return $next($request);
+            }
+
+            return response([
+                "status" => "error",
+                "message" => "NotEnoughRights"
+            ], 403)->header('Content-Type', 'application/json');
+        });
+    }  
+
     /**
      * Display a listing of the resource.
      *

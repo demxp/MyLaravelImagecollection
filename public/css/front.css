@@ -17006,7 +17006,6 @@ a.link:hover:after {
 
 .blog.no-sidebar .main-content, 
 .single-post.no-sidebar .main-content {
-    width: 70%;
     margin: 0 auto;
 }
 

@@ -18,6 +18,8 @@ Vue.component('UsersEdit', require('./components/UsersEdit.vue'));
 Vue.component('UsersRules', require('./components/UsersRules.vue'));
 Vue.component('ImagesIndex', require('./components/ImagesIndex.vue'));
 Vue.component('ImagesUpload', require('./components/ImagesEdit.vue'));
+Vue.component('PagesIndex', require('./components/PagesIndex.vue'));
+Vue.component('PagesEdit', require('./components/PagesEdit.vue'));
 
 const app = new Vue({
   el: '#vueapp',
@@ -30,7 +32,9 @@ const app = new Vue({
         'editcategories',
         'indexusers',
         'editusers',
-        'userrules'
+        'userrules',
+        'indexpages',
+        'editpages'
       ],
       current: 'index',
       id: null 

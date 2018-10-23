@@ -8,11 +8,8 @@
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
-  <link rel="stylesheet" type="text/css" href="/css/admin.css" />
-  <script type="text/javascript" src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
-
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <link rel="stylesheet" type="text/css" href="{{ asset('/css/admin.css') }}" />
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -201,7 +198,9 @@ tr.tr__red td{
       <categories-edit v-if="checkMode('editcategories')"></categories-edit>
       <users-index v-if="checkMode('indexusers')"></users-index>
       <users-edit v-if="checkMode('editusers')" :user-id="id"></users-edit>
-      <users-rules v-if="checkMode('userrules')" :user-id="id"></users-rules>      
+      <users-rules v-if="checkMode('userrules')" :user-id="id"></users-rules>
+      <pages-index v-if="checkMode('indexpages')"></pages-index>
+      <pages-edit v-if="checkMode('editpages')" :page-id="id"></pages-edit>      
     </section>
     <!-- /.content -->
   </div>
@@ -216,7 +215,7 @@ tr.tr__red td{
   </footer>
 </div>
 <!-- ./wrapper -->
-<script type="text/javascript" src="/js/admin.js?sdfsdf"></script>
-<script type="text/javascript" src="/js/app.js"></script>
+<script src="{{ asset('/js/admin.js') }}"></script>
+<script src="{{ asset('/js/app.js') }}"></script>
 </body>
 </html>

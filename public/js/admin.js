@@ -7514,7 +7514,7 @@ var nicEditor = bkClass.extend({
         element = this.checkReplace($BK(element));
         // создаем блок для панельки
         var panelElm = new bkElement('DIV').setStyle({
-            width: (parseInt(element.getStyle('width')) || element.clientWidth) + 'px'
+            // width: (parseInt(element.getStyle('width')) || element.clientWidth) + 'px'
         }).appendBefore(element);
         // вешаем туда панельку
         this.setPanel(panelElm);

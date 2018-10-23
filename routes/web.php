@@ -20,6 +20,7 @@ Route::group(['prefix' => 'api/v1', 'namespace' => 'ApiV1', 'middleware' => 'adm
 	Route::resource('/images', 'ImagesController');	
 	Route::resource('/categories', 'CategoriesController');
 	Route::resource('/users', 'UsersController');
+	Route::resource('/staticpages', 'StaticPagesController');	
 	Route::get('/users/{id}/rules', 'RulesController@getRules');
 	Route::put('/users/{id}/rules', 'RulesController@setRules');
 });
@@ -56,7 +57,7 @@ Route::get('/category/{slug}/list', [
 		'as' => 'showcategoryaslist', 
 		'uses' => 'HomeController@showCategoryAsList'
 ]);
-Route::get('/page/{url}', [
+Route::get('/{url}', [
 		'as' => 'staticpage', 
 		'uses' => 'HomeController@getStaticPage'
 ]);

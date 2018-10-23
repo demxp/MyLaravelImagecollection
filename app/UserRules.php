@@ -13,16 +13,16 @@ class UserRules extends Model
 		return [
 			"rules" => ["allow", "owned", "deny"],
 			"names" => [
-				"images" => "картинок",
-				"categories" => "категорий",
-				"staticpages" => "страниц",
+				"images" => "картинок:",
+				"categories" => "категорий:",
+				"staticpages" => "страниц:",
 				"get" => "Просмотр",
 				"post" => "Создание",
 				"put" => "Изменение",
 				"delete" => "Удаление",
-				"allow"  => " - РАЗРЕШЕНО",
-				"owned" => " - ДОБАВЛЕННЫХ ПОЛЬЗОВАТЕЛЕМ",
-				"deny" => " - ЗАПРЕЩЕНО"
+				"allow"  => "разрешено",
+				"owned" => "добавленных",
+				"deny" => "запрещено"
 			],
 			"data" => [
 				["images", "get", "", ["allow", "deny"]],

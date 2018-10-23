@@ -48,12 +48,12 @@
             <td><span contenteditable="true" @keydown.13.prevent="setTitle(img, $event)" v-text="img.title"></span></td>
             <td>
               <label class="switcher">
-                  <input v-model="img.status" type="checkbox" @change="setStatus(img)"/>
+                  <input :checked="img.status" type="checkbox" @change="setStatus(img, $event)"/>
                   <div class="switcher__text"></div>
               </label>
             </td>
             <td>
-              <select2 :options="cats" v-model="img.category_id" style="width: 100%;" @input="setCategory(img)"></select2>
+              <select2 :options="cats" :value="img.category_id" style="width: 100%;" @input="setCategory(img, $event)"></select2>
                 <div :class="{ setcattitle:true, 'selected': img.iscattitle }" v-if="img.category_id !== 0">
                   <button type="button" class="btn btn-info btn-xs" @click="setCategoryTitle(img)">Иконка</button>                      
                   <span>Иконка</span>
@@ -194,16 +194,43 @@
           }, callback);        
         },
         setTitle(img, event){
+          this.roll = ((img) => {
+            let old = img.title;
+            let _this = this;          
+            return function(obj){
+              obj.title = old;
+              _this.roll = function(){};
+            };
+          })(img);
           let text = event.target.innerText;
           if (text.length < 3) {return false;}
           img.title = text;
           this.saveModel(img, this.createCallback(img));
         },
-        setStatus(img){
+        setStatus(img, event){
+          this.roll = ((img) => {
+            let old = img.status;
+            let _this = this;          
+            return function(obj){
+              obj.status = old;
+              _this.roll = function(){};
+            };
+          })(img);
+          img.status = event.target.checked;
           this.saveModel(img, this.createCallback(img));
         },
-        setCategory(img){
+        setCategory(img, event){
           if(this.selectChangeBlock){return;}
+          this.roll = ((img) => {
+            let old = img.category_id; 
+            let _this = this;
+            return function(obj){
+              obj.category_id = old;
+              _this.roll = function(){};
+            };
+          })(img);
+          let val = event;
+          img.category_id = event;
           this.saveModel(img, this.createCallback(img));
         },
         setCategoryTitle(img){
@@ -211,13 +238,19 @@
           this.ajaxfun(url, 'put', {
             id: img.category_id,
             titleimage: img.id
-          }, () => {
-            this.imgs.map((image, i) => {
-              if(image.category_id == img.category_id){
-                this.imgs[i].iscattitle = false;
-              }
-            });
-            img.iscattitle = true;
+          }, (req) => {
+            if(req.status == "ok"){
+              this.imgs.map((image, i) => {
+                if(image.category_id == img.category_id){
+                  this.imgs[i].iscattitle = false;
+                }
+              });
+              img.iscattitle = true;
+            }else{
+              customAlert(req);
+              obj.danger = true;
+              setTimeout(() => {obj.danger = false;},1000);
+            }
           });         
         },      
         deleteImage(img){
@@ -225,7 +258,7 @@
           let url = '/api/v1/images/'+img.id;
           this.ajaxfun(url, 'delete', {
             id: img.id
-          }, () => {
+          }, (req) => {
             if(req.status == 'ok'){
               this.setPage();          
             }else{
@@ -234,6 +267,7 @@
           });         
         },
         createCallback(obj){
+          let roll = this.roll;
           return function(req){
             if(req.status == 'ok'){
               obj.success = true;
@@ -241,7 +275,8 @@
             }else{
               customAlert(req);
               obj.danger = true;
-              setTimeout(() => {obj.danger = false;},1000);            
+              setTimeout(() => {obj.danger = false;},1000);
+              roll(obj);
             }
           };        
         }

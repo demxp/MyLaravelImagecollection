@@ -26,6 +26,8 @@ class RulesController extends Controller
   			$template["data"][$index][2] = $rule["rule"];
     	}, $user_rules);
 
+        $template['is_editable'] = \Auth::user()->is_admin;
+
     	return $template;
     }
 

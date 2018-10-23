@@ -24,7 +24,7 @@
             <td><span contenteditable="true" @keydown.13.prevent="setTitle(cat, $event)" v-text="cat.title"></span></td>
             <td>
               <label class="switcher">
-                  <input v-model="cat.hidden" type="checkbox" @change="setStatus(cat)"/>
+                  <input :checked="cat.hidden" type="checkbox" @change="setStatus(cat, $event)"/>
                   <div class="switcher__text"></div>
               </label>
             </td>            
@@ -82,10 +82,18 @@
           this.ajaxfun(url, 'put', {
             id: cat.id,
             title: cat.title,
-            hidden: (cat.hidden) ? 1 : 0,
+            hidden: cat.hidden,
           }, callback);        
         },
         setTitle(cat, event){
+          this.roll = ((cat) => {
+            let old = cat.title;
+            let _this = this;          
+            return function(obj){
+              obj.title = old;
+              _this.roll = function(){};
+            };
+          })(cat);        
           let text = event.target.innerText;
           if (text.length < 3) {
             alert("Надо написать название категории! Минимум 3 символа.");
@@ -95,6 +103,15 @@
           this.saveModel(cat, this.createCallback(cat));
         },
         setStatus(cat, event){
+          this.roll = ((cat) => {
+            let old = cat.hidden; 
+            let _this = this;          
+            return function(obj){
+              obj.hidden = old;
+              _this.roll = function(){};
+            };
+          })(cat);
+          cat.hidden = (event.target.checked) ? 1 : 0;        
           this.saveModel(cat, this.createCallback(cat));
         },    
         deleteCategory(cat){
@@ -111,6 +128,7 @@
           });
         },
         createCallback(obj){
+          let roll = this.roll;
           return function(req){
             if(req.status == 'ok'){
               obj.success = true;
@@ -119,9 +137,9 @@
               customAlert(req);
               obj.danger = true;
               setTimeout(() => {obj.danger = false;},1000);
-              return false;
+              roll(obj);
             }
-          };        
+          };      
         }
       }  
     }

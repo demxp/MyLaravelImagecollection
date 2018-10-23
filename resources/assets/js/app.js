@@ -1,5 +1,45 @@
 window.Vue = require('vue');
 
+import swal from 'sweetalert'
+
+/* Скрипт кастомного Alert */
+
+(function(window) {
+  let al = ((swal) => {
+    return function(text){
+      swal("Oops!", text, "error");
+    }; 
+  })(swal);
+  let errors = {
+    'IncorrectInputData': {
+      'parseFunc': (resp) => {
+        al("Некорректные данные");
+      }
+    },
+    'ValidateError': {
+      'parseFunc': (resp) => {
+        al(resp.errors.reduce((acc, item) => {
+          return acc += item + '\n';
+        }, ""));
+      }
+    },
+    'NotEnoughRights': {
+      'parseFunc': (resp) => {
+        al("Не хватает прав для выполнения");
+      }
+    }
+  };
+  window.customAlert = (resp) => {
+    if (!!errors[resp.message]) {
+      errors[resp.message].parseFunc(resp);
+    } else {
+      al("Неизвестная ошибка!");
+    }
+    console.log(resp);
+    return;
+  };
+})(window);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

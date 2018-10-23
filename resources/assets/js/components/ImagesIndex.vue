@@ -283,3 +283,30 @@
       }  
     }
 </script>
+
+<style scoped>
+.setcattitle {
+    text-align: center;
+}
+
+.setcattitle span {
+    border: 1px solid #0acc29;
+    color: #2c68f5;
+    padding: 3px;
+    border-radius: 3px;
+    margin: 5px auto;
+    display: none;
+}
+
+.setcattitle button {
+    margin: 5px auto;
+}
+
+.setcattitle.selected button{
+    display: none;
+}
+
+.setcattitle.selected span{
+    display: inline-block;
+}  
+</style>

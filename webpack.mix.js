@@ -21,6 +21,7 @@ mix.styles([
 	'resources/assets/admin/dist/css/skins/_all-skins.min.css',
 	'resources/assets/admin/plugins/select2/select2.min.css',
 	'resources/assets/admin/dist/css/AdminLTE.min.css',	
+	'resources/assets/admin/dist/css/style_add.css'
 ], 'public/css/admin.css');
 
 mix.scripts([
@@ -28,7 +29,6 @@ mix.scripts([
 	'resources/assets/admin/bootstrap/js/bootstrap.min.js',
 	'resources/assets/admin/dist/js/app.min.js',
 	'resources/assets/admin/plugins/select2/select2.full.js',
-	'resources/assets/admin/dist/js/script.js',
 	'resources/assets/admin/dist/js/promise.js',
 	'resources/assets/admin/dist/js/nicEdit.js',
 ], 'public/js/admin.js');

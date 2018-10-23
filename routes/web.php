@@ -27,11 +27,6 @@ Route::group(['prefix' => 'api/v1', 'namespace' => 'ApiV1', 'middleware' => 'adm
 
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admin'], function(){
 	Route::get('/', 'DashboardController@index'); 
-	Route::resource('/categories', 'CategoriesController');	
-	Route::resource('/users', 'UsersController');			
-	Route::resource('/images', 'ImagesController');	
-	Route::resource('/staticpages', 'StaticPagesController');
-	Route::post('/ajax', 'AjaxController@init');
 });
 
 Route::post('/upload/gettoken', 'UsersController@getUploadToken');

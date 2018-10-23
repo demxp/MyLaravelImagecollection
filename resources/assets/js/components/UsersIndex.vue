@@ -105,3 +105,16 @@
       }  
     }
 </script>
+
+<style>
+.user-avatar{
+  text-align: center;
+  max-width: 120px;
+}
+
+.user-avatar img {
+    width: 100%;
+    max-width: 70px;
+    height: auto;
+}  
+</style>

@@ -14,5 +14,8 @@
     "cross-env": "^5.2.0",
     "laravel-mix": "^2.1.14",
     "vue": "^2.1.10"
+  },
+  "dependencies": {
+    "sweetalert": "^2.1.0"
   }
 }

@@ -5760,12 +5760,6 @@ S2.define('jquery.select2',[
   // Return the Select2 instance for anyone who is importing it.
   return select2;
 }));
-$(function () {
-    nicEditors.allTextAreas({
-      fullPanel: true,
-      iconsPath: '/img/nicEditorIcons.gif'
-    });
-});
 /*!
  * @overview es6-promise - a tiny implementation of Promises/A+.
  * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)

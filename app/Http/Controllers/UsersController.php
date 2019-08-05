@@ -15,6 +15,6 @@ class UsersController extends Controller
         if(is_null($token)){
             abort(401, 'Unauthorized.');
         }
-        return $token;
+        return ['token' => $token];
     }  
 }

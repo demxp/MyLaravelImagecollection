@@ -17,7 +17,9 @@ class ImageController extends Controller
         }
 
         $filename = Images::externalUpload($request->file('uploadfile'), $user);
-        return $filename;
+
+        $link = $request->root().'/upload/getimage/'.$filename;
+        return ['link' => $link];
     } 
 
     public function getUploadedImage($filename, $thumbnail=null)

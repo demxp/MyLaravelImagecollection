@@ -161,25 +161,14 @@ class User extends Authenticatable
 
         if(is_null($user)){return null;}
 
-        return $user->email.":".password_hash($user->id, PASSWORD_DEFAULT);
+        return UserSession::create($user)->key;
     }
 
     public static function checkApiAccess(Request $request)
     {
-        if(is_null($request->server('PHP_AUTH_USER')) || is_null($request->server('PHP_AUTH_PW'))){
-            return null;
-        }
-
-        $email = $request->server('PHP_AUTH_USER');
-        $token = $request->server('PHP_AUTH_PW');
-
-        $user = User::where([
-            ['email', $email],
-            ['is_banned', 0]
-        ])->first();  
-
-        if(is_null($user) || !password_verify($user->id, $token)){return null;}
-
+        $user = UserSession::getUser($request->headers->get('X-Auth-Token'));
+        if (is_null($user) || $user->is_banned == 1) return null;
+        \Auth::loginUsingId($user->id);
         return $user;
     }
 

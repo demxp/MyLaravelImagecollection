@@ -14,6 +14,11 @@ class Images extends Model
 	protected $fillable = ['title'];
     protected $appends = array('thumbnail', 'fullimage', 'getlink');
 
+    public static function userFolder()
+    {
+        return '/storage/pictures/user'.\Auth::user()->id;
+    }
+
 	public function category()
 	{
 	   	return $this->belongsTo(Category::class);
@@ -33,22 +38,26 @@ class Images extends Model
         ];
     }  
 
-    public static function add($fields)
+    public static function add($imagedata, $category=null)
     {
     	$image = new static;
-    	$image->fill($fields);
+    	$image->title = $imagedata['fname'];
     	$image->user_id = \Auth::user()->id;
-        $image->image = self::uploadImageByString($fields['image'], $image->user_id);
-    	$image->save();
-
-    	return $image;
+        $image->category_id = $category;
+        $image->image = self::uploadImageByString($imagedata['fstring'], $image->user_id);
+        if($image->image){
+            $image->save();
+            return $image;
+        }else{
+            return false;
+        }
     }
 
     public function edit($fields)
     {
     	$this->fill($fields);
         if(!is_null($fields['image'])){
-            Storage::delete('uploads/'.$this->image);
+            Storage::delete('storage/'.$this->image);
             $this->image = self::uploadImageByString($fields['image'], $this->user_id);
         }
     	$this->save();
@@ -56,8 +65,8 @@ class Images extends Model
 
     public function remove()
     {
-    	Storage::delete('/uploads/pictures/user'.$this->user_id."/".$this->image);
-        Storage::delete('/uploads/pictures/user'.$this->user_id."/thumbnails/".$this->image);
+    	Storage::delete($this->getImageFile());
+        Storage::delete($this->getThumbnail());
     	$this->delete();
     }
 
@@ -70,16 +79,23 @@ class Images extends Model
         $decodedData = base64_decode($parsed_image[3]);
 
         // Создаем изображение на сервере
-        $filename = str_random(15) . '.jpg';
-        $userfolder = 'uploads/pictures/user'.$user_id;
+        $filename = md5(uniqid());
+        $filenameToSave = $filename . '.jpg';
+        $fpath = self::createPathByFile($filename) . DIRECTORY_SEPARATOR . $filenameToSave;
+        $thmbpath = self::createPathByFile($filename, true) . DIRECTORY_SEPARATOR . $filenameToSave;
 
-        Image::make(imagecreatefromstring($decodedData))->encode('jpg', 75)->save($userfolder."/".$filename);
-        Image::make($userfolder."/".$filename)->resize(200, 200, function ($constraint) {
-            $constraint->aspectRatio();
-            $constraint->upsize();
-        })->save($userfolder."/thumbnails/".$filename);        
+        try{
+            Image::make(imagecreatefromstring($decodedData))->encode('jpg', 75)->save($fpath);
+            Image::make($fpath)->resize(200, 200, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            })->save($thmbpath);
+        }catch(\Throwable $e){
+            echo $e->getMessage();
+            return false;
+        }
 
-        return $filename;
+        return $filenameToSave;
 
         // Надо бы как-то отлавливать косяки, если возникнут...
     } 
@@ -89,7 +105,7 @@ class Images extends Model
         if (is_null($uploaded)) {return null;}
         
         $filename = str_random(15).".".$uploaded->extension();
-        $userfolder = 'uploads/pictures/user'.$user->id;
+        $userfolder = 'storage/pictures/user'.$user->id;
         $uploaded->storeAs($userfolder, $filename);
 
         Image::make($userfolder."/".$filename)->resize(200, 200, function ($constraint) {
@@ -117,7 +133,7 @@ class Images extends Model
     public function getImageFile()
     {
     	if(!is_null($this->image)){
-    		return '/uploads/pictures/user'.$this->user_id."/".$this->image;
+    		return '/storage/pictures/user'.$this->user_id."/".self::getPathByFile($this->image)."/".$this->image;
     	}
     	return '/img/no_image.jpg';
     }
@@ -125,7 +141,7 @@ class Images extends Model
     public function getThumbnail()
     {
         if(!is_null($this->image)){
-            return '/uploads/pictures/user'.$this->user_id."/thumbnails/".$this->image;
+            return '/storage/pictures/user'.$this->user_id."/".self::getPathByFile($this->image, true)."/".$this->image;
         }
         return '/img/no_image.jpg';
     }  
@@ -220,4 +236,32 @@ class Images extends Model
     {
         return $this->getImageLink();  
     } 
+
+    /**
+     * Формирование пути сохранения
+     */
+    public static function createPathByFile($name, $thumbnail=false)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $thmb = ($thumbnail) ? 'thumbnails' : 'full';
+        $beginningLine = substr($name, 0, 2);
+        $endLine = substr($name, -2);
+        $path = self::userFolder() . $ds . $thmb . $ds . $beginningLine . $ds . $endLine;
+        Storage::makeDirectory($path);
+        return \getcwd() . $path;
+    }
+
+    /**
+     * Определение пути сохранения по имени файла
+     */
+    public static function getPathByFile($name, $thumbnail=false)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $nameParts = pathinfo($name);
+        $thmb = ($thumbnail) ? 'thumbnails' : 'full';        
+        $beginningLine = substr($nameParts['filename'], 0, 2);
+        $endLine = substr($nameParts['filename'], -2);
+        $path = $thmb . $ds . $beginningLine . $ds . $endLine;
+        return $path;
+    }        
 }

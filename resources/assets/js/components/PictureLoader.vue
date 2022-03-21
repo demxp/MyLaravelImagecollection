@@ -1,7 +1,7 @@
 <template>
   <div class="form-group">
     <input type="hidden" :value="img.encoded">
-    <component :is="picture" :image="img.image" :load_indicator="load_indicator" @processUpload="process"></component>
+    <component :is="picture" :image="img.image" :load_indicator="load_indicator" @processUpload="process(false)" :delete_button_visible="processImage" @deletePicture="$emit('deletePicture')"></component>
   </div> 
 </template>
 
@@ -32,6 +32,10 @@
           type: String,
           required: false
         },
+        processImage: {
+          required: false,      
+          default: false
+        },        
         picture: ""
       },
       data(){
@@ -74,9 +78,15 @@
             throw("INCORRECT IMGRESIZER PARAMS");
           }
           this.img.image = this.image;
+          if(this.processImage){
+            return this.process(this.processImage);
+          }
         },
-        init(){
+        init(data){
           return new Promise(function(resolve, reject) {
+            if(typeof(data) == 'object'){
+              return resolve(URL.createObjectURL(data));
+            }
             var fileselect = document.createElement('input');
             fileselect.type = 'file';
             fileselect.onchange = function(){
@@ -176,11 +186,11 @@
             }, 0);
           })
         },
-        process(){
-          this.init().then((src) => {
+        process(data){
+          this.init(data).then((src) => {
+            this.load_indicator = true;            
             return this.imageLoader(src)
           }).then((img) => {
-            this.load_indicator = true;        
             return img;
           }).then((img) => {
             URL.revokeObjectURL(img.src);       

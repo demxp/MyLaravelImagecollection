@@ -1,7 +1,6 @@
 <template>
     <div class="row">
       <div class="col-md-10 col-md-offset-1 image-preview">
-        <a class="btn btn-success btn-xs" @click="$emit('processUpload')">Загрузить</a>
         <div class="img_container">
           <div v-if="load_indicator" class="load_overlay">
             <div id="floater"></div>
@@ -9,6 +8,9 @@
               <img src="/img/loading.gif">
             </div>
           </div>
+          <div v-if="delete_button_visible!=false" class="delbtn_overlay" @click="$emit('deletePicture')">
+              <img src="/img/delete_btn.png">
+          </div>          
           <img :src="image" class="img-responsive">
         </div>
       </div>
@@ -27,7 +29,11 @@
           type: Boolean,
           required: false,      
           default: false
-        }
+        },
+        delete_button_visible: {
+          required: false,      
+          default: false
+        }        
       }
     }
 </script>
@@ -52,6 +58,20 @@
     position: absolute;
     top: 0px;
     left: 0px;
+}
+
+.delbtn_overlay {
+    width: 30px;
+    z-index: 999;
+    opacity: 0.6;    
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.delbtn_overlay:hover {
+    opacity: 1;
 }
 
 .load_overlay .load_indicator {

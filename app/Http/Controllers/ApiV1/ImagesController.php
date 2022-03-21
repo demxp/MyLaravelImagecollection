@@ -55,14 +55,25 @@ class ImagesController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'title' => 'required',
-            'image' => 'required'
-        ]);
+        if(count($request->get('images')) < 1){
+            return [
+                "status" => "error",
+                "message" => "IncorrectInputData"
+            ];
+        }
 
-        $newimage = Images::add($request->all());
-        $newimage->setCategory($request->get('category_id'));
-        $newimage->toggleVisibility($request->get('status'));
+        $cat = $request->get('category_id') ?? null;
+
+        foreach($request->get('images') as $image){
+            $newimage = Images::add($image, $cat);
+            if(!$newimage){
+                dump($newimage);
+                return response([
+                    "status" => "error",
+                    "message" => "ErrorSaveFile"
+                ], 500)->header('Content-Type', 'application/json');
+            }
+        }
         
         return [
         	'status' => 'ok'

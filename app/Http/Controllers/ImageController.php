@@ -29,8 +29,7 @@ class ImageController extends Controller
             abort(404, 'Not found.');
         }
 
-        $path = 'uploads/pictures/user'.$image->user_id."/".((!is_null($thumbnail)) ? 'thumbnails/' : "").$filename;
-
-        return response()->file($path);
+        if(is_null($thumbnail)) return response()->file(\getcwd().$image->getImageFile());
+        return response()->file(\getcwd().$image->getThumbnail());
     }
 }

@@ -8,6 +8,8 @@ class UserRules extends Model
 {
     protected $fillable = ['user_id', 'component', 'method', 'rule'];
 
+    public $incrementing = false;
+
 	public static function currentRulesTable()
 	{
 		return [
@@ -66,8 +68,11 @@ class UserRules extends Model
 
 	public static function checkAccessSoft($request, $user, $url_data, $parentModel)
 	{
-        $findRule = $user->apiRules()->where('component', $url_data["component"])->where('method', $request->method())->value('rule');
-
+        $findRule = $user->apiRules()
+        ->where('component', $url_data["component"])
+        ->where('method', strtolower($request->method()))
+        ->value('rule');
+        
         if($findRule == "allow"){
             return true;
         }elseif($findRule == "owned"){

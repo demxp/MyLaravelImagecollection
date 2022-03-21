@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Notifications\Notifiable;
+use Intervention\Image\Facades\Image;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -85,8 +86,11 @@ class User extends Authenticatable
         $decodedData = base64_decode($parsed_image[3]);
 
         // Создаем изображение на сервере
-        $filename = str_random(10) . '.jpg';
-        if (imagejpeg(imagecreatefromstring($decodedData), 'uploads/avatars/' . $filename)) {
+        $filename = md5(uniqid()) . '.jpg';
+        $path = '/storage/pictures/user'.$this->id.'/avatars';
+        Storage::makeDirectory($path);
+        
+        if (Image::make(imagecreatefromstring($decodedData))->encode('jpg', 75)->save(\getcwd().$path.'/'.$filename)) {
             $this->removeAvatar();
             $this->avatar = $filename;
             $this->save();
@@ -99,14 +103,14 @@ class User extends Authenticatable
     public function removeAvatar()
     {
         if($this->avatar != null){
-            Storage::delete('uploads/avatars/'.$this->avatar);
+            Storage::delete('/storage/pictures/user'.$this->id.'/avatars/'.$this->avatar);
         }
     }
 
     public function getAvatar()
     {
         if(!is_null($this->avatar)){
-            return '/uploads/avatars/'.$this->avatar;
+            return '/storage/pictures/user'.$this->id.'/avatars/'.$this->avatar;
         }
         return '/img/no_avatar.jpg';
     }
@@ -137,17 +141,14 @@ class User extends Authenticatable
 
     public static function createUserUploadFolder($user_id)
     {
-        $dirname = 'uploads/pictures/user'.$user_id;
+        $dirname = '/storage/pictures/user'.$user_id;
         Storage::makeDirectory($dirname);
-        Storage::makeDirectory($dirname.'/thumbnails');
     }
 
     public function removeUserUploadFolder()
     {
-        $dirname = 'uploads/pictures/user'.$this->id;
-        if(count(Storage::files($dirname)) == 0){
-            Storage::deleteDirectory($dirname);
-        }
+        $dirname = '/storage/pictures/user'.$this->id;
+        Storage::deleteDirectory($dirname);
     }
 
     public static function createApiAccess($key)

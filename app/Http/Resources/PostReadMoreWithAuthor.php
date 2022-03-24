@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PostShort extends JsonResource
+class PostReadMoreWithAuthor extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,8 +17,9 @@ class PostShort extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'slug' => $this->slug,
-            'publication' => ($this->publication == 0) ? false : true
+            'content' => $this->content,
+            'author'  => $this->author->name,
+            'published' => $this->published
         ];
     }
 }

@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Category;
-use App\StaticPages;
+use App\{
+    Category, 
+    StaticPages, 
+    BlogPost
+};
+use App\Http\Resources\PostReadMoreWithAuthorCollection as PostCollection;
 
 class HomeController extends Controller
 {
@@ -35,7 +39,18 @@ class HomeController extends Controller
     public function getStaticPage($url)
     {
         $page = StaticPages::where('slug', $url)->firstOrFail();
-
         return view('front.static', ['page' => $page]);
     }
+
+    public function allPosts()
+    {
+        $posts = BlogPost::where('publication', 1)->paginate();
+        return view('front.posts', ['posts' => $posts]);
+    }
+
+    public function showPost($slug)
+    {
+        $post = BlogPost::where('slug', $slug)->firstOrFail();
+        return view('front.post', ['post' => $post]);
+    }    
 }

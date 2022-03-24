@@ -53,6 +53,16 @@ Route::get('/category/{slug}/list', [
 		'as' => 'showcategoryaslist', 
 		'uses' => 'HomeController@showCategoryAsList'
 ]);
+
+Route::get('/posts', [
+	'as' => 'posts',
+ 	'uses' => 'HomeController@allPosts'
+]);
+Route::get('/post/{slug}', [
+		'as' => 'showpost', 
+		'uses' => 'HomeController@showPost'
+]);
+
 Route::get('/{url}', [
 		'as' => 'staticpage', 
 		'uses' => 'HomeController@getStaticPage'

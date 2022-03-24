@@ -1454,11 +1454,64 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      posts: []
+      posts: [],
+      current_page: 0,
+      last_page: 0
     };
   },
   mounted: function mounted() {
@@ -1486,22 +1539,82 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       });
     },
     fillTable: function fillTable(data) {
-      var _this = this;
+      var _this2 = this;
 
-      data.map(function (item, i) {
+      data.data.blogposts.map(function (item, i) {
         item.success = false;
         item.danger = false;
-        if (!!_this.posts[i]) {
+        if (!!_this2.posts[i]) {
           Object.keys(item).map(function (param) {
-            return _this.posts[i][param] = item[param];
+            return _this2.posts[i][param] = item[param];
           });
         } else {
-          _this.posts.push(item);
+          _this2.posts.push(item);
         }
       });
-      if (data.length < this.posts.length) {
-        this.posts.splice(data.length, this.posts.length - data.length);
+      if (data.data.blogposts.length < this.posts.length) {
+        this.posts.splice(data.blogposts.length, this.posts.length - data.data.blogposts.length);
       }
+      this.current_page = data.data.count;
+      this.last_page = data.data.total;
+    },
+    nextPage: function nextPage() {
+      var url = '/api/v1/posts' + '?page=' + (this.current_page + 1);
+      this.ajaxfun(url, 'get', null, this.fillTable);
+    },
+    prevPage: function prevPage() {
+      var url = '/api/v1/posts' + '?page=' + (this.current_page - 1);
+      this.ajaxfun(url, 'get', null, this.fillTable);
+    },
+    firstPage: function firstPage() {
+      var url = '/api/v1/posts' + '?page=1';
+      this.ajaxfun(url, 'get', null, this.fillTable);
+    },
+    lastPage: function lastPage() {
+      var url = '/api/v1/posts' + '?page=' + this.last_page;
+      this.ajaxfun(url, 'get', null, this.fillTable);
+    },
+    setPage: function setPage() {
+      if (this.current_page >= 1 && this.current_page <= this.last_page) {
+        var url = '/api/v1/posts' + '?page=' + this.current_page;
+        this.ajaxfun(url, 'get', null, this.fillTable);
+      }
+    },
+    setPublic: function setPublic(post, event) {
+      var _this3 = this;
+
+      this.roll = function (post) {
+        var old = post.publication;
+        var _this = _this3;
+        return function (obj) {
+          obj.publication = old;
+          _this.roll = function () {};
+        };
+      }(post);
+      post.publication = event.target.checked ? 1 : 0;
+      this.saveModel(post, this.createCallback(post));
+    },
+    saveModel: function saveModel(post, callback) {
+      var url = '/api/v1/posts/' + post.id;
+      this.ajaxfun(url, 'put', post, callback);
+    },
+    createCallback: function createCallback(obj) {
+      var roll = this.roll;
+      return function (req) {
+        if (req.status == 'ok') {
+          obj.success = true;
+          setTimeout(function () {
+            obj.success = false;
+          }, 1000);
+        } else {
+          customAlert(req);
+          obj.danger = true;
+          setTimeout(function () {
+            obj.danger = false;
+          }, 1000);
+          roll(obj);
+        }
+      };
     }
   }
 });
@@ -2722,6 +2835,119 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
+      _c("div", { staticStyle: { "text-align": "right" } }, [
+        _c("div", { staticClass: "row pagination" }, [
+          _c("div", { staticStyle: { "text-align": "center" } }, [
+            _c("p", [
+              _vm._v(
+                "Страница " +
+                  _vm._s(_vm.current_page) +
+                  " из " +
+                  _vm._s(_vm.last_page)
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "input-group",
+                staticStyle: { "max-width": "170px", display: "inline-table" }
+              },
+              [
+                _c("span", { staticClass: "input-group-btn" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-info btn-sm",
+                      attrs: {
+                        type: "button",
+                        disabled: _vm.current_page <= 1
+                      },
+                      on: { click: _vm.firstPage }
+                    },
+                    [_vm._v("<<")]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("span", { staticClass: "input-group-btn" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-info btn-sm",
+                      attrs: {
+                        type: "button",
+                        disabled: _vm.current_page <= 1
+                      },
+                      on: { click: _vm.prevPage }
+                    },
+                    [_vm._v("<")]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.current_page,
+                      expression: "current_page"
+                    }
+                  ],
+                  staticClass: "form-control input-sm",
+                  staticStyle: { "text-align": "center" },
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.current_page },
+                  on: {
+                    keyup: function($event) {
+                      if (!("button" in $event) && $event.keyCode !== 13) {
+                        return null
+                      }
+                      return _vm.setPage($event)
+                    },
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.current_page = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("span", { staticClass: "input-group-btn" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-info btn-sm",
+                      attrs: {
+                        type: "button",
+                        disabled: _vm.current_page === _vm.last_page
+                      },
+                      on: { click: _vm.nextPage }
+                    },
+                    [_vm._v(">")]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("span", { staticClass: "input-group-btn" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-info btn-sm",
+                      attrs: {
+                        type: "button",
+                        disabled: _vm.current_page === _vm.last_page
+                      },
+                      on: { click: _vm.lastPage }
+                    },
+                    [_vm._v(">>")]
+                  )
+                ])
+              ]
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
       _c("table", { staticClass: "table table-bordered table-striped" }, [
         _vm._m(0),
         _vm._v(" "),
@@ -2743,6 +2969,22 @@ var render = function() {
                 _c("td", [
                   _vm._v("/"),
                   _c("span", { domProps: { textContent: _vm._s(post.slug) } })
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _c("label", { staticClass: "switcher" }, [
+                    _c("input", {
+                      attrs: { type: "checkbox" },
+                      domProps: { checked: post.publication },
+                      on: {
+                        change: function($event) {
+                          _vm.setPublic(post, $event)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "switcher__text" })
+                  ])
                 ]),
                 _vm._v(" "),
                 _c("td", [
@@ -2776,6 +3018,119 @@ var render = function() {
             )
           })
         )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticStyle: { "text-align": "right" } }, [
+        _c("div", { staticClass: "row pagination" }, [
+          _c("div", { staticStyle: { "text-align": "center" } }, [
+            _c("p", [
+              _vm._v(
+                "Страница " +
+                  _vm._s(_vm.current_page) +
+                  " из " +
+                  _vm._s(_vm.last_page)
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "input-group",
+                staticStyle: { "max-width": "170px", display: "inline-table" }
+              },
+              [
+                _c("span", { staticClass: "input-group-btn" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-info btn-sm",
+                      attrs: {
+                        type: "button",
+                        disabled: _vm.current_page <= 1
+                      },
+                      on: { click: _vm.firstPage }
+                    },
+                    [_vm._v("<<")]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("span", { staticClass: "input-group-btn" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-info btn-sm",
+                      attrs: {
+                        type: "button",
+                        disabled: _vm.current_page <= 1
+                      },
+                      on: { click: _vm.prevPage }
+                    },
+                    [_vm._v("<")]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.current_page,
+                      expression: "current_page"
+                    }
+                  ],
+                  staticClass: "form-control input-sm",
+                  staticStyle: { "text-align": "center" },
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.current_page },
+                  on: {
+                    keyup: function($event) {
+                      if (!("button" in $event) && $event.keyCode !== 13) {
+                        return null
+                      }
+                      return _vm.setPage($event)
+                    },
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.current_page = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("span", { staticClass: "input-group-btn" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-info btn-sm",
+                      attrs: {
+                        type: "button",
+                        disabled: _vm.current_page === _vm.last_page
+                      },
+                      on: { click: _vm.nextPage }
+                    },
+                    [_vm._v(">")]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("span", { staticClass: "input-group-btn" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-info btn-sm",
+                      attrs: {
+                        type: "button",
+                        disabled: _vm.current_page === _vm.last_page
+                      },
+                      on: { click: _vm.lastPage }
+                    },
+                    [_vm._v(">>")]
+                  )
+                ])
+              ]
+            )
+          ])
+        ])
       ])
     ])
   ])
@@ -2792,6 +3147,8 @@ var staticRenderFns = [
         _c("th", [_vm._v("Заголовок")]),
         _vm._v(" "),
         _c("th", [_vm._v("Ссылка")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Публикация")]),
         _vm._v(" "),
         _c("th", [_vm._v("Действия")])
       ])

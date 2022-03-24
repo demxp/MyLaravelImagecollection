@@ -34,7 +34,7 @@ class BlogPostsController extends Controller
      */
     public function index()
     {
-        return new PostShortCollection(BlogPost::all()->apiPaginate());
+        return new PostShortCollection(BlogPost::apiPaginate());
     }
 
     /**
@@ -90,13 +90,10 @@ class BlogPostsController extends Controller
     {
         $BlogPost = BlogPost::find($id);
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => [
-                'required',
-                'email',
-                Rule::unique('BlogPosts')->ignore($BlogPost->id),
-            ],
-            'avatar' => 'nullable'
+            'title' => 'sometimes|required|min:3|max:150',
+            'content' => 'sometimes|required|min:3',
+            'publication' => 'sometimes|required|numeric',
+            'commenting' => 'sometimes|required|numeric'
         ]);
 
         if($validator->fails()) {
@@ -108,7 +105,6 @@ class BlogPostsController extends Controller
         }           
 
         $BlogPost->edit($request->all());
-        $BlogPost->uploadAvatar($request->get('avatar'));
 
         return [
             "status" => "ok"

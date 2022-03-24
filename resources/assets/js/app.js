@@ -71,6 +71,7 @@ Vue.component('ImagesIndex', require('./components/ImagesIndex.vue'));
 Vue.component('ImagesUpload', require('./components/ImagesEdit.vue'));
 Vue.component('PagesIndex', require('./components/PagesIndex.vue'));
 Vue.component('PagesEdit', require('./components/PagesEdit.vue'));
+Vue.component('PostsIndex', require('./components/PostsIndex.vue'));
 
 const app = new Vue({
   el: '#vueapp',
@@ -85,7 +86,8 @@ const app = new Vue({
         'editusers',
         'userrules',
         'indexpages',
-        'editpages'
+        'editpages',
+        'indexposts'
       ],
       current: 'index',
       id: null 

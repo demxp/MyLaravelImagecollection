@@ -61,6 +61,7 @@
       <users-rules v-if="checkMode('userrules')" :user-id="id"></users-rules>
       <pages-index v-if="checkMode('indexpages')"></pages-index>
       <pages-edit v-if="checkMode('editpages')" :page-id="id"></pages-edit>      
+      <posts-index v-if="checkMode('indexposts')"></posts-index>
     </section>
     <!-- /.content -->
   </div>

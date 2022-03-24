@@ -18,6 +18,7 @@ class UserRules extends Model
 				"images" => "картинок:",
 				"categories" => "категорий:",
 				"staticpages" => "страниц:",
+				"blogpost" => "постов:",
 				"get" => "Просмотр",
 				"post" => "Создание",
 				"put" => "Изменение",
@@ -38,7 +39,11 @@ class UserRules extends Model
 				["staticpages", "get", "", ["allow", "deny"]],
 				["staticpages", "post", "", ["allow", "deny"]],
 				["staticpages", "put", "", ["allow", "owned", "deny"]],
-				["staticpages", "delete", "", ["allow", "owned", "deny"]]				
+				["staticpages", "delete", "", ["allow", "owned", "deny"]],
+				["blogpost", "get", "", ["allow", "deny"]],
+				["blogpost", "post", "", ["allow", "deny"]],
+				["blogpost", "put", "", ["allow", "owned", "deny"]],
+				["blogpost", "delete", "", ["allow", "owned", "deny"]]								
 			]
 		];
 	}

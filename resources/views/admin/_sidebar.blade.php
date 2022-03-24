@@ -10,4 +10,5 @@
         <li><a @click="setMode({'mode': 'indexcategories', 'id': null})"><i class="fa fa-list-ul"></i> <span>Категории</span></a></li>
         <li><a @click="setMode({'mode': 'indexpages', 'id': null})"><i class="fa fa-list-ul"></i> <span>Страницы</span></a></li>        
         <li><a @click="setMode({'mode': 'indexusers', 'id': null})"><i class="fa fa-users"></i> <span>Пользователи</span></a></li>
+        <li><a @click="setMode({'mode': 'indexposts', 'id': null})"><i class="fa fa-book"></i> <span>Посты блога</span></a></li>
       </ul>

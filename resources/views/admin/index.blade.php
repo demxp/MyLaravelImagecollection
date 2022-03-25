@@ -62,6 +62,7 @@
       <pages-index v-if="checkMode('indexpages')"></pages-index>
       <pages-edit v-if="checkMode('editpages')" :page-id="id"></pages-edit>      
       <posts-index v-if="checkMode('indexposts')"></posts-index>
+      <posts-edit v-if="checkMode('editposts')" :post-id="id"></posts-edit>
     </section>
     <!-- /.content -->
   </div>

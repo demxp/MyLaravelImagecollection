@@ -72,6 +72,7 @@ Vue.component('ImagesUpload', require('./components/ImagesEdit.vue'));
 Vue.component('PagesIndex', require('./components/PagesIndex.vue'));
 Vue.component('PagesEdit', require('./components/PagesEdit.vue'));
 Vue.component('PostsIndex', require('./components/PostsIndex.vue'));
+Vue.component('PostsEdit', require('./components/PostsEdit.vue'));
 
 const app = new Vue({
   el: '#vueapp',
@@ -87,7 +88,8 @@ const app = new Vue({
         'userrules',
         'indexpages',
         'editpages',
-        'indexposts'
+        'indexposts',
+        'editposts'
       ],
       current: 'index',
       id: null 

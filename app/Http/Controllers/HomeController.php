@@ -8,7 +8,6 @@ use App\{
     StaticPages, 
     BlogPost
 };
-use App\Http\Resources\PostReadMoreWithAuthorCollection as PostCollection;
 
 class HomeController extends Controller
 {
@@ -44,13 +43,13 @@ class HomeController extends Controller
 
     public function allPosts()
     {
-        $posts = BlogPost::where('publication', 1)->paginate();
+        $posts = BlogPost::where('publication', 1)->orderBy('publication_date', 'desc')->paginate();
         return view('front.posts', ['posts' => $posts]);
     }
 
     public function showPost($slug)
     {
         $post = BlogPost::where('slug', $slug)->firstOrFail();
-        return view('front.post', ['post' => $post]);
+        return view('front.single-post', ['post' => $post]);
     }    
 }

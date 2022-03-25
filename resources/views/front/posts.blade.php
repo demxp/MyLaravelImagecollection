@@ -16,7 +16,7 @@
                                                 <div class="entry-header">                                                
                                                     <div class="entry-header-content">
                                                         <h2 class="entry-title">
-                                                            <a href="blog-single.html">{{$post->title}}</a>
+                                                            <a href="{{route('showpost', $post->slug)}}">{{$post->title}}</a>
                                                         </h2>
                                                         <div class="entry-meta">
                                                             <span>By</span>
@@ -25,12 +25,13 @@
                                                         </div>
                                                     </div><!-- /.entry-header-content -->
                                                 </div><!-- /.entry-header -->
+                                                @if($post->title_image)
                                                 <div class="entry-cover">
                                                     <a href="{{route('showpost', $post->slug)}}">
-                                                        <img src="/storage/pictures/user1/full/e1/d6/e15bc25cfc8e41df182868137260b3d6.jpg" alt="images">
+                                                        <img src="{{$post->title_image}}" alt="images">
                                                     </a>
                                                 </div><!-- /.entry-cover -->                                            
-
+                                                @endif
                                                 <div class="entry-content">
                                                     {{$post->shortedContent}}
                                                     <div class="readmore"><a href="{{route('showpost', $post->slug)}}" class="more-link">Read More</a></div>

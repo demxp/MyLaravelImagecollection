@@ -34,7 +34,7 @@ class BlogPostsController extends Controller
      */
     public function index()
     {
-        return new PostShortCollection(BlogPost::apiPaginate());
+        return new PostShortCollection(BlogPost::paginate(20));
     }
 
     /**
@@ -46,10 +46,8 @@ class BlogPostsController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email|unique:BlogPosts',
-            'password' => 'required|min:5',
-            'avatar' => 'nullable'
+            'title' => 'sometimes|required|min:3|max:150',
+            'content' => 'sometimes|required|min:3'
         ]);
 
         if($validator->fails()) {
@@ -58,14 +56,16 @@ class BlogPostsController extends Controller
                 "message" => "ValidateError",
                 "errors" => $validator->messages()->all()
             ];
-        }        
+        }           
 
-        $BlogPost = BlogPost::add($request->all());
-        $BlogPost->uploadAvatar($request->get('avatar'));
+        $post = BlogPost::add($request->all());
 
+        if($post) return ["status" => "ok"];
         return [
-            "status" => "ok"
-        ];
+            "status" => "error",
+            "message" => "SaveError",
+            "errors" => $post->errors()
+        ];        
     }
 
     /**

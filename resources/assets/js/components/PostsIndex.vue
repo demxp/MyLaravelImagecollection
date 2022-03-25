@@ -2,7 +2,7 @@
   <div class="box">
     <div class="box-body">
       <div class="form-group">
-        <a class="btn btn-success" @click="$parent.$emit('switch-mode', {'mode': 'editpages', 'id': null})">Добавить</a>
+        <a class="btn btn-success" @click="$parent.$emit('switch-mode', {'mode': 'editposts', 'id': null})">Добавить</a>
       </div>
       <div style="text-align: right;">
         <div class="row pagination">
@@ -32,7 +32,8 @@
             <th>ID</th>
             <th>Заголовок</th>
             <th>Ссылка</th>
-            <th>Публикация</th>            
+            <th>Публикация</th>
+            <th>Комментирование</th>
             <th>Действия</th>
           </tr>
         </thead>
@@ -43,10 +44,16 @@
             <td>/<span v-text="post.slug"></span></td>
             <td>
               <label class="switcher">
-                  <input :checked="post.publication" type="checkbox" @change="setPublic(post, $event)"/>
+                  <input :checked="post.publication" type="checkbox" @change="createChange(post, 'publication', $event)"/>
                   <div class="switcher__text"></div>
               </label>              
             </td>
+            <td>
+              <label class="switcher">
+                  <input :checked="post.commenting" type="checkbox" @change="createChange(post, 'commenting', $event)"/>
+                  <div class="switcher__text"></div>
+              </label>              
+            </td>            
             <td>
               <button class="btn btn-xs btn-info" @click="editPost(post)">Изменить</button>
               <button class="btn btn-xs btn-danger" @click="deletePost(post)">Удалить</button>
@@ -110,7 +117,7 @@
           });         
         },
         fillTable(data){
-          data.data.blogposts.map((item, i) => {
+          data.data.map((item, i) => {
             item.success = false;
             item.danger = false;
             if(!!this.posts[i]){
@@ -119,11 +126,11 @@
               this.posts.push(item)
             }
           });
-          if(data.data.blogposts.length < this.posts.length){
-            this.posts.splice(data.blogposts.length, this.posts.length - data.data.blogposts.length);
+          if(data.data.length < this.posts.length){
+            this.posts.splice(data.data.length, this.posts.length - data.data.length);
           }
-          this.current_page = data.data.count;
-          this.last_page = data.data.total;          
+          this.current_page = data.current_page;
+          this.last_page = data.total;          
         },
         nextPage(){
           let url = '/api/v1/posts' + '?page=' + (this.current_page + 1);
@@ -147,17 +154,20 @@
             this.ajaxfun(url, 'get', null, this.fillTable);
           }
         },
-        setPublic(post, event){
-          this.roll = ((post) => {
-            let old = post.publication;
+        createChange(model, field, event){
+          this.roll = ((model) => {
+            let oldState = model[field];
             let _this = this;          
             return function(obj){
-              obj.publication = old;
+              obj[field] = oldState;
               _this.roll = function(){};
             };
-          })(post);
-          post.publication = (event.target.checked) ? 1 : 0;
-          this.saveModel(post, this.createCallback(post));
+          })(model);
+          model[field] = (event.target.checked) ? 1 : 0;
+          let saveable = {};
+          saveable.id = model.id;
+          saveable[field] = model[field];
+          this.saveModel(saveable, this.createCallback(model));          
         },
         saveModel(post, callback){
           let url = '/api/v1/posts/'+post.id;
@@ -176,7 +186,23 @@
               roll(obj);
             }
           };
-        }        
+        },
+        editPost(post){
+          this.$parent.$emit('switch-mode', {'mode': 'editposts', 'id': post.id});      
+        },
+        deletePost(post){
+          if(!confirm("Вы уверены?")){return false;}
+          let url = '/api/v1/posts/'+post.id;
+          this.ajaxfun(url, 'delete', {
+            id: post.id
+          }, (req) => {
+            if(req.status == 'ok'){
+              this.setPage();
+            }else{
+              customAlert(req);
+            }            
+          });
+        }
       }  
     }
 </script>

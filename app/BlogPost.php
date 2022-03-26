@@ -40,9 +40,7 @@ class BlogPost extends Model
                 $post->publication_date = null;
             }else{
                 if(isset($fields['publication_date'])){
-                    $post->publication_date = Carbon::createFromFormat('Y-m-d H:i', $fields['publication_date'])
-                    ->subHours(3)
-                    ->format('Y-m-d H:i:s');
+                    $post->publication_date = $fields['publication_date'];
                 }else{
                     $post->publication_date = date(DATE_ATOM);
                 }
@@ -68,9 +66,7 @@ class BlogPost extends Model
             	$this->publication_date = null;
             }else{
                 if(isset($fields['publication_date'])){
-                    $this->publication_date = Carbon::createFromFormat('Y-m-d H:i', $fields['publication_date'])
-                    ->subHours(3)
-                    ->format('Y-m-d H:i:s');
+                    $this->publication_date = $fields['publication_date'];
                 }else{
                     $this->publication_date = date(DATE_ATOM);
                 }
@@ -78,7 +74,12 @@ class BlogPost extends Model
         }
         if(isset($fields['commenting'])){
             $this->commenting = $fields['commenting'];
-        }        
+        }
+        if(isset($fields['title_image']) && strlen($fields['title_image']) > 3){
+            $this->title_image = $fields['title_image'];
+        }else{
+            $this->title_image = null;
+        }
     	$this->save();
     }
 

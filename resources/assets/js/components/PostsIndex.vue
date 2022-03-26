@@ -130,7 +130,7 @@
             this.posts.splice(data.data.length, this.posts.length - data.data.length);
           }
           this.current_page = data.current_page;
-          this.last_page = data.total;          
+          this.last_page = data.last_page;          
         },
         nextPage(){
           let url = '/api/v1/posts' + '?page=' + (this.current_page + 1);

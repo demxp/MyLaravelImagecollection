@@ -1,6 +1,7 @@
 window.Vue = require('vue');
 
 import swal from 'sweetalert'
+import moment from 'moment';
 
 /* Скрипт кастомного Alert */
 
@@ -38,6 +39,7 @@ import swal from 'sweetalert'
     console.log(resp);
     return;
   };
+  window.moment = require('moment');
   window.cyrb53 = function(str, seed = 0) {
       let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
       for (let i = 0, ch; i < str.length; i++) {

@@ -24,7 +24,10 @@
     <![endif]-->
 </head>                                 
 <body class="header-sticky page-loading">
-    <div id="slideBgShower" class="slide-bg"></div>   
+    <div id="slideBgShower" class="slide-bg">
+        <div></div>
+        <div></div>
+    </div>   
     <script type="text/javascript" src="/js/sliderBackground.js?sdfsd"></script>
     <div class="loading-overlay">
     </div>

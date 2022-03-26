@@ -108,6 +108,10 @@
             for(let i in req){
               this.post[i] = req[i];
               if(i == 'title_image' && req[i] != null && req[i].length > 3) this.post.title_image_enabled = true;
+              if(i == 'publication_date' && req[i] != null){
+                let dt = moment(moment(req[i]).utc(true).format()).local();
+                this.post.publication_date = dt.format('DD.MM.YYYY HH:mm');
+              }
             }
           });       
         }
@@ -117,11 +121,9 @@
         }).panelInstance('pagecontent-div');
       },
       watch: {
-        'post.title_image': function (value) {
-          if(value == '' || !value){
-            this.title_image_enabled = false;
-          }else{
-            this.title_image_enabled = true;
+        'post.title_image_enabled': function (value) {
+          if(!value){
+            this.title_image = null;
           }
         }
       },      
@@ -160,9 +162,14 @@
             content: content,
             title_image: (this.post.title_image_enabled) ? this.post.title_image : null,
             publication: (this.post.publication) ? 1 : 0,
-            publication_date: (this.post.publication) ? this.post.publication_date : null,
             commenting: (this.post.commenting) ? 1 : 0,
           };
+
+          if(this.post.publication){
+            request_data.publication_date = moment(this.post.publication_date, 'DD.MM.YYYY HH:mm').utc().format('YYYY-MM-DD HH:mm:ss');
+          }else{
+            request_data.publication_date = null;
+          }
 
           if(this.post.id !== null){
             url += '/' + this.post.id;

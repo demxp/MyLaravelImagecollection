@@ -8968,25 +8968,9 @@ nicEditors.registerPlugin(nicPlugin, {
 var placeholderSelect = nicEditorSelect.extend({
     placeholders: {
         address: {
-            name: 'Email подписчика',
-            insert: '{address}',
-        },
-        fullname: {
-            name: 'Полное имя подписчика',
-            insert: '{fullname}',
-        },
-        open_link: {
-            name: 'Тэг картинки открытия',
-            insert: '<img src="http://trafficfreedom.ru/{open-link}">',
-        },
-        click_link: {
-            name: 'Ссылка перехода',
-            insert: '<a href="http://trafficfreedom.ru/{click-link}?url=http:%2F%2Fgoogle.com%2F">перейти</a>',
-        },
-        unsubscribe_link: {
-            name: 'Ссылка отписки',
-            insert: '<a href="http://trafficfreedom.ru/{unsubscribe-link}?url=http:%2F%2Fgoogle.com%2F">отписаться</a>',
-        },
+            name: 'Разделитель поста',
+            insert: '--readmore--',
+        }
     },
 
     init: function() {

@@ -24,7 +24,11 @@ class HomeController extends Controller
 
     public function showCategory($slug)
     {
-        $category = Category::where('slug', $slug)->firstOrFail();
+        $category = Category::where([
+            ['slug', $slug],
+            ['hidden', 0]
+        ])->first();
+        if(!$category) return view('front.single-post-fail');
         $images = $category->images()->where('status', 1)->paginate(15);
         return view('front.category', ['category' => $category, 'images' => $images]);
     }

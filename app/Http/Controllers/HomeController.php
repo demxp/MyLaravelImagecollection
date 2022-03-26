@@ -13,7 +13,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        return redirect()->route('categories');
+        return redirect()->route('posts');
     }
     
     public function allCategories()
@@ -24,21 +24,16 @@ class HomeController extends Controller
 
     public function showCategory($slug)
     {
-    	$category = Category::where('slug', $slug)->firstOrFail();
-    	return view('front.category', ['category' => $category]);
-    }
-
-    public function showCategoryAsList($slug)
-    {
         $category = Category::where('slug', $slug)->firstOrFail();
-        $images = $category->images()->where('status', 1)->paginate(10);
-        return view('front.categoryList', ['category' => $category, 'images' => $images]);
+        $images = $category->images()->where('status', 1)->paginate(15);
+        return view('front.category', ['category' => $category, 'images' => $images]);
     }
 
     public function getStaticPage($url)
     {
-        $page = StaticPages::where('slug', $url)->firstOrFail();
-        return view('front.static', ['page' => $page]);
+        $page = StaticPages::where('slug', $url)->first();
+        if($page) return view('front.static', ['page' => $page]);
+        return view('front.single-post-fail');
     }
 
     public function allPosts()
@@ -49,7 +44,11 @@ class HomeController extends Controller
 
     public function showPost($slug)
     {
-        $post = BlogPost::where('slug', $slug)->firstOrFail();
-        return view('front.single-post', ['post' => $post]);
+        $post = BlogPost::where([
+            ['slug', $slug],
+            ['publication', 1]
+        ])->first();
+        if($post) return view('front.single-post', ['post' => $post]);
+        return view('front.single-post-fail');
     }    
 }

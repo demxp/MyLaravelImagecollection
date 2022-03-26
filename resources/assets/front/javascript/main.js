@@ -588,7 +588,7 @@
     var retinaLogos = function() {
       var retina = window.devicePixelRatio > 1 ? true : false;
         if( retina ) {
-            $( '.header .logo' ).find('img').attr( {src:'./img/logo@2x.png',width:'145',height:'35'} );   
+            $( '.header .logo' ).find('img').attr( {src:'/img/logo.png',width:'145',height:'35'} );   
         }
     };   
     
@@ -633,21 +633,21 @@
         parallax();
         removePreloader();
 
-    	$('#iview').iView({
-    		pauseTime: 7000,
-    		pauseOnHover: true,
-    		directionNav: true,
-    		directionNavHide: false,
-    		directionNavHoverOpacity: 0,
-    		controlNav: false,
-    		nextLabel: "Следующий",
-    		previousLabel: "Предыдущий",
-    		playLabel: "Запустить",
-    		pauseLabel: "Пауза",
-    		timer: "360Bar",
-    		timerPadding: 3,
-    		timerColor: "#0F0"
-    	});
+    	// $('#iview').iView({
+    	// 	pauseTime: 7000,
+    	// 	pauseOnHover: true,
+    	// 	directionNav: true,
+    	// 	directionNavHide: false,
+    	// 	directionNavHoverOpacity: 0,
+    	// 	controlNav: false,
+    	// 	nextLabel: "Следующий",
+    	// 	previousLabel: "Предыдущий",
+    	// 	playLabel: "Запустить",
+    	// 	pauseLabel: "Пауза",
+    	// 	timer: "360Bar",
+    	// 	timerPadding: 3,
+    	// 	timerColor: "#0F0"
+    	// });
    	});
 
 })(jQuery);

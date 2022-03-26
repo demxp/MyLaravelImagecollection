@@ -42,15 +42,15 @@
 
                                     <div class="navigation post-navigation">
                                         <ul class="nav-links">
-                                            @if($prev = $post->hasPrevious())
                                             <li class="prev-post">
+                                                @if($prev = $post->hasPrevious())                                                
                                                 <a href="{{route('showpost', $prev->slug)}}">
                                                     <div class="link-inner">
                                                         <span class="post-title">{{$prev->title}}</span>
                                                     </div>
                                                 </a>
+                                                @endif
                                             </li>
-                                            @endif
                                             <li class="go-back">
                                                 <a href="{{route('posts')}}">
                                                     <div class="icon">
@@ -60,15 +60,15 @@
                                                     </div>
                                                 </a>
                                             </li>
-                                            @if($next = $post->hasNext())
                                             <li class="next-post">
+                                                @if($next = $post->hasNext())
                                                 <a href="{{route('showpost', $next->slug)}}">
                                                     <div class="link-inner">
                                                         <span class="post-title">{{$next->title}}</span>
                                                     </div>
                                                 </a>
+                                                @endif
                                             </li>
-                                            @endif
                                         </ul>       
                                     </div><!-- /.nagivation -->
 @if ($post->commenting == 1)

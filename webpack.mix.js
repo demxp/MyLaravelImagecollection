@@ -34,27 +34,17 @@ mix.scripts([
 ], 'public/js/admin.js');
 
 mix.copy('resources/assets/admin/bootstrap/fonts','public/fonts');
-mix.copy('resources/assets/admin/dist/img/loading.gif', 'public/img');
+mix.copy('resources/assets/admin/dist/img', 'public/img');
 
 mix.styles([
 	'resources/assets/front/stylesheets/bootstrap.css',
-	'resources/assets/front/stylesheets/font-awesome.css',
-	'resources/assets/front/stylesheets/flexslider.css',
-	'resources/assets/front/stylesheets/owl.carousel.css',
-	'resources/assets/front/stylesheets/shortcodes.css',
-	'resources/assets/front/stylesheets/jquery.flex-images.css',
-	'resources/assets/front/stylesheets/simple-line-icons.css',
-	'resources/assets/front/stylesheets/flaticon.css',
-	'resources/assets/front/stylesheets/swiper.min.css',
-	'resources/assets/front/stylesheets/revolution-slider.css',
-	'resources/assets/front/stylesheets/magnific-popup.css',
 	'resources/assets/front/stylesheets/style.css',
+	'resources/assets/front/stylesheets/font-awesome.css',	
 	'resources/assets/front/stylesheets/responsive.css',
-	'resources/assets/front/stylesheets/colors/color5.css',
+	'resources/assets/front/stylesheets/shortcodes.css',	
+	'resources/assets/front/stylesheets/colors/color1.css',
 	'resources/assets/front/stylesheets/animate.css',
-	'resources/assets/front/stylesheets/progressive-image.min.css',
-	'resources/assets/front/stylesheets/iview.css',
-	'resources/assets/front/stylesheets/iview.custom.css'
+	'resources/assets/front/stylesheets/magnific-popup.css',	
 ], 'public/css/front.css');
 
 
@@ -63,16 +53,11 @@ mix.scripts([
 	'resources/assets/front/javascript/bootstrap.min.js',
 	'resources/assets/front/javascript/jquery.easing.js',
 	'resources/assets/front/javascript/jquery-waypoints.js',
-	'resources/assets/front/javascript/imagesloaded.min.js',
-	'resources/assets/front/javascript/jquery.isotope.min.js',
-	'resources/assets/front/javascript/jquery-countTo.js',
 	'resources/assets/front/javascript/jquery.cookie.js',
-	'resources/assets/front/javascript/parallax.js',
-	'resources/assets/front/javascript/jquery.magnific-popup.min.js',
-	'resources/assets/front/javascript/progressive-image.min.js',
-	'resources/assets/front/javascript/raphael-min.js',
+	'resources/assets/front/javascript/imagesloaded.min.js',	
+	'resources/assets/front/javascript/jquery.isotope.min.js',	
+	'resources/assets/front/javascript/jquery.magnific-popup.min.js',	
 	'resources/assets/front/javascript/main.js',
-	'resources/assets/front/javascript/iview.js'
 ], 'public/js/front.js');
 
 

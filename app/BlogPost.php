@@ -84,12 +84,18 @@ class BlogPost extends Model
 
     public function hasPrevious()
     {
-        return self::where('id', '<', $this->id)->orderBy('id', 'desc')->first();
+        return self::where([
+            ['id', '<', $this->id],
+            ['publication', 1]
+        ])->orderBy('id', 'desc')->first();
     }
 
     public function hasNext()
     {
-        return self::where('id', '>', $this->id)->orderBy('id', 'asc')->first();
+        return self::where([
+            ['id', '>', $this->id],
+            ['publication', 1]            
+        ])->orderBy('id', 'asc')->first();
     }    
 
     public function getPublishedAttribute()
@@ -117,5 +123,10 @@ class BlogPost extends Model
     public function getNoRMContentAttribute()
     {
         return str_replace("--readmore--", '', $this->content);
+    }    
+
+    public function remove()
+    {
+        return $this->delete();
     }    
 }

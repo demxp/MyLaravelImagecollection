@@ -5,7 +5,7 @@
     <!-- Basic Page Needs -->
     <meta charset="utf-8">
     <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
-    <title>iDsgn - Minimal Portfolio Template for Creative People</title>
+    <title>Просто сайт, просто блог, просто галерея</title>
 
     <meta name="author" content="themesflat.com">
 
@@ -18,47 +18,6 @@
     <link href="/icon/apple-touch-icon-32-precomposed.png" rel="apple-touch-icon-precomposed">
     <link href="/icon/favicon.png" rel="shortcut icon">
 
-<style>
-    p.image-title {
-        text-align: center;
-        font-size: 18px;
-        font-style: italic;
-        font-weight: bold;
-    }
-
-    div.loginerror{
-        color: red;
-        margin: 5px auto;
-        text-align: center;
-    } 
-
-    span.post-title {
-        color: white !important;
-        margin: 5px;
-    }    
-
-    div.link-inner {
-        background-color: black;
-        border-radius: 5px;
-        color: white !important;
-        border: 1px solid tomato;
-        width: 150px;
-        text-align: center;
-    }
-
-    .entry-content blockquote {
-        color: chocolate;
-    }    
-
-    .single-post .hentry .entry-content {
-        font-size: 16px;
-        line-height: 2;
-        border: 1px solid tomato;
-        padding: 15px;
-        background: black;
-        color: white !important;
-    }    
-</style>
     <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -97,19 +56,8 @@
                                         </li>
                                         <li class="categories">
                                             <a href="{{route('categories')}}">КАТЕГОРИИ</a>
-<!--                                             <ul class="submenu"> 
-                                                <li><a href="index.html">Home 01</a></li>
-                                                <li><a href="index-02.html">Home 02</a></li>
-                                                <li><a href="index-03.html">Home 03</a></li>
-                                                <li><a href="index-04.html">Home 04</a></li>
-                                                <li><a href="index-05.html">Home 05</a></li>
-                                                <li><a href="index-06.html">Home 06</a></li>
-                                            </ul> -->
                                         </li>
-                                        <li><a href="about.html">ОБО МНЕ</a></li>                                        
-                                        <li><a href="contact.html">КОНТАКТЫ</a></li>                                        
-                                        <li><a href="/register">РЕГИСТРАЦИЯ</a></li>                                                                                
-                                        <li><a href="/login">ЛОГИН</a></li>
+                                        <li><a href="/about">ОБО МНЕ</a></li>                                        
                                     </ul><!-- /.menu -->
                                 </nav><!-- /.mainnav -->  
                             </div><!-- /.nav-wrap -->

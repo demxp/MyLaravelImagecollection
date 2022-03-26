@@ -4,18 +4,7 @@
   * Author: Themesflat
   * Author URI: http://www.themesflat.com
 */
-
 @import url("font-awesome.css");
-@import url("flexslider.css");
-@import url("owl.carousel.css");
-@import url("shortcodes.css");
-@import url("jquery.flex-images.css");
-@import url("simple-line-icons.css");
-@import url("flaticon.css");
-@import url("swiper.min.css");
-@import url("revolution-slider.css");
-@import url("magnific-popup.css");
-@import url("https://fonts.googleapis.com/css?family=Varela+Round|Montserrat:400,700");
 
 /** 
   * Reset
@@ -178,9 +167,6 @@ body {
 	background-color: #fff;		
 	color: #777;
 	line-height: 1.8;
-	background-image: url(../img/bg.png);
-    background-position: bottom right;
-    background-repeat: no-repeat;
 }
 
 a {		
@@ -254,7 +240,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1, h2, h3, h4, h5, h6 {
-	color: tomato;
+	color: #1a1a1a;
 	line-height: 1.4;
 	position: relative;
 }
@@ -341,7 +327,7 @@ select {
   	line-height: 100%;
   	outline: 0;
   	max-width: 100%;
-  	background-image: url(../img/icon/caret.png);
+  	background-image: url(../images/icon/caret.png);
   	background-position: 95% center;
   	background-repeat: no-repeat;
   	position: relative;
@@ -459,7 +445,6 @@ input[type="color"],
 	-webkit-appearance: none;
 	text-shadow: none;
 	color: inherit;
-	border-radius: 5px;
 }
 
 input[type="submit"] {
@@ -470,8 +455,6 @@ input[type="submit"] {
 	     -o-box-shadow: none;
 	        box-shadow: none;
 	color: #ffffff;
-	border: 1px solid tomato;
-    border-radius: 5px;	
 }
 
 a.link {
@@ -510,7 +493,6 @@ a.link:hover:after {
 -------------------------------------------------------------- */
 .header {
 	background-color: #fff;
-	opacity: 0.3;
 }
 
 .header .header-wrap {
@@ -1222,6 +1204,7 @@ a.link:hover:after {
 
 .blog.no-sidebar .main-content, 
 .single-post.no-sidebar .main-content {
+    width: 70%;
     margin: 0 auto;
 }
 
@@ -1298,8 +1281,6 @@ a.link:hover:after {
     display: block;
     position: relative;
     background: #1a1a1a;
-    cursor: url(../img/icon/icon-zoom.png), auto;
-    cursor: -webkit-image-set(url(../img/icon/icon-zoom.png) 1x, url(../img/icon/icon-zoom@2x.png) 2x), auto;
 }
 
 .blog .hentry .entry-cover a:hover img, 
@@ -2088,17 +2069,17 @@ blockquote {
 	background-size: cover;
 }
 
-.parallax1 { background-image: url(../img/parallax/bg-parallax1.jpg); }
+.parallax1 { background-image: url(../images/parallax/bg-parallax1.jpg); }
 
-.parallax2 { background-image: url(../img/parallax/bg-parallax2.jpg); }
+.parallax2 { background-image: url(../images/parallax/bg-parallax2.jpg); }
 
-.parallax3 { background-image: url(../img/parallax/bg-parallax3.jpg); }
+.parallax3 { background-image: url(../images/parallax/bg-parallax3.jpg); }
 
-.parallax4 { background-image: url(../img/parallax/bg-parallax4.jpg); }
+.parallax4 { background-image: url(../images/parallax/bg-parallax4.jpg); }
 
-/* Slider background
--------------------------------------------------------------- */
 
+/* Слайдер фона
+----------------------------------------------------------------*/
 body {
     background-color: #000;
     background-image: none;
@@ -2116,15 +2097,45 @@ div.slide-bg {
     z-index: -1;    
 }
 
-.project-wrap{
-	border-radius: 10px;
+.header-fix{
+	opacity: 0.4;
 }
 
-form{
+.header{
 	padding: 10px;
+    border-radius: 5px;	
 }
 
-form label{
-	color: tomato;
+/* Фикс постов */
+.blog .hentry, 
+.single-post .hentry {
+	background-color: white;
+    padding: 10px;
+    border-radius: 5px;    
 }
 
+.single-post .navigation,
+.blog .paging-navigation {
+	background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.project-single .project-single-wrap,
+.flat-row .post-navigation .nav-links {
+	background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.project-single.project-content-fullwidth{
+    margin-top: 50px;
+}
+
+.flat-row .post-navigation {
+	margin-top: 30px;
+}
+
+.header-widget .header .header-wrap .logo {
+	max-width: 145px;
+}

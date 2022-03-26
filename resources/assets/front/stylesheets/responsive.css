@@ -357,17 +357,17 @@
 	only screen and (                min-resolution: 2dppx) {
 	
 	.flat-accordion .toggle-title.active:after {
-		background: url("../img/icon/sub@2x.png");
+		background: url("../images/icon/sub@2x.png");
 		background-size: 26px 10px;
 	}
 
 	.flat-accordion .toggle-title:after {
-		background: url("../img/icon/add@2x.png");
+		background: url("../images/icon/add@2x.png");
 		background-size: 26px 26px;
 	}
 
 	.widget_search .search-form .search-submit {
-		background: url("../img/icon/search-icon@2x.png");
+		background: url("../images/icon/search-icon@2x.png");
 		background-size: 30px 30px;
 	}
 }

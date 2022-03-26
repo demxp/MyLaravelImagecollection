@@ -1505,10 +1505,9 @@ a.flat-hover {
     display: block;
     position: relative;
     overflow: hidden;
-    cursor: url(../img/icon/icon-zoom.png), auto;
-    cursor: -webkit-image-set(url(../img/icon/icon-zoom.png) 1x, url(../img/icon/icon-zoom@2x.png) 2x), auto;
-    background: white;
-    text-align: center;
+    cursor: url(../images/icon/icon-zoom.png), auto;
+    cursor: -webkit-image-set(url(../images/icon/icon-zoom.png) 1x, url(../images/icon/icon-zoom@2x.png) 2x), auto;
+    background: #1a1a1a;
 }
 
 a.flat-hover:hover {
@@ -2389,7 +2388,7 @@ table tbody tr td {
 }
 
 .widget.widget_search .search-form .search-submit {
-    background-image: url(../img/icon/arrow.svg);
+    background-image: url(../images/icon/arrow.svg);
     background-color: transparent;
     width: 30px;
     height: 20px;
@@ -2461,15 +2460,15 @@ table tbody tr td {
 }
 
 .swiper-container .swiper-wrapper .swiper-slide.slide_1 {
-    background-image: url(../img/slides/s1.jpg);
+    background-image: url(../images/slides/s1.jpg);
 }
 
 .swiper-container .swiper-wrapper .swiper-slide.slide_2 {
-    background-image: url(../img/slides/s2.jpg);
+    background-image: url(../images/slides/s2.jpg);
 }
 
 .swiper-container .swiper-wrapper .swiper-slide.slide_3 {
-    background-image: url(../img/slides/s3.jpg);
+    background-image: url(../images/slides/s3.jpg);
 }
 
 .scrollslider .swiper-container .swiper-wrapper .slide-container {

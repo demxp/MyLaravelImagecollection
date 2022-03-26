@@ -49,10 +49,6 @@ Route::get('/category/{slug}', [
 		'as' => 'showcategory', 
 		'uses' => 'HomeController@showCategory'
 ]);
-Route::get('/category/{slug}/list', [
-		'as' => 'showcategoryaslist', 
-		'uses' => 'HomeController@showCategoryAsList'
-]);
 
 Route::get('/posts', [
 	'as' => 'posts',

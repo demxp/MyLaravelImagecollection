@@ -488,7 +488,8 @@ var nicEditorConfig = bkClass.extend({
         "link": 22,
         "unlink": 23,
         "close": 24,
-        "arrow": 25
+        "arrow": 25,
+        "player": 22
     }
 
 });
@@ -2071,3 +2072,68 @@ nicEditors.registerPlugin(nicPlugin, {
     }
 
 });
+
+/* START CONFIG */
+var nicPlayerOptions = {
+    buttons: {
+        'player': {
+            name: 'Add Player',
+            type: 'nicPlayerButton'
+        }
+    }
+
+};
+/* END CONFIG */
+
+var nicPlayerButton = nicEditorAdvancedButton.extend({
+    addPane: function() {
+        this.im = this.ne.selectedInstance.selElm().parentTag('IMG');
+        this.addForm({
+            'src': {
+                type: 'text',
+                txt: 'URL',
+                'value': 'http://',
+                style: {
+                    width: '150px'
+                }
+            },
+            'elemId': {
+                type: 'text',
+                txt: 'Element ID',
+                'value': 'audio-player',
+                style: {
+                    width: '150px'
+                }
+            }
+        }, this.im);
+    },
+
+    submit: function(e) {
+        var src = this.inputs['src'].value;
+        var elemid = this.inputs['elemId'].value;
+        if (src == "" || src == "http://") {
+            alert("You must enter a Audio URL to insert");
+            return false;
+        }
+        if (elemid == "") {
+            alert("You must enter a Element ID");
+            return false;
+        }
+        this.removePane();
+
+        if (!this.im) {
+            var tmp = '[audio-player,"'+src+'","'+elemid+'"]';
+            this.ne.nicCommand("insertText", tmp);
+            //this.im = this.findElm('IMG', 'src', tmp);
+        }
+        // if (this.im) {
+        //     this.im.setAttributes({
+        //         src: this.inputs['src'].value,
+        //         alt: this.inputs['alt'].value,
+        //         align: this.inputs['align'].value
+        //     });
+        // }
+    }
+});
+
+nicEditors.registerPlugin(nicPlugin, nicPlayerOptions);

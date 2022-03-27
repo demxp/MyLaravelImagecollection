@@ -62,6 +62,7 @@ import moment from 'moment';
 
 Vue.component('LocalTime', require('./components/front/LocalTime.vue'));
 Vue.component('BgSlider', require('./components/front/BgSlider.vue'));
+Vue.component('AudioPlayer', require('./components/front/AudioPlayer.vue'));
 
 const app = new Vue({
   el: '#vueapp',

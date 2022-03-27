@@ -107,6 +107,8 @@ class BlogPost extends Model
 
     public function getShortedContentAttribute()
     {
+        $this->proceedShortcodes(true);
+
         $string = strip_tags($this->content, '--readmore--');
         $pos = strpos($string, '--readmore--');
         $string = substr($string, 0, $pos);
@@ -115,8 +117,32 @@ class BlogPost extends Model
 
     public function getNoRMContentAttribute()
     {
-        return str_replace("--readmore--", '', $this->content);
+        $this->proceedShortcodes();
+
+        $clear_patterns = [
+            '/\-\-readmore\-\-/',
+        ];
+        return preg_replace($clear_patterns, '', $this->content);
     }    
+
+    public function proceedShortcodes($clear=false)
+    {
+        $codes = [
+            '/\[audio-player,\"([\/a-z0-9.]+)\",\"([\/a-z0-9-.]+)\"\]/im'
+        ];
+
+        $replacers = '';
+
+        if(!$clear){
+            $replacers = [
+                '<audio-player url="$1" playerid="$2"> </audio-player>'
+            ];
+        }
+
+        $this->content = preg_replace($codes, $replacers, $this->content);
+
+        return $this;
+    }
 
     public function remove()
     {

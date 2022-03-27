@@ -52,7 +52,7 @@ class HomeController extends Controller
             ['slug', $slug],
             ['publication', 1]
         ])->first();
-        if($post) return view('front.single-post', ['post' => $post]);
-        return view('front.single-post-fail');
-    }    
+        if(!$post) return view('front.single-post-fail');
+        return view('front.single-post', ['post' => $post]);
+    }
 }

@@ -40,6 +40,7 @@ import moment from 'moment';
     return;
   };
   window.moment = require('moment');
+  window.moment.locale('ru');
   window.cyrb53 = function(str, seed = 0) {
       let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
       for (let i = 0, ch; i < str.length; i++) {
@@ -59,22 +60,22 @@ import moment from 'moment';
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('PictureLoader', require('./components/PictureLoader.vue'));
-Vue.component('Select2', require('./components/Select2.vue'));
-Vue.component('PLImageAvatar', require('./components/PLImageAvatar.vue'));
-Vue.component('PLImageImage', require('./components/PLImageImage.vue'));
+Vue.component('PictureLoader', require('./components/admin/PictureLoader.vue'));
+Vue.component('Select2', require('./components/admin/Select2.vue'));
+Vue.component('PLImageAvatar', require('./components/admin/PLImageAvatar.vue'));
+Vue.component('PLImageImage', require('./components/admin/PLImageImage.vue'));
 
-Vue.component('CategoriesIndex', require('./components/CategoriesIndex.vue'));
-Vue.component('CategoriesEdit', require('./components/CategoriesEdit.vue'));
-Vue.component('UsersIndex', require('./components/UsersIndex.vue'));
-Vue.component('UsersEdit', require('./components/UsersEdit.vue'));
-Vue.component('UsersRules', require('./components/UsersRules.vue'));
-Vue.component('ImagesIndex', require('./components/ImagesIndex.vue'));
-Vue.component('ImagesUpload', require('./components/ImagesEdit.vue'));
-Vue.component('PagesIndex', require('./components/PagesIndex.vue'));
-Vue.component('PagesEdit', require('./components/PagesEdit.vue'));
-Vue.component('PostsIndex', require('./components/PostsIndex.vue'));
-Vue.component('PostsEdit', require('./components/PostsEdit.vue'));
+Vue.component('CategoriesIndex', require('./components/admin/CategoriesIndex.vue'));
+Vue.component('CategoriesEdit', require('./components/admin/CategoriesEdit.vue'));
+Vue.component('UsersIndex', require('./components/admin/UsersIndex.vue'));
+Vue.component('UsersEdit', require('./components/admin/UsersEdit.vue'));
+Vue.component('UsersRules', require('./components/admin/UsersRules.vue'));
+Vue.component('ImagesIndex', require('./components/admin/ImagesIndex.vue'));
+Vue.component('ImagesUpload', require('./components/admin/ImagesEdit.vue'));
+Vue.component('PagesIndex', require('./components/admin/PagesIndex.vue'));
+Vue.component('PagesEdit', require('./components/admin/PagesEdit.vue'));
+Vue.component('PostsIndex', require('./components/admin/PostsIndex.vue'));
+Vue.component('PostsEdit', require('./components/admin/PostsEdit.vue'));
 
 const app = new Vue({
   el: '#vueapp',

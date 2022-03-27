@@ -1,8 +1,6 @@
 {
-    "/js/app.js": "/js/app.js?id=1b86a640a737374c6ce0",
-    "/css/admin.css": "/css/admin.css?id=d54fe38aeb2abb049054",
-    "/js/admin.js": "/js/admin.js?id=ba7c007a080d6e67611a",
-    "/css/front.css": "/css/front.css?id=f62e4fa922d63a8a310e",
-    "/js/front.js": "/js/front.js?id=68c1505f706fc0893d63",
-    "/js/sliderBackground.js": "/js/sliderBackground.js?id=7fd0a9186496a5fa6520"
+    "/js/appwebsite.js": "/js/appwebsite.js",
+    "/css/front.css": "/css/front.css",
+    "/js/front.js": "/js/front.js",
+    "/js/sliderBackground.js": "/js/sliderBackground.js"
 }

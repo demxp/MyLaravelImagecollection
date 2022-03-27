@@ -24,7 +24,7 @@
                                                                     <span class="entry-author-name">{{$post->author->name}}</span>
                                                                 </a>
                                                             </span>
-                                                            <span class="entry-time">{{$post->published}} МСК</span>
+                                                            <local-time utc-time="{{$post->published}}"></local-time>
                                                         </div>
                                                     </div><!-- /.entry-header-content -->
                                                 </div><!-- /.entry-header -->

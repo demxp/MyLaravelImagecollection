@@ -7,11 +7,9 @@
     <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
     <title>Просто сайт, просто блог, просто галерея</title>
 
-    <meta name="author" content="themesflat.com">
-
     <!-- Mobile Specific Metas -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" type="text/css" href="/css/front.css?sdfsd" >
+    <link rel="stylesheet" type="text/css" href="/css/front.css" >
 
     <!-- Favicon and touch icons  -->
     <link href="/icon/apple-touch-icon-48-precomposed.png" rel="apple-touch-icon-precomposed" sizes="48x48">
@@ -28,12 +26,11 @@
         <div></div>
         <div></div>
     </div>   
-    <script type="text/javascript" src="/js/sliderBackground.js?sdfsd"></script>
     <div class="loading-overlay">
     </div>
     
     <!-- Boxed -->
-    <div class="boxed">
+    <div class="boxed" id="vueapp">
         <div id="site-header" class="header-widget">
             <header id="header" class="header">
                 <div class="header-wrap">
@@ -80,6 +77,8 @@
     </div>
     
     <!-- Javascript -->
-    <script type="text/javascript" src="/js/front.js?sdgfsd"></script>
+    <script src="/js/front.js"></script>
+    <script src="/js/appwebsite.js"></script>
+    <script src="/js/sliderBackground.js"></script>
 </body>
 </html>

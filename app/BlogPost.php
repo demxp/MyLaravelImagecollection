@@ -102,15 +102,7 @@ class BlogPost extends Model
     public function getPublishedAttribute()
     {
         $pd = $this->publication_date;
-        $addNull = function($int){
-            return ((int)$int > 9) ? $int : '0'.(string)$int;
-        };
-        $months = explode(',', 'января,февраля,марта,апреля,мая,июня,июля,августа,сентября,октября,ноября,декабря');
-        if(!is_null($pd)){
-            $time = Carbon::createFromFormat('Y-m-d H:i:s', $pd)->setTimezone('Europe/Moscow')->toObject();
-            return $time->day . ' ' . $months[$time->month-1] . ' ' . $time->year . ' в ' . $addNull($time->hour) . ':' . $addNull($time->minute);
-        }
-        return '';
+        return $pd;
     }
 
     public function getShortedContentAttribute()

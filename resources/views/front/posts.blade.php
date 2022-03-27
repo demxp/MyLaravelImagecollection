@@ -21,7 +21,7 @@
                                                         <div class="entry-meta">
                                                             <span>By</span>
                                                             <span class="entry-author"><span class="entry-author-name">{{$post->author->name}}</span></span>
-                                                            <span class="entry-time">{{$post->published}} МСК</span>
+                                                            <local-time utc-time="{{$post->published}}"></local-time>
                                                         </div>
                                                     </div><!-- /.entry-header-content -->
                                                 </div><!-- /.entry-header -->

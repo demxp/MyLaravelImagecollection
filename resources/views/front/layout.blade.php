@@ -22,12 +22,13 @@
     <![endif]-->
 </head>                                 
 <body class="header-sticky page-loading">
+    <div id="vueapp">
+    <bg-slider :image-links="['/img/slide_bg/bg_kosmos1.jpg','/img/slide_bg/bg_kosmos2.jpg','/img/slide_bg/bg_kosmos3.jpg','/img/slide_bg/bg_kosmos4.jpg','/img/slide_bg/bg_kosmos5.jpg','/img/slide_bg/bg_kosmos6.jpg','/img/slide_bg/bg_kosmos7.jpg']" :change-timeout="10000"></bg-slider>        
     <div class="loading-overlay">
     </div>
     
     <!-- Boxed -->
-    <div class="boxed" id="vueapp">
-        <bg-slider :image-links="['/img/slide_bg/bg_kosmos1.jpg','/img/slide_bg/bg_kosmos2.jpg','/img/slide_bg/bg_kosmos3.jpg','/img/slide_bg/bg_kosmos4.jpg','/img/slide_bg/bg_kosmos5.jpg','/img/slide_bg/bg_kosmos6.jpg','/img/slide_bg/bg_kosmos7.jpg']" :change-timeout="10000"></bg-slider>
+    <div class="boxed">
         <div id="site-header" class="header-widget">
             <header id="header" class="header">
                 <div class="header-wrap">
@@ -72,7 +73,7 @@
         </a>   
 
     </div>
-    
+    </div>
     <!-- Javascript -->
     <script src="/js/front.js"></script>
     <script src="/js/appwebsite.js"></script>

@@ -61,6 +61,7 @@ import moment from 'moment';
  */
 
 Vue.component('LocalTime', require('./components/front/LocalTime.vue'));
+Vue.component('BgSlider', require('./components/front/BgSlider.vue'));
 
 const app = new Vue({
   el: '#vueapp',

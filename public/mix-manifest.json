@@ -1,6 +1,5 @@
 {
-    "/js/appwebsite.js": "/js/appwebsite.js",
-    "/css/front.css": "/css/front.css",
-    "/js/front.js": "/js/front.js",
-    "/js/sliderBackground.js": "/js/sliderBackground.js"
+    "/js/appadmin.js": "/js/appadmin.js",
+    "/css/admin.css": "/css/admin.css",
+    "/js/admin.js": "/js/admin.js"
 }

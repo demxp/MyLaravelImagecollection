@@ -41,4 +41,3 @@ mix.scripts([
 mix.copy('resources/assets/front/icon','public/icon');
 mix.copy('resources/assets/front/images','public/img');
 mix.copy('resources/assets/front/fonts','public/fonts');
-mix.copy('resources/assets/front/javascript/sliderBackground.js','public/js');

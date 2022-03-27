@@ -38,7 +38,17 @@
             </div>
             <div class="col-md-10">
               <div v-if="post.publication">
-                <input type="text" class="form-control" v-model="post.publication_date" placeholder="Дата публикации">
+                <date-pick 
+                v-model="post.publication_date" 
+                :pickTime="true" 
+                :format="'DD.MM.YYYY HH:mm'" 
+                :inputAttributes="{class: ['form-control', 'other-classes']}"
+                nextMonthCaption="Следующий месяц"
+                prevMonthCaption="Предыдущий месяц"
+                setTimeCaption="Выберите время"
+                :weekdays="['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС']"
+                :months="['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь']"
+                ></date-pick>
               </div>
             </div>
           </div>          
@@ -67,7 +77,11 @@
 </template>
 
 <script>
+    import DatePick from 'vue-date-pick';
+    import 'vue-date-pick/dist/vueDatePick.css';
+
     export default {
+      components: {DatePick},
       props: {
         postId: {
           type: Number,
@@ -196,5 +210,8 @@
 
   label.switcher .switcher__text:after {
     top: 2px;
-  }  
+  }
+  .vdpComponent {
+    width: 100%;
+  }
 </style>

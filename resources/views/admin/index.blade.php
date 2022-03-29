@@ -52,17 +52,23 @@
 
     <!-- Main content -->
     <section class="content">
-      <images-index v-if="checkMode('indeximages')"></images-index>
-      <images-upload v-if="checkMode('uploadimages')"></images-upload>    
-      <categories-index v-if="checkMode('indexcategories')"></categories-index>
-      <categories-edit v-if="checkMode('editcategories')"></categories-edit>
-      <users-index v-if="checkMode('indexusers')"></users-index>
-      <users-edit v-if="checkMode('editusers')" :user-id="id"></users-edit>
-      <users-rules v-if="checkMode('userrules')" :user-id="id"></users-rules>
-      <pages-index v-if="checkMode('indexpages')"></pages-index>
-      <pages-edit v-if="checkMode('editpages')" :page-id="id"></pages-edit>      
-      <posts-index v-if="checkMode('indexposts')"></posts-index>
-      <posts-edit v-if="checkMode('editposts')" :post-id="id"></posts-edit>
+      @if($page == 'images')
+        <images-index v-if="checkMode('index')"></images-index>
+        <images-upload v-if="checkMode('uploadimages')"></images-upload>    
+      @elseif($page == 'categories')
+        <categories-index v-if="checkMode('index')"></categories-index>
+        <categories-edit v-if="checkMode('editcategories')"></categories-edit>
+      @elseif($page == 'users')
+        <users-index v-if="checkMode('index')"></users-index>
+        <users-edit v-if="checkMode('editusers')" :user-id="id"></users-edit>
+        <users-rules v-if="checkMode('userrules')" :user-id="id"></users-rules>        
+      @elseif($page == 'pages')
+        <pages-index v-if="checkMode('index')"></pages-index>
+        <pages-edit v-if="checkMode('editpages')" :page-id="id"></pages-edit>      
+      @elseif($page == 'posts')
+        <posts-index v-if="checkMode('index')"></posts-index>
+        <posts-edit v-if="checkMode('editposts')" :post-id="id"></posts-edit>        
+      @endif
     </section>
     <!-- /.content -->
   </div>

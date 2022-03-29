@@ -128,7 +128,7 @@ class BlogPost extends Model
     public function proceedShortcodes($clear=false)
     {
         $codes = [
-            '/\[audio-player,\"([\/a-z0-9.]+)\",\"([\/a-z0-9-.]+)\"\]/im'
+            '/\[audio-player,\"([\/a-zA-Z0-9._-]+)\",\"([\/a-z0-9-.]+)\"\]/im'
         ];
 
         $replacers = '';

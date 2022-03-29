@@ -82,16 +82,11 @@ const app = new Vue({
   data(){
     return{
       modes:[
-        'indeximages',
         'uploadimages',
-        'indexcategories',
         'editcategories',
-        'indexusers',
         'editusers',
         'userrules',
-        'indexpages',
         'editpages',
-        'indexposts',
         'editposts'
       ],
       current: 'index',
@@ -110,6 +105,9 @@ const app = new Vue({
         }else{
           this.id = null;
         }
+      }else{
+        this.current = 'index';
+        this.id = null;        
       }
     },
     checkMode(mode){

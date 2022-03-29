@@ -41,7 +41,7 @@
           <tr v-for="post in posts" :class="{'tr__green':post.success, 'tr__red':post.danger}">
             <td><span v-text="post.id"></span></td>
             <td><span v-text="post.title"></span></td>
-            <td>/<span v-text="post.slug"></span></td>
+            <td><a :href="post.link" target="_black">/<span v-text="post.slug"></span></a></td>
             <td>
               <label class="switcher">
                   <input :checked="post.publication" type="checkbox" @change="createChange(post, 'publication', $event)"/>

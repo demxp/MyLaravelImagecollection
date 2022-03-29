@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="box-footer">
-      <a class="btn btn-default" @click="$parent.$emit('switch-mode', {'mode': 'indexpages', 'id': null})">Назад</a>
+      <a class="btn btn-default" @click="$parent.$emit('switch-mode', {'mode': 'index', 'id': null})">Назад</a>
       <button class="btn pull-right" :class="{'btn-success':mode.submit_style_success, 'btn-warning':mode.submit_style_warning}" @click="editpage" v-text="mode.submit_text"></button>
     </div>
   </div>
@@ -120,7 +120,7 @@
           
           this.ajaxfun(url, method, request_data, (req) => {
             if(req.status == 'ok'){
-              this.$parent.$emit('switch-mode', {'mode': 'indexpages', 'id': null});
+              this.$parent.$emit('switch-mode', {'mode': 'index', 'id': null});
               return true;
             }
             customAlert(req);

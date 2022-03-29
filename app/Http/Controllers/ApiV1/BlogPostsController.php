@@ -34,7 +34,11 @@ class BlogPostsController extends Controller
      */
     public function index()
     {
-        return new PostShortCollection(BlogPost::paginate(20));
+        return new PostShortCollection(
+                BlogPost::orderByRaw('(CASE WHEN publication = 0 THEN id END) DESC')
+                ->orderBy('publication_date', 'desc')
+                ->paginate(20)
+            );
     }
 
     /**

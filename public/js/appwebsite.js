@@ -33507,13 +33507,13 @@ if (false) {
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(165)
+  __webpack_require__(161)
 }
 var normalizeComponent = __webpack_require__(5)
 /* script */
 var __vue_script__ = __webpack_require__(163)
 /* template */
-var __vue_template__ = __webpack_require__(167)
+var __vue_template__ = __webpack_require__(164)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -33552,8 +33552,46 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 161 */,
-/* 162 */,
+/* 161 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(162);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(4)("55b35c74", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-62e6346c\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./AudioPlayer.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-62e6346c\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./AudioPlayer.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 162 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(3)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Play/Pause Button */\n.play-button[data-v-62e6346c]{\n    height: 45px\n}\ninput[type=\"range\"][data-v-62e6346c] {\n    margin: auto;\n    -webkit-appearance: none;\n    position: relative;\n    overflow: hidden;\n    width: 100%;\n    cursor: pointer;\n    outline: none;\n    border-radius: 0; /* iOS */\n    background: transparent;\n}\ninput[type=\"range\"][data-v-62e6346c]:focus {\n    outline: none;\n}\n[data-v-62e6346c]::-webkit-slider-runnable-track {\n    background: #fff;\n}\n/*\n * 1. Set to 0 width and remove border for a slider without a thumb\n */\n[data-v-62e6346c]::-webkit-slider-thumb {\n    -webkit-appearance: none;\n    width: 0; /* 1 */\n    height: 40px;\n    background: #fff;\n    box-shadow: -100vw 0 0 100vw dodgerblue; \n    border: none; /* 2px solid #999; */\n}\n[data-v-62e6346c]::-moz-range-track {\n    height: 40px;\n    background: #ddd;\n}\n[data-v-62e6346c]::-moz-range-thumb {\n    background: #fff;\n    height: 40px;\n    width: 0; /* 20px; */\n    border: none; /* 3px solid #999; */\n    border-radius: 0 !important;\n    box-shadow: -100vw 0 0 100vw dodgerblue; \n    box-sizing: border-box;\n}\n[data-v-62e6346c]::-ms-fill-lower {\n    background: dodgerblue;\n}\n[data-v-62e6346c]::-ms-thumb {\n    background: #fff;\n    border: 2px solid #999;\n    height: 40px;\n    width: 20px;\n    box-sizing: border-box;\n}\n[data-v-62e6346c]::-ms-ticks-after {\n    display: none;\n}\n[data-v-62e6346c]::-ms-ticks-before {\n    display: none;\n}\n[data-v-62e6346c]::-ms-track {\n    background: #ddd;\n    color: transparent;\n    height: 40px;\n    border: none;\n}\n[data-v-62e6346c]::-ms-tooltip {\n    display: none;\n}\n.w-3\\/4[data-v-62e6346c] {\n    width: 75%;\n}\n.shadow-md[data-v-62e6346c] {\n    box-shadow: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -1px rgba(0,0,0,.06);\n}\n.pt-2[data-v-62e6346c] {\n    padding-top: .5rem;\n}\n.px-2[data-v-62e6346c] {\n    padding-left: .5rem;\n    padding-right: .5rem;\n}\n.max-w-5xl[data-v-62e6346c] {\n    max-width: 64rem;\n}\n.mt-4[data-v-62e6346c] {\n    margin-top: 1rem;\n}\n.border[data-v-62e6346c] {\n    border-width: 1px;\n}\n.border-gray-300[data-v-62e6346c] {\n    --border-opacity: 1;\n    border-color: #e2e8f0;\n    border-color: rgba(226,232,240,var(--border-opacity));\n}\n.bg-gray-200[data-v-62e6346c] {\n    --bg-opacity: 1;\n    background-color: #edf2f7;\n    background-color: rgba(237,242,247,var(--bg-opacity));\n}\n*[data-v-62e6346c],[data-v-62e6346c] ::after,[data-v-62e6346c] ::before {\n    box-sizing: border-box;\n    border-width: 0;\n    border-style: solid;\n    border-color: #e2e8f0;\n}\n.w-full[data-v-62e6346c] {\n    width: 100%;\n}\n.flex-wrap[data-v-62e6346c] {\n    flex-wrap: wrap;\n}\n.inline-flex[data-v-62e6346c] {\n    display: inline-flex;\n}\n.pr-3[data-v-62e6346c] {\n    padding-right: .75rem;\n}\n.flex-initial[data-v-62e6346c] {\n    flex: 0 1 auto;\n}\n.play-button[data-v-62e6346c] {\n    height: 45px;\n}\n.text-orange-600[data-v-62e6346c] {\n    --text-opacity: 1;\n    color: #dd6b20;\n    color: rgba(221,107,32,var(--text-opacity));\n}\n.text-gray-400[data-v-62e6346c] {\n    --text-opacity: 1;\n    color: #cbd5e0;\n    color: rgba(203,213,224,var(--text-opacity));\n}\n.cursor-pointer[data-v-62e6346c] {\n    cursor: pointer;\n}\naudio[data-v-62e6346c], canvas[data-v-62e6346c], embed[data-v-62e6346c], iframe[data-v-62e6346c], img[data-v-62e6346c], object[data-v-62e6346c], svg[data-v-62e6346c], video[data-v-62e6346c] {\n    display: block;\n    vertical-align: middle;\n}\n.flex-grow[data-v-62e6346c] {\n    flex-grow: 1;\n}\n.border-blue-200[data-v-62e6346c] {\n    --border-opacity: 1;\n    border-color: #bee3f8;\n    border-color: rgba(190,227,248,var(--border-opacity));\n}\n.bg-white[data-v-62e6346c] {\n    --bg-opacity: 1;\n    background-color: #fff;\n    background-color: rgba(255,255,255,var(--bg-opacity));\n}\n.relative[data-v-62e6346c] {\n    position: relative;\n}\n.h-full[data-v-62e6346c] {\n    height: 100%;\n}\ninput[type=range][data-v-62e6346c] {\n    margin: auto;\n    -webkit-appearance: none;\n    position: relative;\n    overflow: hidden;\n    width: 100%;\n    cursor: pointer;\n    outline: none;\n    border-radius: 0;\n    background: transparent;\n}\nbutton[data-v-62e6346c], input[data-v-62e6346c], optgroup[data-v-62e6346c], select[data-v-62e6346c], textarea[data-v-62e6346c] {\n    padding: 0;\n    line-height: inherit;\n    color: inherit;\n}\n.left-0[data-v-62e6346c] {\n    left: 0;\n}\n.bottom-0[data-v-62e6346c] {\n    bottom: 0;\n}\n.right-0[data-v-62e6346c] {\n    right: 0;\n}\n.top-0[data-v-62e6346c] {\n    top: 0;\n}\n.absolute[data-v-62e6346c] {\n    position: absolute;\n}\n.pointer-events-none[data-v-62e6346c] {\n    pointer-events: none;\n}\n.justify-between[data-v-62e6346c] {\n    justify-content: space-between;\n}\n.flex[data-v-62e6346c] {\n    display: flex;\n}\n.text-sm[data-v-62e6346c] {\n    font-size: .875rem;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
 /* 163 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -33806,48 +33844,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 164 */,
-/* 165 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(166);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(4)("55b35c74", content, false, {});
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-62e6346c\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./AudioPlayer.vue", function() {
-     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-62e6346c\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./AudioPlayer.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 166 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(3)(false);
-// imports
-
-
-// module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Play/Pause Button */\n.play-button[data-v-62e6346c]{\n    height: 45px\n}\ninput[type=\"range\"][data-v-62e6346c] {\n    margin: auto;\n    -webkit-appearance: none;\n    position: relative;\n    overflow: hidden;\n    width: 100%;\n    cursor: pointer;\n    outline: none;\n    border-radius: 0; /* iOS */\n    background: transparent;\n}\ninput[type=\"range\"][data-v-62e6346c]:focus {\n    outline: none;\n}\n[data-v-62e6346c]::-webkit-slider-runnable-track {\n    background: #fff;\n}\n/*\n * 1. Set to 0 width and remove border for a slider without a thumb\n */\n[data-v-62e6346c]::-webkit-slider-thumb {\n    -webkit-appearance: none;\n    width: 0; /* 1 */\n    height: 40px;\n    background: #fff;\n    box-shadow: -100vw 0 0 100vw dodgerblue; \n    border: none; /* 2px solid #999; */\n}\n[data-v-62e6346c]::-moz-range-track {\n    height: 40px;\n    background: #ddd;\n}\n[data-v-62e6346c]::-moz-range-thumb {\n    background: #fff;\n    height: 40px;\n    width: 0; /* 20px; */\n    border: none; /* 3px solid #999; */\n    border-radius: 0 !important;\n    box-shadow: -100vw 0 0 100vw dodgerblue; \n    box-sizing: border-box;\n}\n[data-v-62e6346c]::-ms-fill-lower {\n    background: dodgerblue;\n}\n[data-v-62e6346c]::-ms-thumb {\n    background: #fff;\n    border: 2px solid #999;\n    height: 40px;\n    width: 20px;\n    box-sizing: border-box;\n}\n[data-v-62e6346c]::-ms-ticks-after {\n    display: none;\n}\n[data-v-62e6346c]::-ms-ticks-before {\n    display: none;\n}\n[data-v-62e6346c]::-ms-track {\n    background: #ddd;\n    color: transparent;\n    height: 40px;\n    border: none;\n}\n[data-v-62e6346c]::-ms-tooltip {\n    display: none;\n}\n.w-3\\/4[data-v-62e6346c] {\n    width: 75%;\n}\n.shadow-md[data-v-62e6346c] {\n    box-shadow: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -1px rgba(0,0,0,.06);\n}\n.pt-2[data-v-62e6346c] {\n    padding-top: .5rem;\n}\n.px-2[data-v-62e6346c] {\n    padding-left: .5rem;\n    padding-right: .5rem;\n}\n.max-w-5xl[data-v-62e6346c] {\n    max-width: 64rem;\n}\n.mt-4[data-v-62e6346c] {\n    margin-top: 1rem;\n}\n.border[data-v-62e6346c] {\n    border-width: 1px;\n}\n.border-gray-300[data-v-62e6346c] {\n    --border-opacity: 1;\n    border-color: #e2e8f0;\n    border-color: rgba(226,232,240,var(--border-opacity));\n}\n.bg-gray-200[data-v-62e6346c] {\n    --bg-opacity: 1;\n    background-color: #edf2f7;\n    background-color: rgba(237,242,247,var(--bg-opacity));\n}\n*[data-v-62e6346c],[data-v-62e6346c] ::after,[data-v-62e6346c] ::before {\n    box-sizing: border-box;\n    border-width: 0;\n    border-style: solid;\n    border-color: #e2e8f0;\n}\n.w-full[data-v-62e6346c] {\n    width: 100%;\n}\n.flex-wrap[data-v-62e6346c] {\n    flex-wrap: wrap;\n}\n.inline-flex[data-v-62e6346c] {\n    display: inline-flex;\n}\n.pr-3[data-v-62e6346c] {\n    padding-right: .75rem;\n}\n.flex-initial[data-v-62e6346c] {\n    flex: 0 1 auto;\n}\n.play-button[data-v-62e6346c] {\n    height: 45px;\n}\n.text-orange-600[data-v-62e6346c] {\n    --text-opacity: 1;\n    color: #dd6b20;\n    color: rgba(221,107,32,var(--text-opacity));\n}\n.text-gray-400[data-v-62e6346c] {\n    --text-opacity: 1;\n    color: #cbd5e0;\n    color: rgba(203,213,224,var(--text-opacity));\n}\n.cursor-pointer[data-v-62e6346c] {\n    cursor: pointer;\n}\naudio[data-v-62e6346c], canvas[data-v-62e6346c], embed[data-v-62e6346c], iframe[data-v-62e6346c], img[data-v-62e6346c], object[data-v-62e6346c], svg[data-v-62e6346c], video[data-v-62e6346c] {\n    display: block;\n    vertical-align: middle;\n}\n.flex-grow[data-v-62e6346c] {\n    flex-grow: 1;\n}\n.border-blue-200[data-v-62e6346c] {\n    --border-opacity: 1;\n    border-color: #bee3f8;\n    border-color: rgba(190,227,248,var(--border-opacity));\n}\n.bg-white[data-v-62e6346c] {\n    --bg-opacity: 1;\n    background-color: #fff;\n    background-color: rgba(255,255,255,var(--bg-opacity));\n}\n.relative[data-v-62e6346c] {\n    position: relative;\n}\n.h-full[data-v-62e6346c] {\n    height: 100%;\n}\ninput[type=range][data-v-62e6346c] {\n    margin: auto;\n    -webkit-appearance: none;\n    position: relative;\n    overflow: hidden;\n    width: 100%;\n    cursor: pointer;\n    outline: none;\n    border-radius: 0;\n    background: transparent;\n}\nbutton[data-v-62e6346c], input[data-v-62e6346c], optgroup[data-v-62e6346c], select[data-v-62e6346c], textarea[data-v-62e6346c] {\n    padding: 0;\n    line-height: inherit;\n    color: inherit;\n}\n.left-0[data-v-62e6346c] {\n    left: 0;\n}\n.bottom-0[data-v-62e6346c] {\n    bottom: 0;\n}\n.right-0[data-v-62e6346c] {\n    right: 0;\n}\n.top-0[data-v-62e6346c] {\n    top: 0;\n}\n.absolute[data-v-62e6346c] {\n    position: absolute;\n}\n.pointer-events-none[data-v-62e6346c] {\n    pointer-events: none;\n}\n.justify-between[data-v-62e6346c] {\n    justify-content: space-between;\n}\n.flex[data-v-62e6346c] {\n    display: flex;\n}\n.text-sm[data-v-62e6346c] {\n    font-size: .875rem;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 167 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {

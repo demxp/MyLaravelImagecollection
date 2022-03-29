@@ -18,7 +18,7 @@
           </div>
         </div>
         <div class="box-footer">
-          <a class="btn btn-default" @click="$parent.$emit('switch-mode', {'mode': 'indexusers', 'id': null})">Назад</a>
+          <a class="btn btn-default" @click="$parent.$emit('switch-mode', {'mode': 'index', 'id': null})">Назад</a>
           <button class="btn btn-success pull-right" v-if="editable" @click="save">Изменить</button>
         </div>
       </div>
@@ -99,7 +99,7 @@
           let url = '/api/v1/users/' + this.userId + '/rules';      
           this.ajaxfun(url, 'put', ret, (req) => {
             if(req.status == 'ok'){
-              this.$parent.$emit('switch-mode', {'mode': 'indexusers', 'id': null});
+              this.$parent.$emit('switch-mode', {'mode': 'index', 'id': null});
               return true;
             }
             customAlert(req);

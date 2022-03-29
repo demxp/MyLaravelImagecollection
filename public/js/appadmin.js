@@ -21407,7 +21407,7 @@ var app = new Vue({
   el: '#vueapp',
   data: function data() {
     return {
-      modes: ['indeximages', 'uploadimages', 'indexcategories', 'editcategories', 'indexusers', 'editusers', 'userrules', 'indexpages', 'editpages', 'indexposts', 'editposts'],
+      modes: ['uploadimages', 'editcategories', 'editusers', 'userrules', 'editpages', 'editposts'],
       current: 'index',
       id: null
     };
@@ -21427,6 +21427,9 @@ var app = new Vue({
         } else {
           this.id = null;
         }
+      } else {
+        this.current = 'index';
+        this.id = null;
       }
     },
     checkMode: function checkMode(mode) {
@@ -34428,7 +34431,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         hidden: this.cat.hidden ? 1 : 0
       }, function (req) {
         if (req.status == 'ok') {
-          _this.$parent.$emit('switch-mode', { 'mode': 'indexcategories', 'id': null });
+          _this.$parent.$emit('switch-mode', { 'mode': 'index', 'id': null });
           return true;
         }
         alert("Упс... Какая-то ошибка...");
@@ -34538,10 +34541,7 @@ var render = function() {
           staticClass: "btn btn-default",
           on: {
             click: function($event) {
-              _vm.$parent.$emit("switch-mode", {
-                mode: "indexcategories",
-                id: null
-              })
+              _vm.$parent.$emit("switch-mode", { mode: "index", id: null })
             }
           }
         },
@@ -35131,7 +35131,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
       this.ajaxfun(url, method, request_data, function (req) {
         if (req.status == 'ok') {
-          _this2.$parent.$emit('switch-mode', { 'mode': 'indexusers', 'id': null });
+          _this2.$parent.$emit('switch-mode', { 'mode': 'index', 'id': null });
           return true;
         }
         customAlert(req);
@@ -35277,7 +35277,7 @@ var render = function() {
           staticClass: "btn btn-default",
           on: {
             click: function($event) {
-              _vm.$parent.$emit("switch-mode", { mode: "indexusers", id: null })
+              _vm.$parent.$emit("switch-mode", { mode: "index", id: null })
             }
           }
         },
@@ -35512,7 +35512,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var url = '/api/v1/users/' + this.userId + '/rules';
       this.ajaxfun(url, 'put', ret, function (req) {
         if (req.status == 'ok') {
-          _this2.$parent.$emit('switch-mode', { 'mode': 'indexusers', 'id': null });
+          _this2.$parent.$emit('switch-mode', { 'mode': 'index', 'id': null });
           return true;
         }
         customAlert(req);
@@ -35594,10 +35594,7 @@ var render = function() {
             staticClass: "btn btn-default",
             on: {
               click: function($event) {
-                _vm.$parent.$emit("switch-mode", {
-                  mode: "indexusers",
-                  id: null
-                })
+                _vm.$parent.$emit("switch-mode", { mode: "index", id: null })
               }
             }
           },
@@ -36678,7 +36675,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       var url = '/api/v1/images';
       this.ajaxfun(url, 'post', toServer, function (req) {
         if (req.status == 'ok') {
-          _this2.$parent.$emit('switch-mode', { 'mode': 'indeximages', 'id': null });
+          _this2.$parent.$emit('switch-mode', { 'mode': 'index', 'id': null });
           return true;
         }
         alert("Упс... Какая-то ошибка...");
@@ -36820,10 +36817,7 @@ var render = function() {
           staticClass: "btn btn-default",
           on: {
             click: function($event) {
-              _vm.$parent.$emit("switch-mode", {
-                mode: "indeximages",
-                id: null
-              })
+              _vm.$parent.$emit("switch-mode", { mode: "index", id: null })
             }
           }
         },
@@ -37312,7 +37306,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
       this.ajaxfun(url, method, request_data, function (req) {
         if (req.status == 'ok') {
-          _this2.$parent.$emit('switch-mode', { 'mode': 'indexpages', 'id': null });
+          _this2.$parent.$emit('switch-mode', { 'mode': 'index', 'id': null });
           return true;
         }
         customAlert(req);
@@ -37419,7 +37413,7 @@ var render = function() {
           staticClass: "btn btn-default",
           on: {
             click: function($event) {
-              _vm.$parent.$emit("switch-mode", { mode: "indexpages", id: null })
+              _vm.$parent.$emit("switch-mode", { mode: "index", id: null })
             }
           }
         },
@@ -37887,8 +37881,10 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("td", [
-                  _vm._v("/"),
-                  _c("span", { domProps: { textContent: _vm._s(post.slug) } })
+                  _c("a", { attrs: { href: post.link, target: "_black" } }, [
+                    _vm._v("/"),
+                    _c("span", { domProps: { textContent: _vm._s(post.slug) } })
+                  ])
                 ]),
                 _vm._v(" "),
                 _c("td", [
@@ -38406,7 +38402,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
       this.ajaxfun(url, method, request_data, function (req) {
         if (req.status == 'ok') {
-          _this2.$parent.$emit('switch-mode', { 'mode': 'indexposts', 'id': null });
+          _this2.$parent.$emit('switch-mode', { 'mode': 'index', 'id': null });
           return true;
         }
         customAlert(req);
@@ -39235,7 +39231,7 @@ var render = function() {
           staticClass: "btn btn-default",
           on: {
             click: function($event) {
-              _vm.$parent.$emit("switch-mode", { mode: "indexposts", id: null })
+              _vm.$parent.$emit("switch-mode", { mode: "index", id: null })
             }
           }
         },

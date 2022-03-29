@@ -11,10 +11,8 @@
 |
 */
 
-Route::get('/', [
-	'as' => 'home',
- 	'uses' => 'HomeController@index'
-]);
+Route::get('/', 'HomeController@index')->name('home');
+Route::get('/admin/{part?}', 'Admin\DashboardController@getpage')->middleware('admin')->name('adminpage');
 
 Route::group(['prefix' => 'api/v1', 'namespace' => 'ApiV1', 'middleware' => 'admin'], function(){
 	Route::resource('/images', 'ImagesController');	
@@ -26,40 +24,19 @@ Route::group(['prefix' => 'api/v1', 'namespace' => 'ApiV1', 'middleware' => 'adm
 	Route::put('/users/{id}/rules', 'RulesController@setRules');
 });
 
-Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admin'], function(){
-	Route::get('/', 'DashboardController@index'); 
-});
-
 Route::post('/upload/gettoken', 'UsersController@getUploadToken');
 Route::post('/upload', 'ImageController@saveUploadImage');
 Route::get('/upload/getimage/{filename}/{thumbnail?}', 'ImageController@getUploadedImage');
 
-Route::get('/register', 'AuthController@registerForm');
-Route::post('/register', 'AuthController@register');
+// Route::get('/register', 'AuthController@registerForm');
+// Route::post('/register', 'AuthController@register');
 
 Route::get('/login', 'AuthController@loginForm');
 Route::post('/login', 'AuthController@login');
 Route::get('/logout', 'AuthController@logout');
 
-Route::get('/category', [
-	'as' => 'categories',
- 	'uses' => 'HomeController@allCategories'
-]);
-Route::get('/category/{slug}', [
-		'as' => 'showcategory', 
-		'uses' => 'HomeController@showCategory'
-]);
-
-Route::get('/posts', [
-	'as' => 'posts',
- 	'uses' => 'HomeController@allPosts'
-]);
-Route::get('/post/{slug}', [
-		'as' => 'showpost', 
-		'uses' => 'HomeController@showPost'
-]);
-
-Route::get('/{url}', [
-		'as' => 'staticpage', 
-		'uses' => 'HomeController@getStaticPage'
-]);
+Route::get('/category', 'HomeController@allCategories')->name('categories');
+Route::get('/category/{slug}', 'HomeController@showCategory')->name('showcategory');
+Route::get('/posts', 'HomeController@allPosts')->name('posts');
+Route::get('/post/{slug}', 'HomeController@showPost')->name('showpost');
+Route::get('/{url}', 'HomeController@getStaticPage')->name('staticpage');

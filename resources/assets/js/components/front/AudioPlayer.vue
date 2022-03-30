@@ -120,6 +120,7 @@ export default {
             if (audio) {
                 this.audioDuration = Math.round(audio.duration);
                 audio.volume = '0.85';
+                audio.preload = 'auto';
             }
         },
         //Convert audio current time from seconds to min:sec display

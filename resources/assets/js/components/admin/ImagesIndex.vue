@@ -45,7 +45,10 @@
         <tbody>
           <tr v-for="img in imgs" :class="{'tr__green':img.success, 'tr__red':img.danger}">
             <td>{{ img.id }}</td>
-            <td><span contenteditable="true" @keydown.13.prevent="setTitle(img, $event)" v-text="img.title"></span></td>
+            <td>
+              <span contenteditable="true" @keydown.13.prevent="setTitle(img, $event)" v-text="img.title"></span><br /><br />
+              <input type="text" class="imglink bg-info" readonly="readonly" :value="img.fullimage" @click="$event.target.select()">
+            </td>
             <td>
               <label class="switcher">
                   <input :checked="img.status" type="checkbox" @change="setStatus(img, $event)"/>
@@ -60,7 +63,9 @@
                 </div>
             </td>
             <td><a :href="img.getlink" target="_blank"><img :src="img.thumbnail" class="img-responsive"></a></td>
-            <td><button class="btn btn-xs btn-danger" @click="deleteImage(img)">Удалить</button></td>   
+            <td>
+              <button class="btn btn-xs btn-danger" @click="deleteImage(img)">Удалить</button>
+            </td>   
           </tr>                 
         </tbody>
       </table>
@@ -279,6 +284,11 @@
               roll(obj);
             }
           };        
+        },
+        getLink(img){
+          customAlert({
+            text: img.fullimage
+          });
         }
       }  
     }
@@ -308,5 +318,9 @@
 
 .setcattitle.selected span{
     display: inline-block;
-}  
+}
+
+.imglink{
+  width: 100%;
+}
 </style>

@@ -33,6 +33,10 @@ import moment from 'moment';
   window.customAlert = (resp) => {
     if (!!errors[resp.message]) {
       errors[resp.message].parseFunc(resp);
+    } else if (!!resp.text) {
+      al(resp.text);
+    } else if (!!resp.message) {
+      al(resp.message);      
     } else {
       al("Неизвестная ошибка!");
     }
@@ -76,6 +80,7 @@ Vue.component('PagesIndex', require('./components/admin/PagesIndex.vue'));
 Vue.component('PagesEdit', require('./components/admin/PagesEdit.vue'));
 Vue.component('PostsIndex', require('./components/admin/PostsIndex.vue'));
 Vue.component('PostsEdit', require('./components/admin/PostsEdit.vue'));
+Vue.component('AudiofilesIndex', require('./components/admin/AudiofilesIndex.vue'));
 
 const app = new Vue({
   el: '#vueapp',

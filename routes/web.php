@@ -19,7 +19,8 @@ Route::group(['prefix' => 'api/v1', 'namespace' => 'ApiV1', 'middleware' => 'adm
 	Route::resource('/categories', 'CategoriesController');
 	Route::resource('/users', 'UsersController');
 	Route::resource('/staticpages', 'StaticPagesController');	
-	Route::resource('/posts', 'BlogPostsController');	
+	Route::resource('/posts', 'BlogPostsController');
+	Route::resource('/audiofiles', 'AudiofilesController');
 	Route::get('/users/{id}/rules', 'RulesController@getRules');
 	Route::put('/users/{id}/rules', 'RulesController@setRules');
 });

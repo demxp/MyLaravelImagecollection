@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\ApiV1;
 
-use App\BlogPost;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\PostShortCollection;
+use App\Music;
 use Validator;
+use Auth;
 
-class BlogPostsController extends Controller
+class AudiofilesController extends Controller
 {
     /**
      * Проверка прав доступа.
@@ -16,7 +16,7 @@ class BlogPostsController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            if(\App\UserRules::checkAccess($request, new BlogPost)){
+            if(\App\UserRules::checkAccess($request, new Music)){
                 return $next($request);
             }
 
@@ -34,11 +34,7 @@ class BlogPostsController extends Controller
      */
     public function index()
     {
-        return new PostShortCollection(
-                BlogPost::orderByRaw('(CASE WHEN publication = 0 THEN id END) DESC')
-                ->orderBy('publication_date', 'desc')
-                ->paginate(20)
-            );
+        return Music::all()->toArray();
     }
 
     /**
@@ -50,8 +46,8 @@ class BlogPostsController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => 'sometimes|required|min:3|max:150',
-            'content' => 'sometimes|required|min:3'
+            'file'  => 'mimes:mp3',
+            'title' => 'required|min:3'
         ]);
 
         if($validator->fails()) {
@@ -60,27 +56,9 @@ class BlogPostsController extends Controller
                 "message" => "ValidateError",
                 "errors" => $validator->messages()->all()
             ];
-        }           
+        }
 
-        $post = BlogPost::add($request->all());
-
-        if($post) return ["status" => "ok"];
-        return [
-            "status" => "error",
-            "message" => "SaveError",
-            "errors" => $post->errors()
-        ];        
-    }
-
-    /**
-     * Get BlogPost data.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        return BlogPost::find($id)->toArray();
+        return Music::add($request);
     }
 
     /**
@@ -92,12 +70,19 @@ class BlogPostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $BlogPost = BlogPost::find($id);
+        $audiofile = Music::find($id);
+
+        if(!$audiofile){
+            return [
+                "status" => "error",
+                "message" => "File not found"
+            ];            
+        }
+
         $validator = Validator::make($request->all(), [
             'title' => 'sometimes|required|min:3|max:150',
-            'content' => 'sometimes|required|min:3',
-            'publication' => 'sometimes|required|numeric',
-            'commenting' => 'sometimes|required|numeric'
+            'artist' => 'sometimes|required',
+            'album' => 'sometimes|required'
         ]);
 
         if($validator->fails()) {
@@ -108,11 +93,7 @@ class BlogPostsController extends Controller
             ];
         }           
 
-        $BlogPost->edit($request->all());
-
-        return [
-            "status" => "ok"
-        ];
+        return $audiofile->edit($request->all());
     }
 
     /**
@@ -123,9 +104,6 @@ class BlogPostsController extends Controller
      */
     public function destroy($id)
     {
-        BlogPost::find($id)->remove();
-        return [
-            "status" => "ok"
-        ];
+        return Music::find($id)->remove();
     }
 }

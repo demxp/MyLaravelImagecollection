@@ -37,6 +37,11 @@
             <th>Действия</th>
           </tr>
         </thead>
+        <tbody v-if="posts.length == 0">
+          <tr>
+            <td colspan=6><center><h3>НЕТ ДАННЫХ</h3></center></td>
+          </tr>
+        </tbody>        
         <tbody>
           <tr v-for="post in posts" :class="{'tr__green':post.success, 'tr__red':post.danger}">
             <td><span v-text="post.id"></span></td>

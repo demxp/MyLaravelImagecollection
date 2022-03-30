@@ -35,7 +35,16 @@
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
-      @include('admin._sidebar')
+      <!-- sidebar menu: : style can be found in sidebar.less -->
+      <ul class="sidebar-menu">
+        <li class="header">ГЛАВНОЕ МЕНЮ</li>
+        <li><a href="{{route('adminpage', 'users')}}"><i class="fa fa-users"></i> <span>Пользователи</span></a></li>
+        <li><a href="{{route('adminpage', 'categories')}}"><i class="fa fa-list-ul"></i> <span>Категории</span></a></li>
+        <li><a href="{{route('adminpage', 'images')}}"><i class="fa fa-sticky-note-o"></i> <span>Картинки</span></a></li>
+        <li><a href="{{route('adminpage', 'posts')}}"><i class="fa fa-book"></i> <span>Посты блога</span></a></li>
+        <li><a href="{{route('adminpage', 'pages')}}"><i class="fa fa-list-ul"></i> <span>Страницы</span></a></li>        
+        <li><a href="{{route('adminpage', 'audiofiles')}}"><i class="fa fa-music"></i> <span>Аудиофайлы</span></a></li>        
+      </ul>
     </section>
     <!-- /.sidebar -->
   </aside>
@@ -68,6 +77,8 @@
       @elseif($page == 'posts')
         <posts-index v-if="checkMode('index')"></posts-index>
         <posts-edit v-if="checkMode('editposts')" :post-id="id"></posts-edit>        
+      @elseif($page == 'audiofiles')
+        <audiofiles-index v-if="checkMode('index')"></audiofiles-index>
       @endif
     </section>
     <!-- /.content -->

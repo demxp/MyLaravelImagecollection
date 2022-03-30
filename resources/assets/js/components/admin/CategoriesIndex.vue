@@ -15,7 +15,7 @@
         </thead>
         <tbody v-if="cats.length == 0">
           <tr>
-            <td colspan=3><center><h3>НЕТ ДАННЫХ</h3></center></td>
+            <td colspan=4><center><h3>НЕТ ДАННЫХ</h3></center></td>
           </tr>
         </tbody>
         <tbody>

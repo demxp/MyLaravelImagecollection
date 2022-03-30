@@ -21356,6 +21356,10 @@ window.Vue = __webpack_require__(143);
   window.customAlert = function (resp) {
     if (!!errors[resp.message]) {
       errors[resp.message].parseFunc(resp);
+    } else if (!!resp.text) {
+      al(resp.text);
+    } else if (!!resp.message) {
+      al(resp.message);
     } else {
       al("Неизвестная ошибка!");
     }
@@ -21402,6 +21406,7 @@ Vue.component('PagesIndex', __webpack_require__(194));
 Vue.component('PagesEdit', __webpack_require__(197));
 Vue.component('PostsIndex', __webpack_require__(200));
 Vue.component('PostsEdit', __webpack_require__(203));
+Vue.component('AudiofilesIndex', __webpack_require__(213));
 
 var app = new Vue({
   el: '#vueapp',
@@ -34199,7 +34204,7 @@ var render = function() {
               _c("tr", [
                 _c(
                   "td",
-                  { attrs: { colspan: "3" } },
+                  { attrs: { colspan: "4" } },
                   [_c("center", [_c("h3", [_vm._v("НЕТ ДАННЫХ")])])],
                   1
                 )
@@ -35722,7 +35727,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n.setcattitle[data-v-99a2275a] {\n    text-align: center;\n}\n.setcattitle span[data-v-99a2275a] {\n    border: 1px solid #0acc29;\n    color: #2c68f5;\n    padding: 3px;\n    border-radius: 3px;\n    margin: 5px auto;\n    display: none;\n}\n.setcattitle button[data-v-99a2275a] {\n    margin: 5px auto;\n}\n.setcattitle.selected button[data-v-99a2275a]{\n    display: none;\n}\n.setcattitle.selected span[data-v-99a2275a]{\n    display: inline-block;\n}  \n", ""]);
+exports.push([module.i, "\n.setcattitle[data-v-99a2275a] {\n    text-align: center;\n}\n.setcattitle span[data-v-99a2275a] {\n    border: 1px solid #0acc29;\n    color: #2c68f5;\n    padding: 3px;\n    border-radius: 3px;\n    margin: 5px auto;\n    display: none;\n}\n.setcattitle button[data-v-99a2275a] {\n    margin: 5px auto;\n}\n.setcattitle.selected button[data-v-99a2275a]{\n    display: none;\n}\n.setcattitle.selected span[data-v-99a2275a]{\n    display: inline-block;\n}\n.imglink[data-v-99a2275a]{\n  width: 100%;\n}\n", ""]);
 
 // exports
 
@@ -35733,6 +35738,11 @@ exports.push([module.i, "\n.setcattitle[data-v-99a2275a] {\n    text-align: cent
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
 //
 //
 //
@@ -36046,6 +36056,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           roll(obj);
         }
       };
+    },
+    getLink: function getLink(img) {
+      customAlert({
+        text: img.fullimage
+      });
     }
   }
 });
@@ -36227,6 +36242,19 @@ var render = function() {
                         }
                         $event.preventDefault()
                         _vm.setTitle(img, $event)
+                      }
+                    }
+                  }),
+                  _c("br"),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("input", {
+                    staticClass: "imglink bg-info",
+                    attrs: { type: "text", readonly: "readonly" },
+                    domProps: { value: img.fullimage },
+                    on: {
+                      click: function($event) {
+                        $event.target.select()
                       }
                     }
                   })
@@ -36938,6 +36966,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -37040,6 +37073,19 @@ var render = function() {
       _vm._v(" "),
       _c("table", { staticClass: "table table-bordered table-striped" }, [
         _vm._m(0),
+        _vm._v(" "),
+        _vm.pages.length == 0
+          ? _c("tbody", [
+              _c("tr", [
+                _c(
+                  "td",
+                  { attrs: { colspan: "4" } },
+                  [_c("center", [_c("h3", [_vm._v("НЕТ ДАННЫХ")])])],
+                  1
+                )
+              ])
+            ])
+          : _vm._e(),
         _vm._v(" "),
         _c(
           "tbody",
@@ -37584,6 +37630,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -37864,6 +37915,19 @@ var render = function() {
       _vm._v(" "),
       _c("table", { staticClass: "table table-bordered table-striped" }, [
         _vm._m(0),
+        _vm._v(" "),
+        _vm.posts.length == 0
+          ? _c("tbody", [
+              _c("tr", [
+                _c(
+                  "td",
+                  { attrs: { colspan: "6" } },
+                  [_c("center", [_c("h3", [_vm._v("НЕТ ДАННЫХ")])])],
+                  1
+                )
+              ])
+            ])
+          : _vm._e(),
         _vm._v(" "),
         _c(
           "tbody",
@@ -39257,6 +39321,639 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-df4c8b54", module.exports)
+  }
+}
+
+/***/ }),
+/* 213 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(214)
+}
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(216)
+/* template */
+var __vue_template__ = __webpack_require__(217)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-f7466fec"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/admin/AudiofilesIndex.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-f7466fec", Component.options)
+  } else {
+    hotAPI.reload("data-v-f7466fec", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 214 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(215);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(3)("5074a2d2", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-f7466fec\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./AudiofilesIndex.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-f7466fec\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./AudiofilesIndex.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 215 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.uploadbtn[data-v-f7466fec] {\n  margin: 10px auto;\n  display: block;\n}\n.imglink[data-v-f7466fec]{\n  width: 100%;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 216 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      afiles: [],
+      upload: {
+        file: null,
+        filename: '',
+        title: '',
+        artist: '',
+        album: '',
+        state: false
+      }
+    };
+  },
+  mounted: function mounted() {
+    this.ajaxfun('/api/v1/audiofiles', 'get', null, this.fillTable);
+  },
+
+  watch: {
+    'upload.state': function uploadState(value) {
+      if (!value) {
+        this.upload.file = null;
+        this.upload.filename = this.upload.title = this.upload.artist = this.upload.album = '';
+      }
+    }
+  },
+  methods: {
+    ajaxfun: function ajaxfun(url, method) {
+      var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+      var callback = arguments[3];
+
+      fetch(url, {
+        method: method,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
+        },
+        body: body !== null ? JSON.stringify(body) : null
+      }).then(function (response) {
+        return response.json();
+      }).then(function (req) {
+        return callback(req);
+      }).catch(function (e) {
+        console.log(e);
+      });
+    },
+    fillTable: function fillTable(data) {
+      var _this2 = this;
+
+      data.map(function (item, i) {
+        item.success = false;
+        item.danger = false;
+        if (!!_this2.afiles[i]) {
+          Object.keys(item).map(function (param) {
+            return _this2.afiles[i][param] = item[param];
+          });
+        } else {
+          _this2.afiles.push(item);
+        }
+      });
+      if (data.length < this.afiles.length) {
+        this.afiles.splice(data.length, this.afiles.length - data.length);
+      }
+    },
+    createChange: function createChange(model, field, event, valid) {
+      var _this3 = this;
+
+      this.roll = function (model) {
+        var oldState = model[field];
+        var _this = _this3;
+        return function (obj) {
+          obj[field] = oldState;
+          _this.roll = function () {};
+        };
+      }(model);
+      if (valid == 'boolean') {
+        model[field] = event.target.checked ? 1 : 0;
+      }
+      if (valid == 'text') {
+        var text = event.target.innerText;
+        if (text.length < 3) {
+          alert("Нужно заполнить поле! Минимум 3 символа.");
+          return false;
+        }
+        model[field] = text;
+      }
+      var saveable = {};
+      saveable.id = model.id;
+      saveable[field] = model[field];
+      this.saveModel(saveable, this.createCallback(model));
+    },
+    saveModel: function saveModel(data, callback) {
+      var url = '/api/v1/audiofiles/' + data.id;
+      this.ajaxfun(url, 'put', data, callback);
+    },
+    createCallback: function createCallback(obj) {
+      var roll = this.roll;
+      return function (req) {
+        if (req.status == 'ok') {
+          obj.success = true;
+          setTimeout(function () {
+            obj.success = false;
+          }, 1000);
+        } else {
+          customAlert(req);
+          obj.danger = true;
+          setTimeout(function () {
+            obj.danger = false;
+          }, 1000);
+          roll(obj);
+        }
+      };
+    },
+    selectFile: function selectFile() {
+      var _this4 = this;
+
+      if (this.upload.file !== null) return false;
+      return new Promise(function (resolve, reject) {
+        var fileselect = document.createElement('input');
+        fileselect.type = 'file';
+        fileselect.onchange = function () {
+          var selected = this.files[0];
+          if (!selected.type.match('audio/mp3')) {
+            return reject({
+              text: "Можно загружать только МР3 файлы!",
+              errorcode: "Upload no mp3 file"
+            });
+          }
+          return resolve(selected);
+        };
+        var event = new MouseEvent("click");
+        fileselect.dispatchEvent(event);
+      }).then(function (sel) {
+        _this4.upload.file = sel;
+        _this4.upload.filename = sel.name;
+      }).catch(function (error) {
+        customAlert(error);
+        console.log(error);
+      });
+    },
+    uploadFile: function uploadFile() {
+      var _this5 = this;
+
+      if (this.upload.file === null) {
+        alert('Файл не выбран');
+        return false;
+      }
+      if (this.upload.title == '') {
+        this.upload.title = this.upload.filename;
+      }
+
+      var fd = new FormData();
+      for (var i in this.upload) {
+        fd.append(i, this.upload[i]);
+      }
+
+      fetch('/api/v1/audiofiles', {
+        method: 'POST',
+        headers: { 'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content },
+        body: fd
+      }).then(function (res) {
+        return res.json();
+      }).then(function (json) {
+        if (json.status != 'ok') {
+          throw json;
+        }
+        _this5.afiles.push(json.data);
+        _this5.upload.state = false;
+      }).catch(function (err) {
+        customAlert(err);
+      });
+    },
+    deleteAfile: function deleteAfile(afile) {
+      var _this6 = this;
+
+      if (!confirm("Вы уверены?")) {
+        return false;
+      }
+      var url = '/api/v1/audiofiles/' + afile.id;
+      this.ajaxfun(url, 'delete', {
+        id: afile.id
+      }, function (req) {
+        if (req.status == 'ok') {
+          _this6.ajaxfun('/api/v1/audiofiles', 'get', null, _this6.fillTable);
+        } else {
+          customAlert(req);
+        }
+      });
+    }
+  }
+});
+
+/***/ }),
+/* 217 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "box" }, [
+    _c("div", { staticClass: "box-body" }, [
+      _c("div", { staticClass: "form-group" }, [
+        _c(
+          "a",
+          {
+            staticClass: "btn btn-success",
+            on: {
+              click: function($event) {
+                _vm.upload.state = !_vm.upload.state
+              }
+            }
+          },
+          [_vm._v("Добавить")]
+        )
+      ]),
+      _vm._v(" "),
+      _vm.upload.state
+        ? _c("div", [
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "exampleInputEmail1" } }, [
+                _vm._v("Имя файла")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                staticClass: "form-control",
+                attrs: { type: "text", readonly: "readonly" },
+                domProps: { value: _vm.upload.filename },
+                on: {
+                  click: function($event) {
+                    _vm.selectFile()
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "exampleInputEmail1" } }, [
+                _vm._v("Название")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.upload.title,
+                    expression: "upload.title"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text" },
+                domProps: { value: _vm.upload.title },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.upload, "title", $event.target.value)
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "exampleInputEmail1" } }, [
+                _vm._v("Исполнитель")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.upload.artist,
+                    expression: "upload.artist"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text" },
+                domProps: { value: _vm.upload.artist },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.upload, "artist", $event.target.value)
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "exampleInputEmail1" } }, [
+                _vm._v("Альбом")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.upload.album,
+                    expression: "upload.album"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text" },
+                domProps: { value: _vm.upload.album },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.upload, "album", $event.target.value)
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "btn btn-success btn-xs uploadbtn",
+                  on: {
+                    click: function($event) {
+                      _vm.uploadFile()
+                    }
+                  }
+                },
+                [_vm._v("Загрузить")]
+              )
+            ])
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _c("table", { staticClass: "table table-bordered table-striped" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _vm.afiles.length == 0
+          ? _c("tbody", [
+              _c("tr", [
+                _c(
+                  "td",
+                  { attrs: { colspan: "5" } },
+                  [_c("center", [_c("h3", [_vm._v("НЕТ ДАННЫХ")])])],
+                  1
+                )
+              ])
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          _vm._l(_vm.afiles, function(afile) {
+            return _c(
+              "tr",
+              { class: { tr__green: afile.success, tr__red: afile.danger } },
+              [
+                _c("td", [_vm._v(_vm._s(afile.id))]),
+                _vm._v(" "),
+                _c("td", [
+                  _c("span", {
+                    attrs: { contenteditable: "true" },
+                    domProps: { textContent: _vm._s(afile.title) },
+                    on: {
+                      keydown: function($event) {
+                        if (!("button" in $event) && $event.keyCode !== 13) {
+                          return null
+                        }
+                        $event.preventDefault()
+                        _vm.createChange(afile, "title", $event, "text")
+                      }
+                    }
+                  }),
+                  _c("br"),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("input", {
+                    staticClass: "imglink bg-info",
+                    attrs: { type: "text", readonly: "readonly" },
+                    domProps: { value: afile.filelink },
+                    on: {
+                      click: function($event) {
+                        $event.target.select()
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _c("span", {
+                    attrs: { contenteditable: "true" },
+                    domProps: { textContent: _vm._s(afile.artist) },
+                    on: {
+                      keydown: function($event) {
+                        if (!("button" in $event) && $event.keyCode !== 13) {
+                          return null
+                        }
+                        $event.preventDefault()
+                        _vm.createChange(afile, "artist", $event, "text")
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _c("span", {
+                    attrs: { contenteditable: "true" },
+                    domProps: { textContent: _vm._s(afile.album) },
+                    on: {
+                      keydown: function($event) {
+                        if (!("button" in $event) && $event.keyCode !== 13) {
+                          return null
+                        }
+                        $event.preventDefault()
+                        _vm.createChange(afile, "album", $event, "text")
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-xs btn-danger",
+                      on: {
+                        click: function($event) {
+                          _vm.deleteAfile(afile)
+                        }
+                      }
+                    },
+                    [_vm._v("Удалить")]
+                  )
+                ])
+              ]
+            )
+          })
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("ID")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Название")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Исполнитель")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Альбом")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Действия")])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-f7466fec", module.exports)
   }
 }
 

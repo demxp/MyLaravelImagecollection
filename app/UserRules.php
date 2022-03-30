@@ -18,7 +18,8 @@ class UserRules extends Model
 				"images" => "картинок:",
 				"categories" => "категорий:",
 				"staticpages" => "страниц:",
-				"blogpost" => "постов:",
+				"posts" => "постов:",
+				"audiofiles" => "аудиофайлов:",
 				"get" => "Просмотр",
 				"post" => "Создание",
 				"put" => "Изменение",
@@ -40,10 +41,14 @@ class UserRules extends Model
 				["staticpages", "post", "", ["allow", "deny"]],
 				["staticpages", "put", "", ["allow", "owned", "deny"]],
 				["staticpages", "delete", "", ["allow", "owned", "deny"]],
-				["blogpost", "get", "", ["allow", "deny"]],
-				["blogpost", "post", "", ["allow", "deny"]],
-				["blogpost", "put", "", ["allow", "owned", "deny"]],
-				["blogpost", "delete", "", ["allow", "owned", "deny"]]								
+				["posts", "get", "", ["allow", "deny"]],
+				["posts", "post", "", ["allow", "deny"]],
+				["posts", "put", "", ["allow", "owned", "deny"]],
+				["posts", "delete", "", ["allow", "owned", "deny"]],
+				["audiofiles", "get", "", ["allow", "deny"]],
+				["audiofiles", "post", "", ["allow", "deny"]],
+				["audiofiles", "put", "", ["allow", "owned", "deny"]],
+				["audiofiles", "delete", "", ["allow", "owned", "deny"]]
 			]
 		];
 	}
@@ -77,14 +82,14 @@ class UserRules extends Model
         ->where('component', $url_data["component"])
         ->where('method', strtolower($request->method()))
         ->value('rule');
-        
+
         if($findRule == "allow"){
             return true;
         }elseif($findRule == "owned"){
             if($parentModel::where('user_id', $user->id)->where('id', $url_data["resource_id"])->count() != 0){
                 return true;
             }
-        }elseif($url_data["resource_id"] == 0 && ($findRule != "deny" || $findRule != null)){
+        }elseif($url_data["resource_id"] == 0 && $findRule != "deny" && $findRule != null){
         	return true;
         }
 

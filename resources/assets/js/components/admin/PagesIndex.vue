@@ -13,6 +13,11 @@
             <th>Действия</th>
           </tr>
         </thead>
+        <tbody v-if="pages.length == 0">
+          <tr>
+            <td colspan=4><center><h3>НЕТ ДАННЫХ</h3></center></td>
+          </tr>
+        </tbody>        
         <tbody>
           <tr v-for="page in pages" :class="{'tr__green':page.success, 'tr__red':page.danger}">
             <td><span v-text="page.id"></span></td>

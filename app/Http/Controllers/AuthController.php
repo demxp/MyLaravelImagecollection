@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
+use App\{User, IpBlock};
 use Auth;
 use Illuminate\Http\Request;
 
@@ -43,7 +43,9 @@ class AuthController extends Controller
     	]))
     	{
     		return redirect("/admin");
-    	}
+    	}else{
+            IpBlock::add($request->ip());
+        }
 
     	return redirect()->back()->with('status', 'Неправильный Email или пароль');
     }

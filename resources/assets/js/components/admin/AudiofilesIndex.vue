@@ -75,7 +75,7 @@
         }
       },
       mounted(){
-        this.ajaxfun('/api/v1/audiofiles', 'get', null, this.fillTable)
+        ajaxfun('/api/v1/audiofiles', 'get', null, this.fillTable)
       },
       watch: {
         'upload.state': function (value) {
@@ -86,22 +86,6 @@
         }
       },      
       methods:{
-        ajaxfun(url, method, body=null, callback){
-          fetch(url, {
-            method: method,
-            headers: {  
-                  "Content-type": "application/json; charset=UTF-8",
-                  'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-            },
-            body: (body !== null) ? JSON.stringify(body) : null
-          }).then(response => {
-              return response.json();
-          }).then(req => {
-              return callback(req);
-          }).catch(e => {
-              console.log(e);
-          });         
-        },
         fillTable(data){
           data.map((item, i) => {
             item.success = false;
@@ -143,7 +127,7 @@
         },
         saveModel(data, callback){
           let url = '/api/v1/audiofiles/'+data.id;
-          this.ajaxfun(url, 'put', data, callback);
+          ajaxfun(url, 'put', data, callback);
         },
         createCallback(obj){
           let roll = this.roll;
@@ -217,11 +201,11 @@
         deleteAfile(afile){
           if(!confirm("Вы уверены?")){return false;}
           let url = '/api/v1/audiofiles/'+afile.id;
-          this.ajaxfun(url, 'delete', {
+          ajaxfun(url, 'delete', {
             id: afile.id
           }, (req) => {
             if(req.status == 'ok'){
-              this.ajaxfun('/api/v1/audiofiles', 'get', null, this.fillTable);
+              ajaxfun('/api/v1/audiofiles', 'get', null, this.fillTable);
             }else{
               customAlert(req);
             }            

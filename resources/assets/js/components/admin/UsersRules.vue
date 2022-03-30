@@ -36,43 +36,39 @@
       data(){
         return{
           allrules: [],
-          editable: false
+          editable: false,
+          texts: {
+            'images': 'картинок',
+            'categories': 'категорий',
+            'staticpages': 'страниц',
+            'audiofiles': 'аудиофайлов',
+            'posts': 'постов',
+            'get': 'Просмотр',
+            'post': 'Добавление',
+            'put': 'Изменение',
+            'delete': 'Удаление',
+            'allow': 'разрешено',
+            'owned': 'добавленных',
+            'deny': 'запрещено'
+          }
         }
       },
       mounted(){
         let url = '/api/v1/users/' + this.userId + '/rules';
-        this.ajaxfun(url, 'get', null, this.fillRules);           
+        ajaxfun(url, 'get', null, this.fillRules);           
       },
       methods:{
-        ajaxfun(url, method, body=null, callback){
-          fetch(url, {
-            method: method,
-            headers: {  
-                  "Content-type": "application/json; charset=UTF-8",
-                  'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-            },
-            body: (body !== null) ? JSON.stringify(body) : null
-          }).then(response => {
-              return response.json();
-          }).then(req => {
-              return callback(req);
-          }).catch(e => {
-              console.log(e);
-          });         
-        },
         fillRules(req){
-          this.modes = req["rules"];
-          this.texts = req["names"];
-          this.editable = (req["is_editable"] == 0) ? false : true;
-          req["data"].map((rule) => {
+          this.editable = (req.editable == 0) ? false : true;
+          req.data.map((rule) => {
             this.allrules.push(rule);
           })
         },
         getText(v){
           if(!!v[2]){
-            return this.texts[v[1]] + " " + this.texts[v[0]] + " " + this.texts[v[2]];
+            return this.texts[v[1]] + " " + this.texts[v[0]] + ": " + this.texts[v[2]];
           }else{
-            return this.texts[v[1]] + " " + this.texts[v[0]] + " не задано";
+            return this.texts[v[1]] + " " + this.texts[v[0]] + ": не задано";
           }
         },
         getClass(v){
@@ -97,7 +93,7 @@
             }
           });
           let url = '/api/v1/users/' + this.userId + '/rules';      
-          this.ajaxfun(url, 'put', ret, (req) => {
+          ajaxfun(url, 'put', ret, (req) => {
             if(req.status == 'ok'){
               this.$parent.$emit('switch-mode', {'mode': 'index', 'id': null});
               return true;

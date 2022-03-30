@@ -45,25 +45,9 @@
         }
       },
       mounted(){
-        this.ajaxfun('/api/v1/categories', 'get', null, this.fillCategories);
+        ajaxfun('/api/v1/categories', 'get', null, this.fillCategories);
       },
       methods:{
-        ajaxfun(url, method, body=null, callback){
-          fetch(url, {
-            method: method,
-            headers: {  
-                  "Content-type": "application/json; charset=UTF-8",
-                  'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-            },
-            body: (body !== null) ? JSON.stringify(body) : null
-          }).then(response => {
-              return response.json();
-          }).then(req => {
-              return callback(req);
-          }).catch(e => {
-              console.log(e);
-          });         
-        },
         fillCategories(data){
           this.cats.push({
             titleimage: 0,
@@ -96,7 +80,7 @@
           console.log(toServer)
 
           let url = '/api/v1/images';
-          this.ajaxfun(url, 'post', toServer, (req) => {
+          ajaxfun(url, 'post', toServer, (req) => {
             if(req.status == 'ok'){
               this.$parent.$emit('switch-mode', {'mode': 'index', 'id': null});
               return true;

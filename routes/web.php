@@ -32,9 +32,9 @@ Route::get('/upload/getimage/{filename}/{thumbnail?}', 'ImageController@getUploa
 // Route::get('/register', 'AuthController@registerForm');
 // Route::post('/register', 'AuthController@register');
 
-Route::get('/login', 'AuthController@loginForm');
-Route::post('/login', 'AuthController@login');
-Route::get('/logout', 'AuthController@logout');
+Route::get('/login', 'AuthController@loginForm')->middleware('ipblock');
+Route::post('/login', 'AuthController@login')->middleware('ipblock');
+Route::get('/logout', 'AuthController@logout')->middleware('ipblock');
 
 Route::get('/category', 'HomeController@allCategories')->name('categories');
 Route::get('/category/{slug}', 'HomeController@showCategory')->name('showcategory');

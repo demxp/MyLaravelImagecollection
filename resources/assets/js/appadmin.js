@@ -37,10 +37,10 @@ import moment from 'moment';
       al(resp.text);
     } else if (!!resp.message) {
       al(resp.message);      
-    } else {
+    } else if (!!resp) {
       al("Неизвестная ошибка!");
+      console.log(resp);
     }
-    console.log(resp);
     return;
   };
   window.moment = require('moment');
@@ -55,7 +55,34 @@ import moment from 'moment';
       h1 = Math.imul(h1 ^ (h1>>>16), 2246822507) ^ Math.imul(h2 ^ (h2>>>13), 3266489909);
       h2 = Math.imul(h2 ^ (h2>>>16), 2246822507) ^ Math.imul(h1 ^ (h1>>>13), 3266489909);
       return 4294967296 * (2097151 & h2) + (h1>>>0);
-  };  
+  }; 
+  window.ajaxfun = function(url, method, body=null, callback){
+    fetch(url, {
+      method: method,
+      headers: {  
+            "Content-type": "application/json; charset=UTF-8",
+            'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
+      },
+      body: (body !== null) ? JSON.stringify(body) : null
+    }).then(response => {
+        if(response.status != 200){
+          let error = response.json();
+          error.then(data => {
+            customAlert(data);
+          }).catch(e => {
+            customAlert({text: 'Ошибка ответа сервера'});
+            console.log(e);
+          });
+          return;
+        }
+        return response.json();
+    }).then(req => {
+        if(!!req) return callback(req);
+    }).catch(e => {
+      customAlert({text: 'Ошибка исполнения запроса'});
+      console.log(e);
+    });         
+  }; 
 })(window);
 
 /**

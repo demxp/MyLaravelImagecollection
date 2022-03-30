@@ -118,7 +118,7 @@
             submit_style_warning: true
           };
           let url = '/api/v1/posts/' + this.postId;
-          this.ajaxfun(url, 'get', null, (req) => {
+          ajaxfun(url, 'get', null, (req) => {
             for(let i in req){
               this.post[i] = req[i];
               if(i == 'title_image' && req[i] != null && req[i].length > 3) this.post.title_image_enabled = true;
@@ -142,22 +142,6 @@
         }
       },      
       methods:{
-        ajaxfun(url, method, body=null, callback){
-          fetch(url, {
-            method: method,
-            headers: {  
-                  "Content-type": "application/json; charset=UTF-8",
-                  'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-            },
-            body: (body !== null) ? JSON.stringify(body) : null
-          }).then(response => {
-              return response.json();
-          }).then(req => {
-              return callback(req);
-          }).catch(e => {
-              console.log(e);
-          });         
-        },
         editpost(){
           if(this.post.title === null || this.post.title.length < 3){
             alert("Надо написать заголовок поста!");
@@ -191,7 +175,7 @@
             request_data.id = this.post.id;
           }
           
-          this.ajaxfun(url, method, request_data, (req) => {
+          ajaxfun(url, method, request_data, (req) => {
             if(req.status == 'ok'){
               this.$parent.$emit('switch-mode', {'mode': 'index', 'id': null});
               return true;

@@ -10,6 +10,8 @@ class Music extends Model
     protected $fillable = ['title', 'artist', 'album'];
     protected $appends = ['filelink'];
 
+    const MUSIC_FOLDER = '/storage/music';
+
     public static function add($request)
     {
     	$mfile = new static;
@@ -53,13 +55,12 @@ class Music extends Model
 
     public static function saveFile($request){
         $filename = '';
-        $music_storage = '/storage/music';
 
         do{
             $filename = md5(uniqid()).'.mp3';
-        }while(Storage::exists($music_storage.'/'.$filename));
+        }while(Storage::exists(self::MUSIC_FOLDER.'/'.$filename));
         
-        $path = Storage::putFileAs($music_storage, $request->file('file'), $filename);
+        $path = Storage::putFileAs(self::MUSIC_FOLDER, $request->file('file'), $filename);
 
         return (object)[
             'filename'  => $filename,
@@ -70,7 +71,7 @@ class Music extends Model
     public function remove()
     {
         try {
-            Storage::delete('/storage/music/'.$this->filename);
+            Storage::delete(self::MUSIC_FOLDER.'/'.$this->filename);
             $this->delete();
             return ["status" => "ok"];
         } catch (\Throwable $e) {

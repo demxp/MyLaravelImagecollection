@@ -12,45 +12,38 @@ class UserRules extends Model
 
 	public static function currentRulesTable()
 	{
-		return [
-			"rules" => ["allow", "owned", "deny"],
-			"names" => [
-				"images" => "картинок:",
-				"categories" => "категорий:",
-				"staticpages" => "страниц:",
-				"posts" => "постов:",
-				"audiofiles" => "аудиофайлов:",
-				"get" => "Просмотр",
-				"post" => "Создание",
-				"put" => "Изменение",
-				"delete" => "Удаление",
-				"allow"  => "разрешено",
-				"owned" => "добавленных",
-				"deny" => "запрещено"
-			],
-			"data" => [
-				["images", "get", "", ["allow", "deny"]],
-				["images", "post", "", ["allow", "deny"]],
-				["images", "put", "", ["allow", "owned", "deny"]],
-				["images", "delete", "", ["allow", "owned", "deny"]],
-				["categories", "get", "", ["allow", "deny"]],
-				["categories", "post", "", ["allow", "deny"]],
-				["categories", "put", "", ["allow", "owned", "deny"]],
-				["categories", "delete", "", ["allow", "owned", "deny"]],
-				["staticpages", "get", "", ["allow", "deny"]],
-				["staticpages", "post", "", ["allow", "deny"]],
-				["staticpages", "put", "", ["allow", "owned", "deny"]],
-				["staticpages", "delete", "", ["allow", "owned", "deny"]],
-				["posts", "get", "", ["allow", "deny"]],
-				["posts", "post", "", ["allow", "deny"]],
-				["posts", "put", "", ["allow", "owned", "deny"]],
-				["posts", "delete", "", ["allow", "owned", "deny"]],
-				["audiofiles", "get", "", ["allow", "deny"]],
-				["audiofiles", "post", "", ["allow", "deny"]],
-				["audiofiles", "put", "", ["allow", "owned", "deny"]],
-				["audiofiles", "delete", "", ["allow", "owned", "deny"]]
-			]
+		$methods = [
+			'get' 		=> ["allow", "deny"],
+			'post' 		=> ["allow", "deny"],
+			'put' 		=> ["allow", "owned", "deny"],
+			'delete' 	=> ["allow", "owned", "deny"]
 		];
+
+		$routes = ['images', 'categories', 'staticpages', 'posts', 'audiofiles'];
+
+		return array_reduce($routes, function($acc, $route) use ($methods){
+			foreach($methods as $method => $rules){
+				$acc[] = [$route, $method, '', $rules];
+			}
+
+			return $acc;
+    	}, []);
+	}
+
+	public static function normalizeRulesTable($user)
+	{
+    	$user_rules = $user->apiRules->toArray();
+    	$template = self::currentRulesTable();
+
+    	array_map(function($userRule) use (&$template){
+			foreach($template as $id => $rule){
+				if($rule[0] == $userRule['component'] && $rule[1] == $userRule['method']){
+					$template[$id][2] = $userRule["rule"];
+				}
+			}
+    	}, $user_rules);
+
+    	return $template;		
 	}
 
 	public function user()
@@ -69,18 +62,19 @@ class UserRules extends Model
 		];
 
         $user = \Auth::user();
+        $method = strtolower($request->method());
 
         if(!$checkHard){
-			return self::checkAccessSoft($request, $user, $url_data, $parentModel);
+			return self::checkAccessSoft($method, $user, $url_data, $parentModel);
 	    }
-	    return self::checkAccessHard($request, $user, $url_data);
+	    return self::checkAccessHard($method, $user, $url_data);
 	}
 
-	public static function checkAccessSoft($request, $user, $url_data, $parentModel)
+	public static function checkAccessSoft($method, $user, $url_data, $parentModel)
 	{
         $findRule = $user->apiRules()
         ->where('component', $url_data["component"])
-        ->where('method', strtolower($request->method()))
+        ->where('method', $method)
         ->value('rule');
 
         if($findRule == "allow"){
@@ -96,11 +90,11 @@ class UserRules extends Model
         return false;
 	}	
 
-	public static function checkAccessHard($request, $user, $url_data)
+	public static function checkAccessHard($method, $user, $url_data)
 	{
 		if($user->is_admin == 1){
 	        return true;
-	    }elseif($user->id == $url_data["resource_id"] || ($url_data["resource_id"] == 0 && $request->method() == 'GET')){
+	    }elseif($user->id == $url_data["resource_id"] || ($url_data["resource_id"] == 0 && $method == 'get')){
 	    	return true;
 	    }
 		return false;

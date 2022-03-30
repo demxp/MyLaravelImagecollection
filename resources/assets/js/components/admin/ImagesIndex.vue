@@ -106,25 +106,9 @@
         }
       },
       mounted(){
-        this.ajaxfun('/api/v1/images', 'get', null, this.fillTable)
+        ajaxfun('/api/v1/images', 'get', null, this.fillTable)
       },
       methods:{
-        ajaxfun(url, method, body=null, callback){
-          fetch(url, {
-            method: method,
-            headers: {  
-                  "Content-type": "application/json; charset=UTF-8",
-                  'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-            },
-            body: (body !== null) ? JSON.stringify(body) : null
-          }).then(response => {
-              return response.json();
-          }).then(req => {
-              return callback(req);
-          }).catch(e => {
-              console.log(e);
-          });         
-        },
         fillTable(data){
           data.categories.map((item, i) => {
             if(!!this.cats[i]){
@@ -162,24 +146,24 @@
         },
         nextPage(){
           let url = '/api/v1/images' + '?page=' + (this.current_page + 1);
-          this.ajaxfun(url, 'get', null, this.fillTable);
+          ajaxfun(url, 'get', null, this.fillTable);
         },
         prevPage(){
           let url = '/api/v1/images' + '?page=' + (this.current_page - 1);
-          this.ajaxfun(url, 'get', null, this.fillTable);
+          ajaxfun(url, 'get', null, this.fillTable);
         }, 
         firstPage(){
           let url = '/api/v1/images' + '?page=1';
-          this.ajaxfun(url, 'get', null, this.fillTable);
+          ajaxfun(url, 'get', null, this.fillTable);
         },
         lastPage(){
           let url = '/api/v1/images' + '?page=' + this.last_page;
-          this.ajaxfun(url, 'get', null, this.fillTable);
+          ajaxfun(url, 'get', null, this.fillTable);
         },     
         setPage(){
           if(this.current_page >= 1 && this.current_page <= this.last_page){
             let url = '/api/v1/images' + '?page=' + this.current_page;
-            this.ajaxfun(url, 'get', null, this.fillTable);
+            ajaxfun(url, 'get', null, this.fillTable);
           }
         },
         checkCatTitle(img){
@@ -190,7 +174,7 @@
         },
         saveModel(img, callback){
           let url = '/api/v1/images/'+img.id;
-          this.ajaxfun(url, 'put', {
+          ajaxfun(url, 'put', {
             id: img.id,
             title: img.title,
             category_id: img.category_id,
@@ -240,7 +224,7 @@
         },
         setCategoryTitle(img){
           let url = '/api/v1/categories/'+img.category_id;
-          this.ajaxfun(url, 'put', {
+          ajaxfun(url, 'put', {
             id: img.category_id,
             titleimage: img.id
           }, (req) => {
@@ -261,7 +245,7 @@
         deleteImage(img){
           if(!confirm("Вы уверены?")){return false;}
           let url = '/api/v1/images/'+img.id;
-          this.ajaxfun(url, 'delete', {
+          ajaxfun(url, 'delete', {
             id: img.id
           }, (req) => {
             if(req.status == 'ok'){
@@ -284,11 +268,6 @@
               roll(obj);
             }
           };        
-        },
-        getLink(img){
-          customAlert({
-            text: img.fullimage
-          });
         }
       }  
     }

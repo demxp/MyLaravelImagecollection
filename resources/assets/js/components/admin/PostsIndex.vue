@@ -102,25 +102,9 @@
         }
       },
       mounted(){
-        this.ajaxfun('/api/v1/posts', 'get', null, this.fillTable)
+        ajaxfun('/api/v1/posts', 'get', null, this.fillTable)
       },
       methods:{
-        ajaxfun(url, method, body=null, callback){
-          fetch(url, {
-            method: method,
-            headers: {  
-                  "Content-type": "application/json; charset=UTF-8",
-                  'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-            },
-            body: (body !== null) ? JSON.stringify(body) : null
-          }).then(response => {
-              return response.json();
-          }).then(req => {
-              return callback(req);
-          }).catch(e => {
-              console.log(e);
-          });         
-        },
         fillTable(data){
           data.data.map((item, i) => {
             item.success = false;
@@ -139,24 +123,24 @@
         },
         nextPage(){
           let url = '/api/v1/posts' + '?page=' + (this.current_page + 1);
-          this.ajaxfun(url, 'get', null, this.fillTable);
+          ajaxfun(url, 'get', null, this.fillTable);
         },
         prevPage(){
           let url = '/api/v1/posts' + '?page=' + (this.current_page - 1);
-          this.ajaxfun(url, 'get', null, this.fillTable);
+          ajaxfun(url, 'get', null, this.fillTable);
         }, 
         firstPage(){
           let url = '/api/v1/posts' + '?page=1';
-          this.ajaxfun(url, 'get', null, this.fillTable);
+          ajaxfun(url, 'get', null, this.fillTable);
         },
         lastPage(){
           let url = '/api/v1/posts' + '?page=' + this.last_page;
-          this.ajaxfun(url, 'get', null, this.fillTable);
+          ajaxfun(url, 'get', null, this.fillTable);
         },     
         setPage(){
           if(this.current_page >= 1 && this.current_page <= this.last_page){
             let url = '/api/v1/posts' + '?page=' + this.current_page;
-            this.ajaxfun(url, 'get', null, this.fillTable);
+            ajaxfun(url, 'get', null, this.fillTable);
           }
         },
         createChange(model, field, event){
@@ -176,7 +160,7 @@
         },
         saveModel(post, callback){
           let url = '/api/v1/posts/'+post.id;
-          this.ajaxfun(url, 'put', post, callback);
+          ajaxfun(url, 'put', post, callback);
         },
         createCallback(obj){
           let roll = this.roll;
@@ -198,7 +182,7 @@
         deletePost(post){
           if(!confirm("Вы уверены?")){return false;}
           let url = '/api/v1/posts/'+post.id;
-          this.ajaxfun(url, 'delete', {
+          ajaxfun(url, 'delete', {
             id: post.id
           }, (req) => {
             if(req.status == 'ok'){

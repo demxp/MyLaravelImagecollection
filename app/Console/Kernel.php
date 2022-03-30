@@ -13,7 +13,10 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\CreateAdmin::class
+        Commands\CreateAdmin::class,
+        Commands\Ipblocker\IpBlock::class,
+        Commands\Ipblocker\IpBlockAdd::class,
+        Commands\Ipblocker\IpBlockRemove::class
     ];
 
     /**

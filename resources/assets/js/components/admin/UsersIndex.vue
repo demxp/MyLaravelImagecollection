@@ -45,25 +45,9 @@
         }
       },
       mounted(){
-        this.ajaxfun('/api/v1/users', 'get', null, this.fillTable)
+        ajaxfun('/api/v1/users', 'get', null, this.fillTable)
       },
       methods:{
-        ajaxfun(url, method, body=null, callback){
-          fetch(url, {
-            method: method,
-            headers: {  
-                  "Content-type": "application/json; charset=UTF-8",
-                  'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-            },
-            body: (body !== null) ? JSON.stringify(body) : null
-          }).then(response => {
-              return response.json();
-          }).then(req => {
-              return callback(req);
-          }).catch(e => {
-              console.log(e);
-          });         
-        },
         fillTable(data){
           data.map((item, i) => {
             item.success = false;
@@ -87,9 +71,9 @@
         deleteUser(user){
           if(!confirm("Вы уверены?")){return false;}
           let url = '/api/v1/users/'+user.id;
-          this.ajaxfun(url, 'delete', {
+          ajaxfun(url, 'delete', {
             id: user.id
-          }, () => {this.ajaxfun('/api/v1/users', 'get', null, this.fillTable)});         
+          }, () => {ajaxfun('/api/v1/users', 'get', null, this.fillTable)});         
         },
         createCallback(obj){
           return function(req){

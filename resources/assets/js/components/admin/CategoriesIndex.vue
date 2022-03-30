@@ -44,25 +44,9 @@
         }
       },
       mounted(){
-        this.ajaxfun('/api/v1/categories', 'get', null, this.fillTable)
+        ajaxfun('/api/v1/categories', 'get', null, this.fillTable)
       },
       methods:{
-        ajaxfun(url, method, body=null, callback){
-          fetch(url, {
-            method: method,
-            headers: {  
-                  "Content-type": "application/json; charset=UTF-8",
-                  'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-            },
-            body: (body !== null) ? JSON.stringify(body) : null
-          }).then(response => {
-              return response.json();
-          }).then(req => {
-              return callback(req);
-          }).catch(e => {
-              console.log(e);
-          });         
-        },
         fillTable(data){
           data.map((item, i) => {
             item.success = false;
@@ -79,7 +63,7 @@
         },
         saveModel(cat, callback){
           let url = '/api/v1/categories/'+cat.id;
-          this.ajaxfun(url, 'put', {
+          ajaxfun(url, 'put', {
             id: cat.id,
             title: cat.title,
             hidden: cat.hidden,
@@ -117,11 +101,11 @@
         deleteCategory(cat){
           if(!confirm("Вы уверены?")){return false;}
           let url = '/api/v1/categories/'+cat.id;
-          this.ajaxfun(url, 'delete', {
+          ajaxfun(url, 'delete', {
             id: cat.id
           }, (req) => {
             if(req.status == 'ok'){
-              this.ajaxfun('/api/v1/categories', 'get', null, this.fillTable);
+              ajaxfun('/api/v1/categories', 'get', null, this.fillTable);
             }else{
               customAlert(req);
             }            

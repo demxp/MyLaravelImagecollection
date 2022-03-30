@@ -21360,10 +21360,10 @@ window.Vue = __webpack_require__(143);
       al(resp.text);
     } else if (!!resp.message) {
       al(resp.message);
-    } else {
+    } else if (!!resp) {
       al("Неизвестная ошибка!");
+      console.log(resp);
     }
-    console.log(resp);
     return;
   };
   window.moment = __webpack_require__(0);
@@ -21381,6 +21381,36 @@ window.Vue = __webpack_require__(143);
     h1 = Math.imul(h1 ^ h1 >>> 16, 2246822507) ^ Math.imul(h2 ^ h2 >>> 13, 3266489909);
     h2 = Math.imul(h2 ^ h2 >>> 16, 2246822507) ^ Math.imul(h1 ^ h1 >>> 13, 3266489909);
     return 4294967296 * (2097151 & h2) + (h1 >>> 0);
+  };
+  window.ajaxfun = function (url, method) {
+    var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+    var callback = arguments[3];
+
+    fetch(url, {
+      method: method,
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+        'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
+      },
+      body: body !== null ? JSON.stringify(body) : null
+    }).then(function (response) {
+      if (response.status != 200) {
+        var error = response.json();
+        error.then(function (data) {
+          customAlert(data);
+        }).catch(function (e) {
+          customAlert({ text: 'Ошибка ответа сервера' });
+          console.log(e);
+        });
+        return;
+      }
+      return response.json();
+    }).then(function (req) {
+      if (!!req) return callback(req);
+    }).catch(function (e) {
+      customAlert({ text: 'Ошибка исполнения запроса' });
+      console.log(e);
+    });
   };
 })(window);
 
@@ -34048,29 +34078,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     };
   },
   mounted: function mounted() {
-    this.ajaxfun('/api/v1/categories', 'get', null, this.fillTable);
+    ajaxfun('/api/v1/categories', 'get', null, this.fillTable);
   },
 
   methods: {
-    ajaxfun: function ajaxfun(url, method) {
-      var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-      var callback = arguments[3];
-
-      fetch(url, {
-        method: method,
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-          'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-        },
-        body: body !== null ? JSON.stringify(body) : null
-      }).then(function (response) {
-        return response.json();
-      }).then(function (req) {
-        return callback(req);
-      }).catch(function (e) {
-        console.log(e);
-      });
-    },
     fillTable: function fillTable(data) {
       var _this2 = this;
 
@@ -34091,7 +34102,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     saveModel: function saveModel(cat, callback) {
       var url = '/api/v1/categories/' + cat.id;
-      this.ajaxfun(url, 'put', {
+      ajaxfun(url, 'put', {
         id: cat.id,
         title: cat.title,
         hidden: cat.hidden
@@ -34137,11 +34148,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return false;
       }
       var url = '/api/v1/categories/' + cat.id;
-      this.ajaxfun(url, 'delete', {
+      ajaxfun(url, 'delete', {
         id: cat.id
       }, function (req) {
         if (req.status == 'ok') {
-          _this5.ajaxfun('/api/v1/categories', 'get', null, _this5.fillTable);
+          ajaxfun('/api/v1/categories', 'get', null, _this5.fillTable);
         } else {
           customAlert(req);
         }
@@ -34404,25 +34415,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   mounted: function mounted() {},
 
   methods: {
-    ajaxfun: function ajaxfun(url, method) {
-      var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-      var callback = arguments[3];
-
-      fetch(url, {
-        method: method,
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-          'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-        },
-        body: body !== null ? JSON.stringify(body) : null
-      }).then(function (response) {
-        return response.json();
-      }).then(function (req) {
-        return callback(req);
-      }).catch(function (e) {
-        console.log(e);
-      });
-    },
     addcategory: function addcategory() {
       var _this = this;
 
@@ -34431,7 +34423,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return false;
       }
       var url = '/api/v1/categories';
-      this.ajaxfun(url, 'post', {
+      ajaxfun(url, 'post', {
         title: this.cat.title,
         hidden: this.cat.hidden ? 1 : 0
       }, function (req) {
@@ -34727,29 +34719,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     };
   },
   mounted: function mounted() {
-    this.ajaxfun('/api/v1/users', 'get', null, this.fillTable);
+    ajaxfun('/api/v1/users', 'get', null, this.fillTable);
   },
 
   methods: {
-    ajaxfun: function ajaxfun(url, method) {
-      var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-      var callback = arguments[3];
-
-      fetch(url, {
-        method: method,
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-          'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-        },
-        body: body !== null ? JSON.stringify(body) : null
-      }).then(function (response) {
-        return response.json();
-      }).then(function (req) {
-        return callback(req);
-      }).catch(function (e) {
-        console.log(e);
-      });
-    },
     fillTable: function fillTable(data) {
       var _this = this;
 
@@ -34781,10 +34754,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return false;
       }
       var url = '/api/v1/users/' + user.id;
-      this.ajaxfun(url, 'delete', {
+      ajaxfun(url, 'delete', {
         id: user.id
       }, function () {
-        _this2.ajaxfun('/api/v1/users', 'get', null, _this2.fillTable);
+        ajaxfun('/api/v1/users', 'get', null, _this2.fillTable);
       });
     },
     createCallback: function createCallback(obj) {
@@ -35075,7 +35048,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         submit_style_warning: true
       };
       var url = '/api/v1/users/' + this.userId;
-      this.ajaxfun(url, 'get', null, function (req) {
+      ajaxfun(url, 'get', null, function (req) {
         for (var i in req) {
           _this.user[i] = req[i];
         }
@@ -35084,25 +35057,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
 
   methods: {
-    ajaxfun: function ajaxfun(url, method) {
-      var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-      var callback = arguments[3];
-
-      fetch(url, {
-        method: method,
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-          'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-        },
-        body: body !== null ? JSON.stringify(body) : null
-      }).then(function (response) {
-        return response.json();
-      }).then(function (req) {
-        return callback(req);
-      }).catch(function (e) {
-        console.log(e);
-      });
-    },
     edituser: function edituser() {
       var _this2 = this;
 
@@ -35134,7 +35088,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         request_data.id = this.user.id;
       }
 
-      this.ajaxfun(url, method, request_data, function (req) {
+      ajaxfun(url, method, request_data, function (req) {
         if (req.status == 'ok') {
           _this2.$parent.$emit('switch-mode', { 'mode': 'index', 'id': null });
           return true;
@@ -35446,49 +35400,42 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   data: function data() {
     return {
       allrules: [],
-      editable: false
+      editable: false,
+      texts: {
+        'images': 'картинок',
+        'categories': 'категорий',
+        'staticpages': 'страниц',
+        'audiofiles': 'аудиофайлов',
+        'posts': 'постов',
+        'get': 'Просмотр',
+        'post': 'Добавление',
+        'put': 'Изменение',
+        'delete': 'Удаление',
+        'allow': 'разрешено',
+        'owned': 'добавленных',
+        'deny': 'запрещено'
+      }
     };
   },
   mounted: function mounted() {
     var url = '/api/v1/users/' + this.userId + '/rules';
-    this.ajaxfun(url, 'get', null, this.fillRules);
+    ajaxfun(url, 'get', null, this.fillRules);
   },
 
   methods: {
-    ajaxfun: function ajaxfun(url, method) {
-      var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-      var callback = arguments[3];
-
-      fetch(url, {
-        method: method,
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-          'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-        },
-        body: body !== null ? JSON.stringify(body) : null
-      }).then(function (response) {
-        return response.json();
-      }).then(function (req) {
-        return callback(req);
-      }).catch(function (e) {
-        console.log(e);
-      });
-    },
     fillRules: function fillRules(req) {
       var _this = this;
 
-      this.modes = req["rules"];
-      this.texts = req["names"];
-      this.editable = req["is_editable"] == 0 ? false : true;
-      req["data"].map(function (rule) {
+      this.editable = req.editable == 0 ? false : true;
+      req.data.map(function (rule) {
         _this.allrules.push(rule);
       });
     },
     getText: function getText(v) {
       if (!!v[2]) {
-        return this.texts[v[1]] + " " + this.texts[v[0]] + " " + this.texts[v[2]];
+        return this.texts[v[1]] + " " + this.texts[v[0]] + ": " + this.texts[v[2]];
       } else {
-        return this.texts[v[1]] + " " + this.texts[v[0]] + " не задано";
+        return this.texts[v[1]] + " " + this.texts[v[0]] + ": не задано";
       }
     },
     getClass: function getClass(v) {
@@ -35515,7 +35462,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
       });
       var url = '/api/v1/users/' + this.userId + '/rules';
-      this.ajaxfun(url, 'put', ret, function (req) {
+      ajaxfun(url, 'put', ret, function (req) {
         if (req.status == 'ok') {
           _this2.$parent.$emit('switch-mode', { 'mode': 'index', 'id': null });
           return true;
@@ -35846,29 +35793,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     };
   },
   mounted: function mounted() {
-    this.ajaxfun('/api/v1/images', 'get', null, this.fillTable);
+    ajaxfun('/api/v1/images', 'get', null, this.fillTable);
   },
 
   methods: {
-    ajaxfun: function ajaxfun(url, method) {
-      var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-      var callback = arguments[3];
-
-      fetch(url, {
-        method: method,
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-          'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-        },
-        body: body !== null ? JSON.stringify(body) : null
-      }).then(function (response) {
-        return response.json();
-      }).then(function (req) {
-        return callback(req);
-      }).catch(function (e) {
-        console.log(e);
-      });
-    },
     fillTable: function fillTable(data) {
       var _this2 = this;
 
@@ -35910,24 +35838,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     nextPage: function nextPage() {
       var url = '/api/v1/images' + '?page=' + (this.current_page + 1);
-      this.ajaxfun(url, 'get', null, this.fillTable);
+      ajaxfun(url, 'get', null, this.fillTable);
     },
     prevPage: function prevPage() {
       var url = '/api/v1/images' + '?page=' + (this.current_page - 1);
-      this.ajaxfun(url, 'get', null, this.fillTable);
+      ajaxfun(url, 'get', null, this.fillTable);
     },
     firstPage: function firstPage() {
       var url = '/api/v1/images' + '?page=1';
-      this.ajaxfun(url, 'get', null, this.fillTable);
+      ajaxfun(url, 'get', null, this.fillTable);
     },
     lastPage: function lastPage() {
       var url = '/api/v1/images' + '?page=' + this.last_page;
-      this.ajaxfun(url, 'get', null, this.fillTable);
+      ajaxfun(url, 'get', null, this.fillTable);
     },
     setPage: function setPage() {
       if (this.current_page >= 1 && this.current_page <= this.last_page) {
         var url = '/api/v1/images' + '?page=' + this.current_page;
-        this.ajaxfun(url, 'get', null, this.fillTable);
+        ajaxfun(url, 'get', null, this.fillTable);
       }
     },
     checkCatTitle: function checkCatTitle(img) {
@@ -35940,7 +35868,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     saveModel: function saveModel(img, callback) {
       var url = '/api/v1/images/' + img.id;
-      this.ajaxfun(url, 'put', {
+      ajaxfun(url, 'put', {
         id: img.id,
         title: img.title,
         category_id: img.category_id,
@@ -36002,7 +35930,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var _this6 = this;
 
       var url = '/api/v1/categories/' + img.category_id;
-      this.ajaxfun(url, 'put', {
+      ajaxfun(url, 'put', {
         id: img.category_id,
         titleimage: img.id
       }, function (req) {
@@ -36029,7 +35957,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return false;
       }
       var url = '/api/v1/images/' + img.id;
-      this.ajaxfun(url, 'delete', {
+      ajaxfun(url, 'delete', {
         id: img.id
       }, function (req) {
         if (req.status == 'ok') {
@@ -36056,11 +35984,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           roll(obj);
         }
       };
-    },
-    getLink: function getLink(img) {
-      customAlert({
-        text: img.fullimage
-      });
     }
   }
 });
@@ -36642,29 +36565,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
   },
   mounted: function mounted() {
-    this.ajaxfun('/api/v1/categories', 'get', null, this.fillCategories);
+    ajaxfun('/api/v1/categories', 'get', null, this.fillCategories);
   },
 
   methods: {
-    ajaxfun: function ajaxfun(url, method) {
-      var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-      var callback = arguments[3];
-
-      fetch(url, {
-        method: method,
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-          'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-        },
-        body: body !== null ? JSON.stringify(body) : null
-      }).then(function (response) {
-        return response.json();
-      }).then(function (req) {
-        return callback(req);
-      }).catch(function (e) {
-        console.log(e);
-      });
-    },
     fillCategories: function fillCategories(data) {
       var _this = this;
 
@@ -36701,7 +36605,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       console.log(toServer);
 
       var url = '/api/v1/images';
-      this.ajaxfun(url, 'post', toServer, function (req) {
+      ajaxfun(url, 'post', toServer, function (req) {
         if (req.status == 'ok') {
           _this2.$parent.$emit('switch-mode', { 'mode': 'index', 'id': null });
           return true;
@@ -36979,29 +36883,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     };
   },
   mounted: function mounted() {
-    this.ajaxfun('/api/v1/staticpages', 'get', null, this.fillTable);
+    ajaxfun('/api/v1/staticpages', 'get', null, this.fillTable);
   },
 
   methods: {
-    ajaxfun: function ajaxfun(url, method) {
-      var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-      var callback = arguments[3];
-
-      fetch(url, {
-        method: method,
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-          'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-        },
-        body: body !== null ? JSON.stringify(body) : null
-      }).then(function (response) {
-        return response.json();
-      }).then(function (req) {
-        return callback(req);
-      }).catch(function (e) {
-        console.log(e);
-      });
-    },
     fillTable: function fillTable(data) {
       var _this = this;
 
@@ -37030,11 +36915,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return false;
       }
       var url = '/api/v1/staticpages/' + page.id;
-      this.ajaxfun(url, 'delete', {
+      ajaxfun(url, 'delete', {
         id: page.id
       }, function (req) {
         if (req.status == 'ok') {
-          _this2.ajaxfun('/api/v1/staticpages', 'get', null, _this2.fillTable);
+          ajaxfun('/api/v1/staticpages', 'get', null, _this2.fillTable);
         } else {
           customAlert(req);
         }
@@ -37287,7 +37172,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         submit_style_warning: true
       };
       var url = '/api/v1/staticpages/' + this.pageId;
-      this.ajaxfun(url, 'get', null, function (req) {
+      ajaxfun(url, 'get', null, function (req) {
         for (var i in req) {
           _this.page[i] = req[i];
         }
@@ -37300,25 +37185,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
 
   methods: {
-    ajaxfun: function ajaxfun(url, method) {
-      var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-      var callback = arguments[3];
-
-      fetch(url, {
-        method: method,
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-          'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-        },
-        body: body !== null ? JSON.stringify(body) : null
-      }).then(function (response) {
-        return response.json();
-      }).then(function (req) {
-        return callback(req);
-      }).catch(function (e) {
-        console.log(e);
-      });
-    },
     editpage: function editpage() {
       var _this2 = this;
 
@@ -37350,7 +37216,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         request_data.id = this.page.id;
       }
 
-      this.ajaxfun(url, method, request_data, function (req) {
+      ajaxfun(url, method, request_data, function (req) {
         if (req.status == 'ok') {
           _this2.$parent.$emit('switch-mode', { 'mode': 'index', 'id': null });
           return true;
@@ -37645,29 +37511,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     };
   },
   mounted: function mounted() {
-    this.ajaxfun('/api/v1/posts', 'get', null, this.fillTable);
+    ajaxfun('/api/v1/posts', 'get', null, this.fillTable);
   },
 
   methods: {
-    ajaxfun: function ajaxfun(url, method) {
-      var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-      var callback = arguments[3];
-
-      fetch(url, {
-        method: method,
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-          'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-        },
-        body: body !== null ? JSON.stringify(body) : null
-      }).then(function (response) {
-        return response.json();
-      }).then(function (req) {
-        return callback(req);
-      }).catch(function (e) {
-        console.log(e);
-      });
-    },
     fillTable: function fillTable(data) {
       var _this2 = this;
 
@@ -37690,24 +37537,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     nextPage: function nextPage() {
       var url = '/api/v1/posts' + '?page=' + (this.current_page + 1);
-      this.ajaxfun(url, 'get', null, this.fillTable);
+      ajaxfun(url, 'get', null, this.fillTable);
     },
     prevPage: function prevPage() {
       var url = '/api/v1/posts' + '?page=' + (this.current_page - 1);
-      this.ajaxfun(url, 'get', null, this.fillTable);
+      ajaxfun(url, 'get', null, this.fillTable);
     },
     firstPage: function firstPage() {
       var url = '/api/v1/posts' + '?page=1';
-      this.ajaxfun(url, 'get', null, this.fillTable);
+      ajaxfun(url, 'get', null, this.fillTable);
     },
     lastPage: function lastPage() {
       var url = '/api/v1/posts' + '?page=' + this.last_page;
-      this.ajaxfun(url, 'get', null, this.fillTable);
+      ajaxfun(url, 'get', null, this.fillTable);
     },
     setPage: function setPage() {
       if (this.current_page >= 1 && this.current_page <= this.last_page) {
         var url = '/api/v1/posts' + '?page=' + this.current_page;
-        this.ajaxfun(url, 'get', null, this.fillTable);
+        ajaxfun(url, 'get', null, this.fillTable);
       }
     },
     createChange: function createChange(model, field, event) {
@@ -37729,7 +37576,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     saveModel: function saveModel(post, callback) {
       var url = '/api/v1/posts/' + post.id;
-      this.ajaxfun(url, 'put', post, callback);
+      ajaxfun(url, 'put', post, callback);
     },
     createCallback: function createCallback(obj) {
       var roll = this.roll;
@@ -37759,7 +37606,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return false;
       }
       var url = '/api/v1/posts/' + post.id;
-      this.ajaxfun(url, 'delete', {
+      ajaxfun(url, 'delete', {
         id: post.id
       }, function (req) {
         if (req.status == 'ok') {
@@ -38385,7 +38232,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         submit_style_warning: true
       };
       var url = '/api/v1/posts/' + this.postId;
-      this.ajaxfun(url, 'get', null, function (req) {
+      ajaxfun(url, 'get', null, function (req) {
         for (var i in req) {
           _this.post[i] = req[i];
           if (i == 'title_image' && req[i] != null && req[i].length > 3) _this.post.title_image_enabled = true;
@@ -38410,25 +38257,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     }
   },
   methods: {
-    ajaxfun: function ajaxfun(url, method) {
-      var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-      var callback = arguments[3];
-
-      fetch(url, {
-        method: method,
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-          'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-        },
-        body: body !== null ? JSON.stringify(body) : null
-      }).then(function (response) {
-        return response.json();
-      }).then(function (req) {
-        return callback(req);
-      }).catch(function (e) {
-        console.log(e);
-      });
-    },
     editpost: function editpost() {
       var _this2 = this;
 
@@ -38464,7 +38292,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         request_data.id = this.post.id;
       }
 
-      this.ajaxfun(url, method, request_data, function (req) {
+      ajaxfun(url, method, request_data, function (req) {
         if (req.status == 'ok') {
           _this2.$parent.$emit('switch-mode', { 'mode': 'index', 'id': null });
           return true;
@@ -39498,7 +39326,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     };
   },
   mounted: function mounted() {
-    this.ajaxfun('/api/v1/audiofiles', 'get', null, this.fillTable);
+    ajaxfun('/api/v1/audiofiles', 'get', null, this.fillTable);
   },
 
   watch: {
@@ -39510,25 +39338,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     }
   },
   methods: {
-    ajaxfun: function ajaxfun(url, method) {
-      var body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-      var callback = arguments[3];
-
-      fetch(url, {
-        method: method,
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-          'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-        },
-        body: body !== null ? JSON.stringify(body) : null
-      }).then(function (response) {
-        return response.json();
-      }).then(function (req) {
-        return callback(req);
-      }).catch(function (e) {
-        console.log(e);
-      });
-    },
     fillTable: function fillTable(data) {
       var _this2 = this;
 
@@ -39576,7 +39385,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     saveModel: function saveModel(data, callback) {
       var url = '/api/v1/audiofiles/' + data.id;
-      this.ajaxfun(url, 'put', data, callback);
+      ajaxfun(url, 'put', data, callback);
     },
     createCallback: function createCallback(obj) {
       var roll = this.roll;
@@ -39662,11 +39471,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return false;
       }
       var url = '/api/v1/audiofiles/' + afile.id;
-      this.ajaxfun(url, 'delete', {
+      ajaxfun(url, 'delete', {
         id: afile.id
       }, function (req) {
         if (req.status == 'ok') {
-          _this6.ajaxfun('/api/v1/audiofiles', 'get', null, _this6.fillTable);
+          ajaxfun('/api/v1/audiofiles', 'get', null, _this6.fillTable);
         } else {
           customAlert(req);
         }

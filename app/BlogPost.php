@@ -34,18 +34,7 @@ class BlogPost extends Model
         $post = new static;
         $post->fill($fields);
         $post->owner = \Auth::user()->id;
-        if(isset($fields['publication'])){
-            $post->publication = $fields['publication'];
-            if($post->publication == 0){
-                $post->publication_date = null;
-            }else{
-                if(isset($fields['publication_date'])){
-                    $post->publication_date = $fields['publication_date'];
-                }else{
-                    $post->publication_date = date(DATE_ATOM);
-                }
-            }
-        }
+        $post->processingPublication($fields);
         if(isset($fields['commenting'])){
             $post->commenting = $fields['commenting'];
         }                
@@ -60,18 +49,7 @@ class BlogPost extends Model
     public function edit($fields)
     {
     	$this->fill($fields);
-        if(isset($fields['publication'])){
-            $this->publication = $fields['publication'];
-            if($this->publication == 0){
-            	$this->publication_date = null;
-            }else{
-                if(isset($fields['publication_date'])){
-                    $this->publication_date = $fields['publication_date'];
-                }else{
-                    $this->publication_date = date(DATE_ATOM);
-                }
-            }
-        }
+        $this->processingPublication($fields);
         if(isset($fields['commenting'])){
             $this->commenting = $fields['commenting'];
         }
@@ -81,6 +59,24 @@ class BlogPost extends Model
             $this->title_image = null;
         }
     	$this->save();
+    }
+
+    public function processingPublication($fields)
+    {
+        if(isset($fields['publication'])){
+            $this->publication = $fields['publication'];
+            if($this->publication == 0){
+                $this->publication_date = null;
+            }else{
+                if(isset($fields['publication_date'])){
+                    $this->publication_date = $fields['publication_date'];
+                }else{
+                    $this->publication_date = date(DATE_ATOM);
+                }
+            }
+        }
+
+        return $this;
     }
 
     public function hasPrevious()
@@ -101,8 +97,7 @@ class BlogPost extends Model
 
     public function getPublishedAttribute()
     {
-        $pd = $this->publication_date;
-        return $pd;
+        return $this->publication_date;
     }
 
     public function getShortedContentAttribute()

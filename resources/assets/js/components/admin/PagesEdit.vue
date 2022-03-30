@@ -61,7 +61,7 @@
             submit_style_warning: true
           };
           let url = '/api/v1/staticpages/' + this.pageId;
-          this.ajaxfun(url, 'get', null, (req) => {
+          ajaxfun(url, 'get', null, (req) => {
             for(let i in req){
               this.page[i] = req[i];
             }
@@ -73,22 +73,6 @@
         }).panelInstance('pagecontent-div');
       },
       methods:{
-        ajaxfun(url, method, body=null, callback){
-          fetch(url, {
-            method: method,
-            headers: {  
-                  "Content-type": "application/json; charset=UTF-8",
-                  'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-            },
-            body: (body !== null) ? JSON.stringify(body) : null
-          }).then(response => {
-              return response.json();
-          }).then(req => {
-              return callback(req);
-          }).catch(e => {
-              console.log(e);
-          });         
-        },
         editpage(){
           if(this.page.title === null || this.page.title.length < 3){
             alert("Надо написать заголовок страницы!");
@@ -118,7 +102,7 @@
             request_data.id = this.page.id;
           }
           
-          this.ajaxfun(url, method, request_data, (req) => {
+          ajaxfun(url, method, request_data, (req) => {
             if(req.status == 'ok'){
               this.$parent.$emit('switch-mode', {'mode': 'index', 'id': null});
               return true;

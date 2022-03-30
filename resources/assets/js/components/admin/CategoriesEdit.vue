@@ -48,29 +48,13 @@
 
       },
       methods:{
-        ajaxfun(url, method, body=null, callback){
-          fetch(url, {
-            method: method,
-            headers: {  
-                  "Content-type": "application/json; charset=UTF-8",
-                  'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-            },
-            body: (body !== null) ? JSON.stringify(body) : null
-          }).then(response => {
-              return response.json();
-          }).then(req => {
-              return callback(req);
-          }).catch(e => {
-              console.log(e);
-          });         
-        },
         addcategory(){
           if(this.cat.title === null || this.cat.title.length < 3){
             alert("Надо написать название категории! Минимум 3 символа.");
             return false;
           }      
           let url = '/api/v1/categories';
-          this.ajaxfun(url, 'post', {
+          ajaxfun(url, 'post', {
             title: this.cat.title,
             hidden: (this.cat.hidden) ? 1 : 0,
           }, (req) => {

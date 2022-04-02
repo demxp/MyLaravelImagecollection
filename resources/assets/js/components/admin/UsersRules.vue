@@ -43,6 +43,7 @@
             'staticpages': 'страниц',
             'audiofiles': 'аудиофайлов',
             'posts': 'постов',
+            'tags': 'тегов',
             'get': 'Просмотр',
             'post': 'Добавление',
             'put': 'Изменение',
@@ -65,10 +66,11 @@
           })
         },
         getText(v){
+          let paramName = (!!this.texts[v[0]]) ? this.texts[v[0]] : v[0].toUpperCase();
           if(!!v[2]){
-            return this.texts[v[1]] + " " + this.texts[v[0]] + ": " + this.texts[v[2]];
+            return this.texts[v[1]] + " " + paramName + ": " + this.texts[v[2]];
           }else{
-            return this.texts[v[1]] + " " + this.texts[v[0]] + ": не задано";
+            return this.texts[v[1]] + " " + paramName + ": не задано";
           }
         },
         getClass(v){

@@ -76,4 +76,10 @@ class Category extends Model
         $this->titleimage = $id;
         $this->save();
     }
+
+    public function resetHeadImage()
+    {
+        $this->titleimage = null;
+        $this->save();
+    }
 }

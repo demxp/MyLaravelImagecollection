@@ -8,6 +8,7 @@ use Validator;
 use Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ImageShort;
 
 class ImagesController extends Controller
 {
@@ -36,15 +37,10 @@ class ImagesController extends Controller
     public function index()
     {
         if(\Auth::user()->is_admin == 1){
-            $images = Images::paginate(20)->toArray();
+            return ImageShort::collection(Images::paginate(20));
         }else{
-            $images = Images::where('user_id', \Auth::user()->id)->paginate(20)->toArray();
+            return ImageShort::collection(Images::where('user_id', \Auth::user()->id)->paginate(20));
         }
-
-        $categories = Category::all();
-        $images_array = $images['data'];
-        unset($images['data']);
-        return ['images' => $images_array, 'categories' => $categories, 'pagesinfo' => $images];
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\ApiV1;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoryShort;
 use App\Category;
 use Validator;
 use Auth;
@@ -34,7 +35,7 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        return Category::all()->toArray();
+        return CategoryShort::collection(Category::all());
     }
 
     /**

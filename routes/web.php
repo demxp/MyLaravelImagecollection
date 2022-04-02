@@ -21,6 +21,7 @@ Route::group(['prefix' => 'api/v1', 'namespace' => 'ApiV1', 'middleware' => 'adm
 	Route::resource('/staticpages', 'StaticPagesController');	
 	Route::resource('/posts', 'BlogPostsController');
 	Route::resource('/audiofiles', 'AudiofilesController');
+	Route::resource('/tags', 'TagsController');
 	Route::get('/users/{id}/rules', 'RulesController@getRules');
 	Route::put('/users/{id}/rules', 'RulesController@setRules');
 });
@@ -39,5 +40,6 @@ Route::get('/logout', 'AuthController@logout')->middleware('ipblock');
 Route::get('/category', 'HomeController@allCategories')->name('categories');
 Route::get('/category/{slug}', 'HomeController@showCategory')->name('showcategory');
 Route::get('/posts', 'HomeController@allPosts')->name('posts');
+Route::get('/posts/{tag}', 'HomeController@PostsByTag')->name('postsbytag');
 Route::get('/post/{slug}', 'HomeController@showPost')->name('showpost');
 Route::get('/{url}', 'HomeController@getStaticPage')->name('staticpage');

@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 
 class DashboardController extends Controller
 {
-	const ADMIN_PAGES = ['images', 'categories', 'users', 'pages', 'posts', 'audiofiles'];
+	const ADMIN_PAGES = ['images', 'categories', 'users', 'pages', 'posts', 'audiofiles', 'tags'];
 
 	public function getpage($page=null)
 	{

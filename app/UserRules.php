@@ -19,7 +19,7 @@ class UserRules extends Model
 			'delete' 	=> ["allow", "owned", "deny"]
 		];
 
-		$routes = ['images', 'categories', 'staticpages', 'posts', 'audiofiles'];
+		$routes = ['images', 'categories', 'staticpages', 'posts', 'audiofiles', 'tags'];
 
 		return array_reduce($routes, function($acc, $route) use ($methods){
 			foreach($methods as $method => $rules){

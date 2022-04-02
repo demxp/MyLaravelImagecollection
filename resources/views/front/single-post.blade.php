@@ -26,6 +26,21 @@
                                                             </span>
                                                             <local-time utc-time="{{$post->published}}"></local-time>
                                                         </div>
+                                                        @if(count($post->tags) > 0)
+                                                        <div class="entry-meta">
+                                                            <span>Тэги:</span>
+                                                            @foreach($post->tags as $tag)
+                                                                <a href="{{route('postsbytag', $tag->slug)}}">
+                                                                    <span class="entry-tag">{{$tag->title}}</span>
+                                                                </a>
+                                                            @endforeach
+                                                        </div>
+                                                        @else
+                                                        <div class="entry-meta">
+                                                            <span>Тэги:</span>
+                                                            <span class="entry-tag">ОТСУТСТВУЮТ</span>
+                                                        </div>
+                                                        @endif                                         
                                                     </div><!-- /.entry-header-content -->
                                                 </div><!-- /.entry-header -->
                                                 @if (!is_null($post->title_image))

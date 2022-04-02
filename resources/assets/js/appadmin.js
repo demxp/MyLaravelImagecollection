@@ -82,6 +82,52 @@ import moment from 'moment';
       customAlert({text: 'Ошибка исполнения запроса'});
       console.log(e);
     });         
+  };
+  window.localCache = {
+    data: {},
+    get: function (url, callback){
+      if(this.data[url] && !this.data[url].wait){
+        return callback(this.data[url].data);
+      }
+      if(!this.data[url]){
+        this.data[url] = {
+          wait: true,
+          started: false,
+          cbArray: [],
+          data: null
+        };
+      }
+      if(this.data[url].wait){
+        this.data[url].cbArray.push(callback);
+      }
+      if(!this.data[url].started){
+        this.data[url].started = true;
+        let _this = this;
+        this.request(url, function(json){
+          _this.data[url].data = json;
+          _this.data[url].wait = false;
+          _this.data[url].cbArray.map((item, i) => {
+            item(json);
+          });
+          _this.data[url].cbArray = [];
+        });
+      }      
+    },
+    request: function (url, callback) {
+      console.log('Request in cache for url' + url);
+      new Promise(function(resolve, reject) {
+        fetch(url, {method: 'get'}).then(response => {
+            if(response.status != 200){
+                console.log('Error from LocalCache - Request');
+                return reject();
+            };
+            return response.json();
+        }).then(json => {
+          resolve(json);
+          callback(json);
+        })
+      });
+    }    
   }; 
 })(window);
 
@@ -108,6 +154,7 @@ Vue.component('PagesEdit', require('./components/admin/PagesEdit.vue'));
 Vue.component('PostsIndex', require('./components/admin/PostsIndex.vue'));
 Vue.component('PostsEdit', require('./components/admin/PostsEdit.vue'));
 Vue.component('AudiofilesIndex', require('./components/admin/AudiofilesIndex.vue'));
+Vue.component('TagsIndex', require('./components/admin/TagsIndex.vue'));
 
 const app = new Vue({
   el: '#vueapp',

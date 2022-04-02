@@ -62,7 +62,21 @@
                 </label>
               </div>
             </div>
-          </div>                    
+          </div>
+          <h4>Теги поста</h4>
+          <div class="row">
+            <div class="col-md-12">
+              <multiselect
+              v-model="post.tags"
+              :options="tags"
+              :multiple="true"
+              :group-select="true"
+              placeholder="Type to search"
+              track-by="title"
+              label="title"
+              ></multiselect>
+            </div>
+          </div>          
           <div class="form-group">
             <div id="pagecontent-div" style="width: 100%; min-height: 250px; border: 1px solid black;padding: 10px;" v-html="post.content"></div>
           </div>
@@ -79,9 +93,10 @@
 <script>
     import DatePick from 'vue-date-pick';
     import 'vue-date-pick/dist/vueDatePick.css';
+    import Multiselect from 'vue-multiselect';
 
     export default {
-      components: {DatePick},
+      components: {DatePick, Multiselect},
       props: {
         postId: {
           type: Number,
@@ -99,14 +114,17 @@
             content: null,
             publication: false,
             publication_date: null,
-            commenting: false
+            commenting: false,
+            tags: []
           },
           mode:{
             box_title: "Добавляем пост",
             submit_text: "Добавить",
             submit_style_success: true,
             submit_style_warning: false
-          }
+          },
+          tempTags: [],
+          tags: []
         }
       },
       mounted(){
@@ -117,17 +135,22 @@
             submit_style_success: false,
             submit_style_warning: true
           };
-          let url = '/api/v1/posts/' + this.postId;
-          ajaxfun(url, 'get', null, (req) => {
-            for(let i in req){
-              this.post[i] = req[i];
-              if(i == 'title_image' && req[i] != null && req[i].length > 3) this.post.title_image_enabled = true;
-              if(i == 'publication_date' && req[i] != null){
-                let dt = moment(moment(req[i]).utc(true).format()).local();
+          ajaxfun('/api/v1/posts/' + this.postId, 'get', null, (req) => {
+            let post = req;
+            for(let i in post){
+              this.post[i] = post[i];  
+              if(i == 'title_image' && post[i] != null && post[i].length > 3) this.post.title_image_enabled = true;
+              if(i == 'publication_date' && post[i] != null){
+                let dt = moment(moment(post[i]).utc(true).format()).local();
                 this.post.publication_date = dt.format('DD.MM.YYYY HH:mm');
               }
             }
-          });       
+          });
+          ajaxfun('/api/v1/tags', 'get', null, (req) => {
+            req.map((item, i) => {
+              this.tags.push(item);
+            });
+          });          
         }
         this.contentEditor = new nicEditor({
           fullPanel: true,
@@ -161,6 +184,7 @@
             title_image: (this.post.title_image_enabled) ? this.post.title_image : null,
             publication: (this.post.publication) ? 1 : 0,
             commenting: (this.post.commenting) ? 1 : 0,
+            tags: this.post.tags
           };
 
           if(this.post.publication){
@@ -187,6 +211,7 @@
     }
 </script>
 
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style scoped>
   label.switcher .switcher__text:before {
     top: 0px;

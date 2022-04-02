@@ -174,12 +174,12 @@ class Images extends Model
 
     public function setCategory($id)
     {
-    	if($id == null) { return 1;}
+        if(is_null($id) && $this->id == $this->category->titleimage){
+            $this->category->resetHeadImage();
+        }
 
     	$this->category_id = $id;
     	$this->save();
-
-        return 0;        
     }
 
     public function setCategoryTitleimage($id)

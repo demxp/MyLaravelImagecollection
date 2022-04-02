@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\{
     Category, 
     StaticPages, 
-    BlogPost
+    BlogPost,
+    PostTag
 };
 
 class HomeController extends Controller
@@ -55,4 +56,15 @@ class HomeController extends Controller
         if(!$post) return view('front.single-post-fail');
         return view('front.single-post', ['post' => $post]);
     }
+
+    public function PostsByTag($tag)
+    {
+        $tag = PostTag::where([
+            ['slug', $tag]
+        ])->first();
+        if(!$tag) return view('front.single-post-fail');
+
+        $posts = $tag->posts()->where('publication', 1)->orderBy('publication_date', 'desc')->paginate();
+        return view('front.posts', ['posts' => $posts]);
+    }    
 }

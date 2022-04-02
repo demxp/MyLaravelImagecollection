@@ -37,7 +37,7 @@
                                 <ul class="nav-links">
                                     <li class="prev-post">
                                         @if($category->hasPrevious())
-                                            <a href="{{route('showcategoryaslist', $category->getPrevious()->slug)}}">
+                                            <a href="{{route('showcategory', $category->getPrevious()->slug)}}">
                                                 <div class="link-inner">
                                                     <span class="post-title">{{$category->getPrevious()->title}}</span>
                                                 </div>
@@ -55,7 +55,7 @@
                                     </li>
                                     <li class="next-post">
                                         @if($category->hasNext())
-                                        <a href="{{route('showcategoryaslist', $category->getNext()->slug)}}">
+                                        <a href="{{route('showcategory', $category->getNext()->slug)}}">
                                             <div class="link-inner">
                                                 <span class="post-title">{{$category->getNext()->title}}</span>
                                             </div>

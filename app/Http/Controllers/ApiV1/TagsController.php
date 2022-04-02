@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\ApiV1;
 
-use App\BlogPost;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\{PostShort, PostToEdit};
+use App\PostTag;
 use Validator;
+use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\TagShort;
 
-class BlogPostsController extends Controller
+class TagsController extends Controller
 {
     /**
      * Проверка прав доступа.
@@ -16,7 +17,7 @@ class BlogPostsController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            if(\App\UserRules::checkAccess($request, new BlogPost)){
+            if(\App\UserRules::checkAccess($request, new PostTag)){
                 return $next($request);
             }
 
@@ -34,11 +35,7 @@ class BlogPostsController extends Controller
      */
     public function index()
     {
-        return PostShort::collection(
-                BlogPost::orderByRaw('(CASE WHEN publication = 0 THEN id END) DESC')
-                ->orderBy('publication_date', 'desc')
-                ->paginate(20)
-            );
+        return TagShort::collection(PostTag::all());
     }
 
     /**
@@ -50,8 +47,7 @@ class BlogPostsController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => 'sometimes|required|min:3|max:150',
-            'content' => 'sometimes|required|min:3'
+            'title' => 'required|min:3|max:25'
         ]);
 
         if($validator->fails()) {
@@ -60,27 +56,24 @@ class BlogPostsController extends Controller
                 "message" => "ValidateError",
                 "errors" => $validator->messages()->all()
             ];
-        }           
+        }        
 
-        $post = BlogPost::add($request->all());
+        if(PostTag::findDuble($request->get('title'))){
+            return [
+                "status" => "error",
+                "message" => "ValidateError",
+                "errors" => ['Найден дубликат заданного названия тега']
+            ];
+        }
 
-        if($post) return ["status" => "ok"];
+        $tag = PostTag::add($request->all());
+
+        if($tag) return ["status" => "ok"];
         return [
             "status" => "error",
             "message" => "SaveError",
-            "errors" => $post->errors()
-        ];        
-    }
-
-    /**
-     * Get BlogPost data.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        return new PostToEdit(BlogPost::find($id));
+            "errors" => $tag->errors()
+        ];
     }
 
     /**
@@ -92,12 +85,9 @@ class BlogPostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $BlogPost = BlogPost::find($id);
+        $tag = PostTag::find($id);
         $validator = Validator::make($request->all(), [
-            'title' => 'sometimes|required|min:3|max:150',
-            'content' => 'sometimes|required|min:3',
-            'publication' => 'sometimes|required|numeric',
-            'commenting' => 'sometimes|required|numeric'
+            'title' => 'required|min:3|max:25'
         ]);
 
         if($validator->fails()) {
@@ -108,11 +98,23 @@ class BlogPostsController extends Controller
             ];
         }           
 
-        $BlogPost->edit($request->all());
+        if(PostTag::findDuble($request->get('title'))){
+            return [
+                "status" => "error",
+                "message" => "ValidateError",
+                "errors" => ['Найден дубликат заданного названия тега']
+            ];
+        }
+
+        if($tag->edit($request->all())){
+            return ["status" => "ok"];
+        }
 
         return [
-            "status" => "ok"
-        ];
+            "status" => "error",
+            "message" => "SaveError",
+            "errors" => $tag->errors()
+        ];        
     }
 
     /**
@@ -123,9 +125,10 @@ class BlogPostsController extends Controller
      */
     public function destroy($id)
     {
-        BlogPost::find($id)->remove();
-        return [
-            "status" => "ok"
-        ];
+        if(PostTag::find($id)->delete()){
+            return ["status" => "ok"];
+        }
+
+        return ["status" => "error"];
     }
 }

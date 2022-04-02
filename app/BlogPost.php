@@ -20,6 +20,11 @@ class BlogPost extends Model
 	    return $this->belongsTo(User::class, 'owner');
 	}
 
+    public function tags()
+    {
+        return $this->belongsToMany('App\PostTag', 'posts_tags', 'post_id', 'tag_id');
+    }
+
     public function sluggable()
     {
         return [
@@ -35,6 +40,7 @@ class BlogPost extends Model
         $post->fill($fields);
         $post->owner = \Auth::user()->id;
         $post->processingPublication($fields);
+        $post->processingTags($fields);
         if(isset($fields['commenting'])){
             $post->commenting = $fields['commenting'];
         }                
@@ -50,6 +56,7 @@ class BlogPost extends Model
     {
     	$this->fill($fields);
         $this->processingPublication($fields);
+        $this->processingTags($fields);
         if(isset($fields['commenting'])){
             $this->commenting = $fields['commenting'];
         }
@@ -75,6 +82,18 @@ class BlogPost extends Model
                 }
             }
         }
+
+        return $this;
+    }
+
+    public function processingTags($fields)
+    {
+        $tags = array_reduce($fields['tags'], function($acc, $item){
+            $acc[] = $item['id'];
+            return $acc;
+        }, []);
+
+        $this->tags()->sync($tags);
 
         return $this;
     }

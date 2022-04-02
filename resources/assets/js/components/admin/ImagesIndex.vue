@@ -43,7 +43,7 @@
           </tr>
         </tbody>
         <tbody>
-          <tr v-for="img in imgs" :class="{'tr__green':img.success, 'tr__red':img.danger}">
+          <tr v-for="img in imgs" :key="img.id" :class="{'tr__green':img.success, 'tr__red':img.danger}">
             <td>{{ img.id }}</td>
             <td>
               <span contenteditable="true" @keydown.13.prevent="setTitle(img, $event)" v-text="img.title"></span><br /><br />
@@ -56,7 +56,7 @@
               </label>
             </td>
             <td>
-              <select2 :options="cats" :value="img.category_id" style="width: 100%;" @input="setCategory(img, $event)"></select2>
+              <multiselect v-model="img.category" :options="cats" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Pick a value" @select="setCategory(img, $event, 'change')" @remove="setCategory(img, $event, 'clear')" track-by="title" label="title"></multiselect>
                 <div :class="{ setcattitle:true, 'selected': img.iscattitle }" v-if="img.category_id !== 0">
                   <button type="button" class="btn btn-info btn-xs" @click="setCategoryTitle(img)">Иконка</button>                      
                   <span>Иконка</span>
@@ -96,7 +96,10 @@
 </template>
 
 <script>
+    import Multiselect from 'vue-multiselect';
+
     export default {
+      components: {Multiselect},  
       data(){
         return{
           imgs: [],
@@ -106,11 +109,12 @@
         }
       },
       mounted(){
+        window.localCache.get('/api/v1/categories', this.fillCategories);
         ajaxfun('/api/v1/images', 'get', null, this.fillTable)
       },
       methods:{
-        fillTable(data){
-          data.categories.map((item, i) => {
+        fillCategories(data){
+          data.map((item, i) => {
             if(!!this.cats[i]){
               this.cats[i].titleimage = item.titleimage;
               this.cats[i].text = item.title;
@@ -118,31 +122,28 @@
             }else{
               this.cats.push({
                 titleimage: item.titleimage,
-                text: item.title,
+                title: item.title,
                 id: item.id
               });
             }
           });
-          data.images.map((item, i) => {
+        },        
+        fillTable(data){
+          let imgs = data.data;
+          imgs.map((item, i) => {
             item.success = false;
             item.danger = false;
-            item.iscattitle = false;
-            this.cats.map((cat) => {
-              if(cat.titleimage == item.id){
-                item.iscattitle = true;
-              }              
-            })          
             if(!!this.imgs[i]){
               Object.keys(item).map((param) => this.imgs[i][param] = item[param]);
             }else{
               this.imgs.push(item)
             }
           });
-          if(data.images.length < this.imgs.length){
-            this.imgs.splice(data.images.length,this.imgs.length - data.images.length);
+          if(imgs.length < this.imgs.length){
+            this.imgs.splice(imgs.length,this.imgs.length - imgs.length);
           }
-          this.current_page = data.pagesinfo.current_page;
-          this.last_page = data.pagesinfo.last_page;
+          this.current_page = data.meta.current_page;
+          this.last_page = data.meta.last_page;
         },
         nextPage(){
           let url = '/api/v1/images' + '?page=' + (this.current_page + 1);
@@ -166,18 +167,12 @@
             ajaxfun(url, 'get', null, this.fillTable);
           }
         },
-        checkCatTitle(img){
-          for(item in this.cats){
-            if(this.cats[item].titleimage == img.id){return true;}
-          }
-          return false;
-        },
         saveModel(img, callback){
           let url = '/api/v1/images/'+img.id;
           ajaxfun(url, 'put', {
             id: img.id,
             title: img.title,
-            category_id: img.category_id,
+            category_id: (!!img.category) ? img.category.id : null,
             status: (img.status) ? null : 'hide',
             image: null
           }, callback);        
@@ -208,29 +203,28 @@
           img.status = event.target.checked;
           this.saveModel(img, this.createCallback(img));
         },
-        setCategory(img, event){
-          if(this.selectChangeBlock){return;}
+        setCategory(img, event, mode){
           this.roll = ((img) => {
-            let old = img.category_id; 
+            let old = img.category;
             let _this = this;
             return function(obj){
-              obj.category_id = old;
+              obj.category = old;
               _this.roll = function(){};
             };
           })(img);
-          let val = event;
-          img.category_id = event;
+          img.category = (mode == 'clear') ? null : event;
+          if(!!img.category) img.iscattitle = false;
           this.saveModel(img, this.createCallback(img));
         },
         setCategoryTitle(img){
-          let url = '/api/v1/categories/'+img.category_id;
+          let url = '/api/v1/categories/'+img.category.id;
           ajaxfun(url, 'put', {
-            id: img.category_id,
+            id: img.category.id,
             titleimage: img.id
           }, (req) => {
             if(req.status == "ok"){
               this.imgs.map((image, i) => {
-                if(image.category_id == img.category_id){
+                if(!!image.category && image.category.id == img.category.id){
                   this.imgs[i].iscattitle = false;
                 }
               });
@@ -272,6 +266,8 @@
       }  
     }
 </script>
+
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style scoped>
 .setcattitle {

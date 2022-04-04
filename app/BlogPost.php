@@ -88,12 +88,14 @@ class BlogPost extends Model
 
     public function processingTags($fields)
     {
-        $tags = array_reduce($fields['tags'], function($acc, $item){
-            $acc[] = $item['id'];
-            return $acc;
-        }, []);
+        if(isset($fields['tags'])){
+            $tags = array_reduce($fields['tags'], function($acc, $item){
+                $acc[] = $item['id'];
+                return $acc;
+            }, []);
 
-        $this->tags()->sync($tags);
+            $this->tags()->sync($tags);
+        }
 
         return $this;
     }

@@ -86,87 +86,9 @@
                                             </li>
                                         </ul>       
                                     </div><!-- /.nagivation -->
-@if ($post->commenting == 1)
-                                    <div id="comments" class="comments-area">
-                                        <h4 class="comments-title">2 thoughts on “Modern Design In Britain”</h4>
-
-                                        <ul class="comment-list">
-                                            <li>
-                                                <article class="comment-body">
-                                                    <div class="comment-meta">
-                                                        <div class="comment-author">
-                                                            <img src="images/icon/1.png" alt="images">
-                                                            <b class="fn"><a href="#" class="url">STEVEN GRAY</a></b>
-                                                            <span class="says">says:</span>
-                                                        </div>
-                                                        <div class="comment-metadata">
-                                                            <a href="#"><span>September 7, 2016 at 4:26 am</span></a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="comment-content">
-                                                        <p>Stradling’s taste is not easy to predict, and there is no dominant aesthetic or obvious theme; Bauhaus side-tables and Somerset ceramics are viewed with equal respect. The two design connoisseurs share an</p>
-                                                    </div>
-                                                    <div class="reply"><a class="comment-reply-link" href="#">Reply</a></div>
-                                                </article>
-                                                <ul class="children">
-                                                    <li>
-                                                        <article class="comment-body">
-                                                            <div class="comment-meta">
-                                                                <div class="comment-author">
-                                                                    <img src="images/icon/1.png" alt="images">
-                                                                    <b class="fn"><a href="#" class="url">STEVEN GRAY</a></b>
-                                                                    <span class="says">says:</span>
-                                                                </div>
-                                                                <div class="comment-metadata">
-                                                                    <a href="#"><span>September 7, 2016 at 4:26 am</span></a>
-                                                                </div>
-                                                            </div>
-                                                            <div class="comment-content">
-                                                                <p>For this exhibition, titled “Modern Design in Britain”, Margaret Howell has selected fifty objects from the Ken Stradling Collection</p>
-                                                            </div>
-                                                            <div class="reply"><a class="comment-reply-link" href="#">Reply</a></div>
-                                                        </article>
-                                                    </li>
-                                                </ul><!-- /.children -->
-                                                <article class="comment-body">
-                                                    <div class="comment-meta">
-                                                        <div class="comment-author">
-                                                            <img src="images/icon/1.png" alt="images">
-                                                            <b class="fn"><a href="#" class="url">STEVEN GRAY</a></b>
-                                                            <span class="says">says:</span>
-                                                        </div>
-                                                        <div class="comment-metadata">
-                                                            <a href="#"><span>September 7, 2016 at 4:26 am</span></a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="comment-content">
-                                                        <p>Stradling’s taste is not easy to predict, and there is no dominant aesthetic or obvious theme; Bauhaus side-tables and Somerset ceramics are viewed with equal respect. The two design connoisseurs share an</p>
-                                                    </div>
-                                                    <div class="reply"><a class="comment-reply-link" href="#">Reply</a></div>
-                                                </article>
-                                            </li>
-                                        </ul><!-- /.comment-list -->
-
-                                        <div id="respond" class="comment-respond">
-                                            <h4 id="reply-title" class="comment-reply-title">Leave a Reply</h4>
-                                            <form id="commentform" class="comment-form">
-                                                <p class="comment-notes"><span id="email-notes">Your email address will not be published.</span> Required fields are marked <span class="required">*</span></p>
-
-                                                <p class="comment-form-comment"><label>Comment</label> <textarea id="comment" name="comment" required="required"></textarea></p>
-
-                                                <p class="comment-form-author"><label>Name <span class="required">*</span></label> <input id="author" name="author" type="text" value="" required="required"></p>
-
-                                                <p class="comment-form-email"><label>Email <span class="required">*</span></label> <input id="email" name="email" type="email" value="" required="required"></p>
-
-                                                <!-- <p class="comment-form-url"><label>Website<span class="required">*</span></label> <input id="url" name="url" type="url" value=""></p> -->
-
-                                                <p class="comment-form-url"><label>Website</label> <input id="url" name="url" type="text" value="" required="required"></p>
-
-                                                <p class="form-submit"><input name="submit" type="submit" id="submit" class="submit" value="Post Comment"></p>
-                                            </form><!-- /#commentform -->
-                                        </div><!-- /.comment-respond -->
-                                    </div><!-- /.comments-area -->
-@endif                                                                        
+                                    @if ($post->commenting == 1)
+                                    <comments-block post-id="{{$post->id}}" post-slug="{{$post->slug}}"></comments-block>
+                                    @endif                                                                        
                                 </div><!-- /.main-content-wrap -->
                             </div><!-- /.main-content -->
                         </div><!-- /.content-wrap  -->

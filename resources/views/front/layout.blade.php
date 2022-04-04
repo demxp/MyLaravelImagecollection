@@ -4,6 +4,7 @@
 <head>
     <!-- Basic Page Needs -->
     <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
     <title>Просто сайт, просто блог, просто галерея</title>
 

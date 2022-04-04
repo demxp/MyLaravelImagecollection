@@ -43,3 +43,7 @@ Route::get('/posts', 'HomeController@allPosts')->name('posts');
 Route::get('/posts/{tag}', 'HomeController@PostsByTag')->name('postsbytag');
 Route::get('/post/{slug}', 'HomeController@showPost')->name('showpost');
 Route::get('/{url}', 'HomeController@getStaticPage')->name('staticpage');
+Route::get('/post/{slug}/comments', 'CommentController@getPostComments');
+Route::post('/post/{slug}/comments', 'CommentController@savePostComment');
+Route::put('/post/{slug}/comments', 'CommentController@editPostComments');
+Route::delete('/post/{slug}/comments', 'CommentController@deletePostComments');

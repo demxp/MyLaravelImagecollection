@@ -12,7 +12,14 @@
 */
 
 Route::get('/', 'HomeController@index')->name('home');
-Route::get('/admin/{part?}', 'Admin\DashboardController@getpage')->middleware('admin')->name('adminpage');
+
+Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admin'], function(){
+	Route::get('/post/{slug}/comments', 'CommentController@getPostComments');
+	Route::post('/post/{slug}/comments', 'CommentController@savePostComment');
+	Route::put('/post/{slug}/comments', 'CommentController@editPostComments');
+	Route::delete('/post/{slug}/comments', 'CommentController@deletePostComments');
+	Route::get('/{part?}', 'DashboardController@getpage')->name('adminpage');
+});
 
 Route::group(['prefix' => 'api/v1', 'namespace' => 'ApiV1', 'middleware' => 'admin'], function(){
 	Route::resource('/images', 'ImagesController');	

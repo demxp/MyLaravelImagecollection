@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\{
@@ -9,16 +9,26 @@ use App\{
 };
 use Validator;
 use App\Http\Resources\CommentShort;
+use App\Http\Controllers\Controller;
 
 class CommentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if(\Auth::user()->is_admin == 1) return $next($request);
+            return response([
+                "status" => "error",
+                "message" => "NotEnoughRights"
+            ], 403)->header('Content-Type', 'application/json');
+        });
+    }      
+
     public function savePostComment(Request $request, $postSlug)
     {
         $validator = Validator::make($request->all(), [
             'postId' 		=> 'required|numeric',
             'topCommentId'	=> 'required|numeric',
-            'email'			=> 'required|email:rfc',
-            'name'			=> 'required|min:3|max:100',
             'content'		=> 'required|min:10|max:'.config('app.commentLimit')
         ]);
 
@@ -43,15 +53,7 @@ class CommentController extends Controller
             "message" => "Post not found"
         ];
 
-        if($post->commenting == BlogPost::COMMENTING_NOT_ALLOW) return [
-            "status" => "error",
-            "message" => "Post not commentable"
-        ];
-
-        if($newComment = Comment::add($commentData)){
-            if($post->commenting == BlogPost::COMMENTING_MODERATED){
-                $newComment->moderation = true;
-            }
+        if($newComment = Comment::add($commentData, \Auth::user())){
         	return new CommentShort($newComment);
         }
 
@@ -72,7 +74,7 @@ class CommentController extends Controller
 
         return [
         	'status' => 'ok',
-        	'data' => Comment::getByPost($post->id, $post->commenting)
+        	'data' => Comment::getByPost($post->id, BlogPost::COMMENTING_ALLOW_ALL)
         ];
     }
 
@@ -85,7 +87,7 @@ class CommentController extends Controller
             "message" => "Post not found"
         ];
 
-        if(Comment::deleteComment($req->all())) return [
+        if(Comment::deleteComment($req->all(), \Auth::user())) return [
         	'status' => 'ok'
         ];
 
@@ -98,8 +100,8 @@ class CommentController extends Controller
     {
         $validator = Validator::make($req->all(), [
             'id'	 		=> 'required|numeric',
-            'allowEdit'		=> 'required|string',
-            'content'		=> 'required|min:10|max:'.config('app.commentLimit')
+            'content'		=> 'sometimes|min:10|max:'.config('app.commentLimit'),
+            'commentStatus' => 'sometimes|numeric'
         ]);
 
         if($validator->fails()) {
@@ -110,7 +112,7 @@ class CommentController extends Controller
             ];
         }
 
-        if($comm = Comment::editComment($req->all())) return [
+        if($comm = Comment::editComment($req->all(), \Auth::user()))return [
         	'status' => 'ok',
         	'data'	=> new CommentShort($comm)
         ];

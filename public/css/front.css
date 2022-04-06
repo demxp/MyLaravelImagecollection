@@ -8737,6 +8737,11 @@ a.comment-reply-link {
     display: inline-block;
     margin: 0 3px;
 }
+
+/* Фикс Sweetalert */
+button.swal-button{
+	line-height: inherit;
+}
 /*!
  *  Font Awesome 4.6.3 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)

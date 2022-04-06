@@ -2152,3 +2152,8 @@ a.comment-reply-link {
     display: inline-block;
     margin: 0 3px;
 }
+
+/* Фикс Sweetalert */
+button.swal-button{
+	line-height: inherit;
+}

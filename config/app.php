@@ -230,4 +230,7 @@ return [
         'Image' => Intervention\Image\Facades\Image::class,
     ],
 
+    /* Comment symbols limit */
+
+    'commentLimit' => env('COMMENT_LIMIT', '2000'),
 ];

@@ -14,13 +14,19 @@ class CommentShort extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $result = [
             'id' => $this->id,
             'name' => $this->name,
             'content' => $this->content,
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
             'topComment' => $this->topComment,
-            'allowEdit' => $this->commentAllowEdit
+            'allowEdit' => $this->commentAllowEdit,
+            'moderation' => $this->moderation,
+            'fromAdmin' => $this->fromAdmin
         ];
+
+        if(\Auth::check()) $result['commentStatus'] = $this->status;
+
+        return $result;
     }
 }

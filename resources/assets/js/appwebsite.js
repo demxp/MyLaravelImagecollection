@@ -7,8 +7,9 @@ import moment from 'moment';
 
 (function(window) {
   let al = ((swal) => {
-    return function(text){
-      swal("Oops!", text, "error");
+    return function(text, mode=false){
+      if(mode) return swal('', text, mode);
+      return swal("Oops!", text, "error");
     }; 
   })(swal);
   let errors = {
@@ -34,7 +35,10 @@ import moment from 'moment';
     if (!!errors[resp.message]) {
       errors[resp.message].parseFunc(resp);
     } else if (!!resp.text) {
-      al(resp.text);
+      if(!('mode' in resp)){
+        resp.mode = false;
+      }
+      al(resp.text, resp.mode);
     } else if (!!resp.message) {
       al(resp.message);      
     } else if (!!resp) {
@@ -96,6 +100,7 @@ Vue.component('BgSlider', require('./components/front/BgSlider.vue'));
 Vue.component('AudioPlayer', require('./components/front/AudioPlayer.vue'));
 Vue.component('CommentsBlock', require('./components/front/CommentsBlock.vue'));
 Vue.component('CommentArticle', require('./components/front/CommentArticle.vue'));
+Vue.component('DivEditable', require('./components/front/DivEditable.vue'));
 
 const app = new Vue({
   el: '#vueapp',

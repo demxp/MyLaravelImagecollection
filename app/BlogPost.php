@@ -15,6 +15,10 @@ class BlogPost extends Model
     protected $fillable = ['title', 'content'];
     protected $appends = ['published', 'shortedContent', 'noRMContent'];
 
+    const COMMENTING_NOT_ALLOW = 0;
+    const COMMENTING_MODERATED = 1;
+    const COMMENTING_ALLOW_ALL = 2;
+
 	public function author()
 	{
 	    return $this->belongsTo(User::class, 'owner');

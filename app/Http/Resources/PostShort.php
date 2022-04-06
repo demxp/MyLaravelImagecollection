@@ -18,7 +18,8 @@ class PostShort extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'slug' => $this->slug,
-            'publication' => ($this->publication == 0) ? false : true,
+            'publication' => $this->publication,
+            'commenting' => $this->commenting,
             'link' => \URL::to('/').'/post/'.$this->slug
         ];
     }

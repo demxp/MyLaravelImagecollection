@@ -138,9 +138,10 @@ import moment from 'moment';
  */
 
 Vue.component('PictureLoader', require('./components/admin/PictureLoader.vue'));
-Vue.component('Select2', require('./components/admin/Select2.vue'));
 Vue.component('PLImageAvatar', require('./components/admin/PLImageAvatar.vue'));
 Vue.component('PLImageImage', require('./components/admin/PLImageImage.vue'));
+Vue.component('TristateSwitcher', require('./components/admin/TristateSwitcher.vue'));
+Vue.component('DistateSwitcher', require('./components/admin/DistateSwitcher.vue'));
 
 Vue.component('CategoriesIndex', require('./components/admin/CategoriesIndex.vue'));
 Vue.component('CategoriesEdit', require('./components/admin/CategoriesEdit.vue'));

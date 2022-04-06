@@ -8,8 +8,11 @@
         v-for="comment in comments"
         :key="comment.id"
         :reply-click="replyTo"
-        :edit-click="editComment"
+        :edit-click="sendComment"
         :delete-click="deleteComment"
+        :allow-click="allowComment"
+        :mark-block="markNewComment"
+        :admin-mode="adminMode"
         ></comment-article>
       </ul><!-- /.comment-list -->
 
@@ -19,15 +22,18 @@
               <p class="comment-notes"><span id="email-notes">Ваш адрес Email не будет опубликован.</span> Обязательные поля отмечены звездочками <span class="required">*</span></p>
 
               <p class="comment-form-comment">
-                <label>{{ mode.text }}<span class="reset-reply" v-if="mode.reset" @click="resetReply()">СБРОС</span></label>
+                <label>{{ mode.text }}
+                  <span class="reset-reply" v-if="mode.reset" @click="resetReply()">СБРОС</span>
+                </label>
                 <textarea name="comment" required="required" v-model="formComment.content" ref="InputCommentElem"></textarea>
+                <span>Счетчик символов: {{ counterSymbols }}</span>
               </p>
 
-              <p class="comment-form-author"><label>Ваше имя <span class="required">*</span></label> <input name="author" type="text" required="required" v-model="formComment.name"></p>
+              <p class="comment-form-author" v-if="!adminMode"><label>Ваше имя <span class="required">*</span></label> <input name="author" type="text" required="required" v-model="formComment.name"></p>
 
-              <p class="comment-form-email"><label>Ваш Email <span class="required">*</span></label> <input name="email" type="email" required="required" v-model="formComment.email"></p>
+              <p class="comment-form-email" v-if="!adminMode"><label>Ваш Email <span class="required">*</span></label> <input name="email" type="email" required="required" v-model="formComment.email"></p>
 
-              <p class="form-submit"><input name="submit" type="button" class="submit" value="Отправить" @click="sendComment(formComment.parent)"></p>
+              <p class="form-submit"><input name="submit" type="button" class="submit" value="Отправить" @click="sendComment()"></p>
           </form><!-- /#commentform -->
       </div><!-- /.comment-respond -->
   </div><!-- /.comments-area -->
@@ -45,6 +51,15 @@
           type: String,
           required: true,
           default: null
+        },
+        commentLimit: {
+          type: String,
+          required: true
+        },
+        adminMode: {
+          type: Boolean,
+          required: false,
+          default: false
         }
       },
       data(){
@@ -64,11 +79,14 @@
             key: 'send',
             text: 'Ваш комментарий',
             reset: false
-          }
+          },
+          counterSymbols: 0
         }
       },
       mounted(){
         this.formComment.postId = this.postId;
+        this.counterSymbols = this.commentLimit;
+        this.apiLink = ((this.adminMode) ? '/admin' : '') + '/post/'+this.postSlug+'/comments';
         this.getPostComments();
         this.loadTemp();
         this.insertWatch = true;
@@ -76,6 +94,7 @@
       watch: {
         'formComment.content': function (value) {
           this.saveTemp();
+          this.counterSymbols = this.commentLimit - value.split('').length;
         },
         'formComment.name': function (value) {
           this.saveTemp();
@@ -85,6 +104,18 @@
         }
       },      
       methods:{
+        markNewComment(id){
+          return 'CommentBlockId-' + id;
+        },
+        scrollToComment(id){
+          setTimeout(function(){
+            let blockId = 'CommentBlockId-' + id;
+            let elem = document.getElementById(blockId);
+            if(!!elem){
+              elem.scrollIntoView({behavior: "smooth", block: "center"});
+            }
+          }, 200);
+        },
         validateEmail(email){
           return email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
         },
@@ -127,67 +158,56 @@
           this.mode.reset = false;
           this.mode.key = 'send';
         },
-        sendComment(){
-          if(this.formComment.name.length < 3){
-            customAlert({text: "Вы не назвались, введите ваше имя"});
-            return false;
-          }      
-          if(this.formComment.content.length < 10){
+        sendComment(data=null){
+          let input = data;
+          let method = 'put';
+          let afterfunc = function(req){
+            if(req.status == 'error') return customAlert(req);
+            input.callback(req);
+            return req;
+          };
+          if(!input){
+            input = this.formComment;
+            method = 'post';
+            afterfunc = this.afterSendComment;
+
+            if(!this.adminMode){
+              if(input.name.length < 3){
+                customAlert({text: "Вы не назвались, введите ваше имя"});
+                return false;
+              }      
+              let valid = this.validateEmail(input.email);
+              if(valid.constructor.name != "Array" || valid[0] != valid['input']){
+                customAlert({text: "Что-то неправильно в Email адресе..."});
+                return false;
+              }
+            }
+          }
+
+          if(input.content.length < 10){
             customAlert({text: "Пустой комментарий, минимум 10 символов"});
             return false;
           }
-          let valid = this.validateEmail(this.formComment.email);
-          if(valid.constructor.name != "Array" || valid[0] != valid['input']){
-            customAlert({text: "Что-то неправильно в Email адресе..."});
-            return false;
-          }          
 
-          let method = (this.mode.key == 'edit') ? 'put' : 'post';
-
-          ajaxfun('/post/'+this.postSlug+'/comments', method, this.formComment, (req) => {
-            this.formComment.content = '';
-            switch(this.mode.key){
-              case('send'):
-                this.comments.push(req)
-                break;
-              case('edit'):
-                this.formComment.parent.content = req.data.content;
-                this.formComment.parent.allowEdit = req.data.allowEdit;
-                this.resetReply();
-                break;
-              case('reply'):
-                this.formComment.parent.children.push(req);
-                this.resetReply();                
-                break;
-            }
-
-          });       
+          ajaxfun(this.apiLink, method, input, afterfunc);
         },
-        editComment(comment){
-          this.contentNotWatch(comment.content);
-          this.formComment.allowEdit = comment.allowEdit;
-          this.formComment.id = comment.id;
-          this.formComment.parent = comment;
-          this.mode.text = 'Редактирование комментария';
-          this.mode.reset = true;
-          this.mode.key = 'edit';
-          this.$refs['respondArea'].scrollIntoView({behavior: "smooth"});
-          let element = this.$refs['InputCommentElem'];
-          let position = element.value.length;
-          element.focus();
-          if (element.setSelectionRange) {
-              element.setSelectionRange(position, position);
-          } else if (element.createTextRange) {
-              let range = element.createTextRange();
-              range.collapse(true);
-              range.moveEnd('character', position);
-              range.moveStart('character', position);
-              range.select();
+        afterSendComment(req){
+          if(req.status == 'error') return customAlert(req);
+          switch(this.mode.key){
+            case('send'):
+              this.comments.push(req)
+              break;
+            case('reply'):
+              this.formComment.parent.children.push(req);
+              this.resetReply();
+              break;
           }
+          if(req.moderation === true) customAlert({text: "Для этого поста включена модерация комментариев. Пока ваш комментарий видите только вы...", mode: 'warning'});          
+          this.scrollToComment(req.id);
         },
         deleteComment(comment, hidefunc){
           if(!confirm("Вы уверены?")){return false;}
-          ajaxfun('/post/'+this.postSlug+'/comments', 'delete', {
+          ajaxfun(this.apiLink, 'delete', {
             id: comment.id,
             allowEdit: comment.allowEdit
           }, (req) => {
@@ -198,10 +218,36 @@
             }           
           });          
         },
+        allowComment(data){
+          ajaxfun(this.apiLink, 'put', data, function(req){
+            if(req.status == 'error') return customAlert(req);
+            data.callback(req);
+            return req;
+          });
+        },
         getPostComments(){
           let _this = this;
-          ajaxfun('/post/'+this.postSlug+'/comments', 'get', null, (req) => {
-            _this.comments = req.data;
+          const traverse = (arr, topComment) =>
+              arr.filter(comment => comment.topComment === topComment)
+              .reduce((result, current) => [
+                  ...result,
+                  {
+                      ...current,
+                      children: traverse(arr, current.id)
+                  }
+              ], [])
+
+          const parseTree = (arr) =>
+              arr.filter(({ topComment }) => !topComment)
+              .map(comment => ({
+                  ...comment,
+                  children: traverse(arr, comment.id)
+              }))
+
+          let link = (this.adminMode)
+
+          ajaxfun(this.apiLink, 'get', null, (req) => {
+            _this.comments = parseTree(req.data);
           });       
         },
       },

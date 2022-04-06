@@ -21331,7 +21331,10 @@ window.Vue = __webpack_require__(143);
 (function (window) {
   var al = function (swal) {
     return function (text) {
-      swal("Oops!", text, "error");
+      var mode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+      if (mode) return swal('', text, mode);
+      return swal("Oops!", text, "error");
     };
   }(__WEBPACK_IMPORTED_MODULE_0_sweetalert___default.a);
   var errors = {
@@ -21357,7 +21360,10 @@ window.Vue = __webpack_require__(143);
     if (!!errors[resp.message]) {
       errors[resp.message].parseFunc(resp);
     } else if (!!resp.text) {
-      al(resp.text);
+      if (!('mode' in resp)) {
+        resp.mode = false;
+      }
+      al(resp.text, resp.mode);
     } else if (!!resp.message) {
       al(resp.message);
     } else if (!!resp) {
@@ -21425,6 +21431,7 @@ Vue.component('BgSlider', __webpack_require__(155));
 Vue.component('AudioPlayer', __webpack_require__(160));
 Vue.component('CommentsBlock', __webpack_require__(165));
 Vue.component('CommentArticle', __webpack_require__(168));
+Vue.component('DivEditable', __webpack_require__(171));
 
 var app = new Vue({
   el: '#vueapp',
@@ -34165,6 +34172,16 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -34212,6 +34229,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       type: String,
       required: true,
       default: null
+    },
+    commentLimit: {
+      type: String,
+      required: true
+    },
+    adminMode: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data: function data() {
@@ -34231,11 +34257,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         key: 'send',
         text: 'Ваш комментарий',
         reset: false
-      }
+      },
+      counterSymbols: 0
     };
   },
   mounted: function mounted() {
     this.formComment.postId = this.postId;
+    this.counterSymbols = this.commentLimit;
+    this.apiLink = (this.adminMode ? '/admin' : '') + '/post/' + this.postSlug + '/comments';
     this.getPostComments();
     this.loadTemp();
     this.insertWatch = true;
@@ -34244,6 +34273,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   watch: {
     'formComment.content': function formCommentContent(value) {
       this.saveTemp();
+      this.counterSymbols = this.commentLimit - value.split('').length;
     },
     'formComment.name': function formCommentName(value) {
       this.saveTemp();
@@ -34253,6 +34283,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     }
   },
   methods: {
+    markNewComment: function markNewComment(id) {
+      return 'CommentBlockId-' + id;
+    },
+    scrollToComment: function scrollToComment(id) {
+      setTimeout(function () {
+        var blockId = 'CommentBlockId-' + id;
+        var elem = document.getElementById(blockId);
+        if (!!elem) {
+          elem.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 200);
+    },
     validateEmail: function validateEmail(email) {
       return email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
     },
@@ -34295,69 +34337,59 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.mode.key = 'send';
     },
     sendComment: function sendComment() {
-      var _this2 = this;
+      var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-      if (this.formComment.name.length < 3) {
-        customAlert({ text: "Вы не назвались, введите ваше имя" });
-        return false;
+      var input = data;
+      var method = 'put';
+      var afterfunc = function afterfunc(req) {
+        if (req.status == 'error') return customAlert(req);
+        input.callback(req);
+        return req;
+      };
+      if (!input) {
+        input = this.formComment;
+        method = 'post';
+        afterfunc = this.afterSendComment;
+
+        if (!this.adminMode) {
+          if (input.name.length < 3) {
+            customAlert({ text: "Вы не назвались, введите ваше имя" });
+            return false;
+          }
+          var valid = this.validateEmail(input.email);
+          if (valid.constructor.name != "Array" || valid[0] != valid['input']) {
+            customAlert({ text: "Что-то неправильно в Email адресе..." });
+            return false;
+          }
+        }
       }
-      if (this.formComment.content.length < 10) {
+
+      if (input.content.length < 10) {
         customAlert({ text: "Пустой комментарий, минимум 10 символов" });
         return false;
       }
-      var valid = this.validateEmail(this.formComment.email);
-      if (valid.constructor.name != "Array" || valid[0] != valid['input']) {
-        customAlert({ text: "Что-то неправильно в Email адресе..." });
-        return false;
-      }
 
-      var method = this.mode.key == 'edit' ? 'put' : 'post';
-
-      ajaxfun('/post/' + this.postSlug + '/comments', method, this.formComment, function (req) {
-        _this2.formComment.content = '';
-        switch (_this2.mode.key) {
-          case 'send':
-            _this2.comments.push(req);
-            break;
-          case 'edit':
-            _this2.formComment.parent.content = req.data.content;
-            _this2.formComment.parent.allowEdit = req.data.allowEdit;
-            _this2.resetReply();
-            break;
-          case 'reply':
-            _this2.formComment.parent.children.push(req);
-            _this2.resetReply();
-            break;
-        }
-      });
+      ajaxfun(this.apiLink, method, input, afterfunc);
     },
-    editComment: function editComment(comment) {
-      this.contentNotWatch(comment.content);
-      this.formComment.allowEdit = comment.allowEdit;
-      this.formComment.id = comment.id;
-      this.formComment.parent = comment;
-      this.mode.text = 'Редактирование комментария';
-      this.mode.reset = true;
-      this.mode.key = 'edit';
-      this.$refs['respondArea'].scrollIntoView({ behavior: "smooth" });
-      var element = this.$refs['InputCommentElem'];
-      var position = element.value.length;
-      element.focus();
-      if (element.setSelectionRange) {
-        element.setSelectionRange(position, position);
-      } else if (element.createTextRange) {
-        var range = element.createTextRange();
-        range.collapse(true);
-        range.moveEnd('character', position);
-        range.moveStart('character', position);
-        range.select();
+    afterSendComment: function afterSendComment(req) {
+      if (req.status == 'error') return customAlert(req);
+      switch (this.mode.key) {
+        case 'send':
+          this.comments.push(req);
+          break;
+        case 'reply':
+          this.formComment.parent.children.push(req);
+          this.resetReply();
+          break;
       }
+      if (req.moderation === true) customAlert({ text: "Для этого поста включена модерация комментариев. Пока ваш комментарий видите только вы...", mode: 'warning' });
+      this.scrollToComment(req.id);
     },
     deleteComment: function deleteComment(comment, hidefunc) {
       if (!confirm("Вы уверены?")) {
         return false;
       }
-      ajaxfun('/post/' + this.postSlug + '/comments', 'delete', {
+      ajaxfun(this.apiLink, 'delete', {
         id: comment.id,
         allowEdit: comment.allowEdit
       }, function (req) {
@@ -34368,10 +34400,40 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
       });
     },
+    allowComment: function allowComment(data) {
+      ajaxfun(this.apiLink, 'put', data, function (req) {
+        if (req.status == 'error') return customAlert(req);
+        data.callback(req);
+        return req;
+      });
+    },
     getPostComments: function getPostComments() {
       var _this = this;
-      ajaxfun('/post/' + this.postSlug + '/comments', 'get', null, function (req) {
-        _this.comments = req.data;
+      var traverse = function traverse(arr, topComment) {
+        return arr.filter(function (comment) {
+          return comment.topComment === topComment;
+        }).reduce(function (result, current) {
+          return [].concat(_toConsumableArray(result), [_extends({}, current, {
+            children: traverse(arr, current.id)
+          })]);
+        }, []);
+      };
+
+      var parseTree = function parseTree(arr) {
+        return arr.filter(function (_ref) {
+          var topComment = _ref.topComment;
+          return !topComment;
+        }).map(function (comment) {
+          return _extends({}, comment, {
+            children: traverse(arr, comment.id)
+          });
+        });
+      };
+
+      var link = this.adminMode;
+
+      ajaxfun(this.apiLink, 'get', null, function (req) {
+        _this.comments = parseTree(req.data);
       });
     }
   }
@@ -34402,8 +34464,11 @@ var render = function() {
             attrs: {
               comment: comment,
               "reply-click": _vm.replyTo,
-              "edit-click": _vm.editComment,
-              "delete-click": _vm.deleteComment
+              "edit-click": _vm.sendComment,
+              "delete-click": _vm.deleteComment,
+              "allow-click": _vm.allowComment,
+              "mark-block": _vm.markNewComment,
+              "admin-mode": _vm.adminMode
             }
           })
         })
@@ -34434,7 +34499,7 @@ var render = function() {
               _vm._v(" "),
               _c("p", { staticClass: "comment-form-comment" }, [
                 _c("label", [
-                  _vm._v(_vm._s(_vm.mode.text)),
+                  _vm._v(_vm._s(_vm.mode.text) + "\n                "),
                   _vm.mode.reset
                     ? _c(
                         "span",
@@ -34471,58 +34536,78 @@ var render = function() {
                       _vm.$set(_vm.formComment, "content", $event.target.value)
                     }
                   }
-                })
+                }),
+                _vm._v(" "),
+                _c("span", [
+                  _vm._v("Счетчик символов: " + _vm._s(_vm.counterSymbols))
+                ])
               ]),
               _vm._v(" "),
-              _c("p", { staticClass: "comment-form-author" }, [
-                _vm._m(1),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.formComment.name,
-                      expression: "formComment.name"
-                    }
-                  ],
-                  attrs: { name: "author", type: "text", required: "required" },
-                  domProps: { value: _vm.formComment.name },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
+              !_vm.adminMode
+                ? _c("p", { staticClass: "comment-form-author" }, [
+                    _vm._m(1),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.formComment.name,
+                          expression: "formComment.name"
+                        }
+                      ],
+                      attrs: {
+                        name: "author",
+                        type: "text",
+                        required: "required"
+                      },
+                      domProps: { value: _vm.formComment.name },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.formComment, "name", $event.target.value)
+                        }
                       }
-                      _vm.$set(_vm.formComment, "name", $event.target.value)
-                    }
-                  }
-                })
-              ]),
+                    })
+                  ])
+                : _vm._e(),
               _vm._v(" "),
-              _c("p", { staticClass: "comment-form-email" }, [
-                _vm._m(2),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.formComment.email,
-                      expression: "formComment.email"
-                    }
-                  ],
-                  attrs: { name: "email", type: "email", required: "required" },
-                  domProps: { value: _vm.formComment.email },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
+              !_vm.adminMode
+                ? _c("p", { staticClass: "comment-form-email" }, [
+                    _vm._m(2),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.formComment.email,
+                          expression: "formComment.email"
+                        }
+                      ],
+                      attrs: {
+                        name: "email",
+                        type: "email",
+                        required: "required"
+                      },
+                      domProps: { value: _vm.formComment.email },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.formComment,
+                            "email",
+                            $event.target.value
+                          )
+                        }
                       }
-                      _vm.$set(_vm.formComment, "email", $event.target.value)
-                    }
-                  }
-                })
-              ]),
+                    })
+                  ])
+                : _vm._e(),
               _vm._v(" "),
               _c("p", { staticClass: "form-submit" }, [
                 _c("input", {
@@ -34530,7 +34615,7 @@ var render = function() {
                   attrs: { name: "submit", type: "button", value: "Отправить" },
                   on: {
                     click: function($event) {
-                      _vm.sendComment(_vm.formComment.parent)
+                      _vm.sendComment()
                     }
                   }
                 })
@@ -34588,17 +34673,21 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(177)
+}
 var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(169)
 /* template */
-var __vue_template__ = __webpack_require__(170)
+var __vue_template__ = __webpack_require__(179)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = null
+var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = null
+var __vue_scopeId__ = "data-v-777e7e74"
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
@@ -34671,6 +34760,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -34679,31 +34777,239 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       required: true,
       default: null
     },
+    adminMode: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
     replyClick: Function,
     editClick: Function,
-    deleteClick: Function
+    deleteClick: Function,
+    allowClick: Function,
+    markBlock: Function
   },
   data: function data() {
     return {
-      isdeleted: false
+      isdeleted: false,
+      blockId: null,
+      editing: false
     };
+  },
+  mounted: function mounted() {
+    var id = this.comment.id;
+    this.blockId = this.markBlock(id);
   },
 
   methods: {
     hideDeleted: function hideDeleted() {
       this.isdeleted = true;
+    },
+    enableEdit: function enableEdit() {
+      this.editing = true;
+    },
+    sendComment: function sendComment() {
+      this.editClick({
+        id: this.comment.id,
+        allowEdit: this.comment.allowEdit,
+        content: this.comment.content,
+        callback: this.renewData
+      });
+    },
+    sendAllow: function sendAllow() {
+      this.allowClick({
+        id: this.comment.id,
+        commentStatus: this.comment.commentStatus == 0 ? 1 : 0,
+        callback: this.renewData
+      });
+    },
+    renewData: function renewData(req) {
+      this.editing = false;
+      this.comment.allowEdit = req.data.allowEdit;
+      if ('commentStatus' in req.data) this.comment.commentStatus = req.data.commentStatus;
     }
   },
   computed: {
     allowEdit: function allowEdit() {
       var allowEdit = this.comment.allowEdit;
       return !!allowEdit && allowEdit.length > 0;
+    },
+    contentClass: function contentClass() {
+      var base = ['comment-content'];
+      if (this.editing) base.push('div-editable-enabled');
+      return base;
+    },
+    articleClass: function articleClass() {
+      var base = ['comment-body'];
+      if (this.comment.fromAdmin) base.push('mark-from-admin');
+      if ('commentStatus' in this.comment && this.comment.commentStatus == 0) base.push('mark-unallowed');
+      return base;
     }
   }
 });
 
 /***/ }),
-/* 170 */
+/* 170 */,
+/* 171 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(172)
+/* template */
+var __vue_template__ = __webpack_require__(173)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/front/DivEditable.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-57fc2288", Component.options)
+  } else {
+    hotAPI.reload("data-v-57fc2288", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 172 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    value: {
+      type: String,
+      default: ''
+    },
+    enabled: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    listeners: function listeners() {
+      return _extends({}, this.$listeners, { input: this.onInput });
+    }
+  },
+  mounted: function mounted() {
+    this.$refs.editable.innerText = this.value;
+  },
+
+  methods: {
+    onInput: function onInput(e) {
+      this.$emit('input', e.target.innerText);
+    }
+  }
+});
+
+/***/ }),
+/* 173 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    _vm._g(
+      { ref: "editable", attrs: { contenteditable: _vm.enabled } },
+      _vm.listeners
+    )
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-57fc2288", module.exports)
+  }
+}
+
+/***/ }),
+/* 174 */,
+/* 175 */,
+/* 176 */,
+/* 177 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(178);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(5)("3ec4cb74", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-777e7e74\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./CommentArticle.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-777e7e74\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./CommentArticle.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 178 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(4)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.div-editable-enabled[data-v-777e7e74]{\n  border: 1px solid green;\n  background-image: url('/img/icon/pencil.png');\n  background-repeat: no-repeat;\n  background-size: 30px Auto;\n}\n.comment-reply-link[data-v-777e7e74]{\n  cursor: pointer;\n}\n.mark-from-admin[data-v-777e7e74]{\n  background-color: #fff0fe;\n  border: 1px solid red;\n}\n.mark-unallowed[data-v-777e7e74]{\n  background-color: #ffaeae;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 179 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -34711,83 +35017,202 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return !_vm.isdeleted
-    ? _c("li", [
-        _c("article", { staticClass: "comment-body" }, [
-          _c("div", { staticClass: "comment-meta" }, [
-            _c("div", { staticClass: "comment-author" }, [
-              _c("img", {
-                attrs: { src: "/img/no_avatar.jpg", alt: "images" }
-              }),
-              _vm._v(" "),
-              _c("b", { staticClass: "fn" }, [
-                _c("a", { staticClass: "url", attrs: { href: "#" } }, [
-                  _vm._v(_vm._s(_vm.comment.name))
+    ? _c("li", { attrs: { id: _vm.blockId } }, [
+        _c(
+          "article",
+          { class: _vm.articleClass },
+          [
+            !_vm.editing
+              ? _c("div", { staticClass: "comment-meta" }, [
+                  _c("div", { staticClass: "comment-author" }, [
+                    _c("img", {
+                      attrs: { src: "/img/no_avatar.jpg", alt: "images" }
+                    }),
+                    _vm._v(" "),
+                    _c("b", { staticClass: "fn" }, [
+                      _c("a", { staticClass: "url", attrs: { href: "#" } }, [
+                        _vm._v(_vm._s(_vm.comment.name))
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "says" }, [_vm._v("написал:")])
+                  ])
                 ])
-              ]),
-              _vm._v(" "),
-              _c("span", { staticClass: "says" }, [_vm._v("написал:")])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "comment-content" }, [
-            _c("p", [_vm._v(_vm._s(_vm.comment.content))])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "reply" }, [
-            _c("span", [
-              !_vm.allowEdit
-                ? _c(
-                    "a",
-                    {
-                      staticClass: "comment-reply-link",
-                      on: {
-                        click: function($event) {
-                          _vm.replyClick(_vm.comment)
-                        }
-                      }
-                    },
-                    [_vm._v("Ответить")]
-                  )
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.allowEdit
-                ? _c(
-                    "a",
-                    {
-                      staticClass: "comment-reply-link",
-                      staticStyle: { color: "green" },
-                      on: {
-                        click: function($event) {
-                          _vm.editClick(_vm.comment)
-                        }
-                      }
-                    },
-                    [_vm._v("Редактировать")]
-                  )
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.allowEdit
-                ? _c(
-                    "a",
-                    {
-                      staticClass: "comment-reply-link",
-                      staticStyle: { color: "red" },
-                      on: {
-                        click: function($event) {
-                          _vm.deleteClick(_vm.comment, _vm.hideDeleted)
-                        }
-                      }
-                    },
-                    [_vm._v("Удалить")]
-                  )
-                : _vm._e()
-            ]),
+              : _vm._e(),
             _vm._v(" "),
-            _c("span", { staticClass: "comment-date-updated" }, [
-              _vm._v(_vm._s(_vm.comment.updated_at))
+            _c("div-editable", {
+              class: _vm.contentClass,
+              attrs: { enabled: _vm.editing },
+              model: {
+                value: _vm.comment.content,
+                callback: function($$v) {
+                  _vm.$set(_vm.comment, "content", $$v)
+                },
+                expression: "comment.content"
+              }
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "reply" }, [
+              !_vm.adminMode
+                ? _c("span", [
+                    !_vm.allowEdit
+                      ? _c(
+                          "a",
+                          {
+                            staticClass: "comment-reply-link",
+                            on: {
+                              click: function($event) {
+                                _vm.replyClick(_vm.comment)
+                              }
+                            }
+                          },
+                          [_vm._v("Ответить")]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.allowEdit && !_vm.editing
+                      ? _c(
+                          "a",
+                          {
+                            staticClass: "comment-reply-link",
+                            staticStyle: { color: "green" },
+                            on: {
+                              click: function($event) {
+                                _vm.enableEdit()
+                              }
+                            }
+                          },
+                          [_vm._v("Редактировать")]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.allowEdit
+                      ? _c(
+                          "a",
+                          {
+                            staticClass: "comment-reply-link",
+                            staticStyle: { color: "red" },
+                            on: {
+                              click: function($event) {
+                                _vm.deleteClick(_vm.comment, _vm.hideDeleted)
+                              }
+                            }
+                          },
+                          [_vm._v("Удалить")]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.allowEdit && _vm.editing
+                      ? _c(
+                          "a",
+                          {
+                            staticClass: "comment-reply-link",
+                            staticStyle: { color: "green" },
+                            on: {
+                              click: function($event) {
+                                _vm.sendComment()
+                              }
+                            }
+                          },
+                          [_vm._v("Отправить")]
+                        )
+                      : _vm._e()
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.adminMode
+                ? _c("span", [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "comment-reply-link",
+                        on: {
+                          click: function($event) {
+                            _vm.replyClick(_vm.comment)
+                          }
+                        }
+                      },
+                      [_vm._v("Ответить")]
+                    ),
+                    _vm._v(" "),
+                    !_vm.editing
+                      ? _c(
+                          "a",
+                          {
+                            staticClass: "comment-reply-link",
+                            staticStyle: { color: "green" },
+                            on: {
+                              click: function($event) {
+                                _vm.enableEdit()
+                              }
+                            }
+                          },
+                          [_vm._v("Редактировать")]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      {
+                        staticClass: "comment-reply-link",
+                        staticStyle: { color: "red" },
+                        on: {
+                          click: function($event) {
+                            _vm.deleteClick(_vm.comment, _vm.hideDeleted)
+                          }
+                        }
+                      },
+                      [_vm._v("Удалить")]
+                    ),
+                    _vm._v(" "),
+                    _vm.editing
+                      ? _c(
+                          "a",
+                          {
+                            staticClass: "comment-reply-link",
+                            staticStyle: { color: "green" },
+                            on: {
+                              click: function($event) {
+                                _vm.sendComment()
+                              }
+                            }
+                          },
+                          [_vm._v("Отправить")]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.comment.commentStatus == 0
+                      ? _c(
+                          "a",
+                          {
+                            staticClass: "comment-reply-link",
+                            staticStyle: { color: "blue" },
+                            on: {
+                              click: function($event) {
+                                _vm.sendAllow()
+                              }
+                            }
+                          },
+                          [_vm._v("Одобрить")]
+                        )
+                      : _vm._e()
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _c(
+                "span",
+                { staticClass: "comment-date-updated" },
+                [
+                  _c("local-time", {
+                    attrs: { "utc-time": _vm.comment.updated_at }
+                  })
+                ],
+                1
+              )
             ])
-          ])
-        ]),
+          ],
+          1
+        ),
         _vm._v(" "),
         _c(
           "ul",
@@ -34799,7 +35224,10 @@ var render = function() {
                 comment: child,
                 "reply-click": _vm.replyClick,
                 "edit-click": _vm.editClick,
-                "delete-click": _vm.deleteClick
+                "delete-click": _vm.deleteClick,
+                "allow-click": _vm.allowClick,
+                "mark-block": _vm.markBlock,
+                "admin-mode": _vm.adminMode
               }
             })
           })

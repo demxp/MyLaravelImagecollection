@@ -86,8 +86,15 @@
                                             </li>
                                         </ul>       
                                     </div><!-- /.nagivation -->
-                                    @if ($post->commenting == 1)
-                                    <comments-block post-id="{{$post->id}}" post-slug="{{$post->slug}}"></comments-block>
+                                    @if ($post->commenting != 0)
+                                    <comments-block
+                                        post-id="{{$post->id}}"
+                                        post-slug="{{$post->slug}}"
+                                        comment-limit="{{config('app.commentLimit')}}"
+                                        @if (\Auth::check() && \Auth::user()->is_admin)
+                                        admin-mode
+                                        @endif
+                                    ></comments-block>
                                     @endif                                                                        
                                 </div><!-- /.main-content-wrap -->
                             </div><!-- /.main-content -->

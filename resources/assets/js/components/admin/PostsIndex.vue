@@ -48,16 +48,19 @@
             <td><span v-text="post.title"></span></td>
             <td><a :href="post.link" target="_black">/<span v-text="post.slug"></span></a></td>
             <td>
-              <label class="switcher">
-                  <input :checked="post.publication" type="checkbox" @change="createChange(post, 'publication', $event)"/>
-                  <div class="switcher__text"></div>
-              </label>              
+              <distate-switcher
+              :select="post.publication"
+              :options="publicMode"
+               @change="createChange(post, 'publication', $event, 'native')"
+              ></distate-switcher>              
             </td>
             <td>
-              <label class="switcher">
-                  <input :checked="post.commenting" type="checkbox" @change="createChange(post, 'commenting', $event)"/>
-                  <div class="switcher__text"></div>
-              </label>              
+              <tristate-switcher
+              mode="switcher"
+              :select="post.commenting"
+              @change="createChange(post, 'commenting', $event, 'native')"
+              :options="commentMode"
+              ></tristate-switcher>
             </td>            
             <td>
               <button class="btn btn-xs btn-info" @click="editPost(post)">Изменить</button>
@@ -102,6 +105,15 @@
         }
       },
       mounted(){
+        this.publicMode = [
+            {value: '0', text: 'Закрыто'},
+            {value: '1', text: 'Открыто'}            
+        ];        
+        this.commentMode = [
+            {value: '0', text: 'Выключено'},
+            {value: '1', text: 'Модерация'},
+            {value: '2', text: 'Включено'}
+        ];
         ajaxfun('/api/v1/posts', 'get', null, this.fillTable)
       },
       methods:{
@@ -143,7 +155,7 @@
             ajaxfun(url, 'get', null, this.fillTable);
           }
         },
-        createChange(model, field, event){
+        createChange(model, field, event, valid){
           this.roll = ((model) => {
             let oldState = model[field];
             let _this = this;          
@@ -152,7 +164,12 @@
               _this.roll = function(){};
             };
           })(model);
-          model[field] = (event.target.checked) ? 1 : 0;
+          if(valid == 'boolean'){
+            model[field] = (event.target.checked) ? 1 : 0;
+          }
+          if(valid == 'native'){
+            model[field] = event;
+          }          
           let saveable = {};
           saveable.id = model.id;
           saveable[field] = model[field];

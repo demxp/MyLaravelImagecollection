@@ -25,8 +25,14 @@
                 <label>{{ mode.text }}
                   <span class="reset-reply" v-if="mode.reset" @click="resetReply()">СБРОС</span>
                 </label>
-                <textarea name="comment" required="required" v-model="formComment.content" ref="InputCommentElem"></textarea>
-                <span>Счетчик символов: {{ counterSymbols }}</span>
+                <textarea 
+                name="comment"
+                required="required"
+                v-model="formComment.content"
+                ref="InputCommentElem"
+                :style="commentAreaClass"
+                ></textarea>
+                <span>Счетчик символов: <span :style="commentCounterClass">{{ counterSymbols }}</span></span>
               </p>
 
               <p class="comment-form-author" v-if="!adminMode"><label>Ваше имя <span class="required">*</span></label> <input name="author" type="text" required="required" v-model="formComment.name"></p>
@@ -102,7 +108,25 @@
         'formComment.email': function (value) {
           this.saveTemp();
         }
-      },      
+      },
+      computed: {
+        commentAreaClass(){
+          let ln = this.formComment.content.length;
+          let check = (ln != 0 && (ln < 10 || ln > this.commentLimit));
+          return {
+            border: '1px solid',
+            borderColor: (check) ? 'red' : 'green'
+          };
+        },
+        commentCounterClass(){
+          let ln = this.formComment.content.length;
+          let check = (ln != 0 && (ln < 10 || ln > this.commentLimit));
+          return {
+            fontWeight: (check) ? '700' : '400',
+            color: (check) ? 'red' : 'green'
+          };
+        }        
+      },
       methods:{
         markNewComment(id){
           return 'CommentBlockId-' + id;
@@ -177,7 +201,7 @@
                 return false;
               }      
               let valid = this.validateEmail(input.email);
-              if(valid.constructor.name != "Array" || valid[0] != valid['input']){
+              if(!!valid && (valid.constructor.name != "Array" || valid[0] != valid['input'])){
                 customAlert({text: "Что-то неправильно в Email адресе..."});
                 return false;
               }
@@ -195,7 +219,8 @@
           if(req.status == 'error') return customAlert(req);
           switch(this.mode.key){
             case('send'):
-              this.comments.push(req)
+              this.comments.push(req);
+              this.resetReply();
               break;
             case('reply'):
               this.formComment.parent.children.push(req);

@@ -11,7 +11,10 @@
 |
 */
 
-Route::get('/', 'HomeController@index')->name('home');
+Route::get('/', function () {
+    return redirect()->route('posts');
+})->name('home');
+
 
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admin'], function(){
 	Route::get('/post/{slug}/comments', 'CommentController@getPostComments');
@@ -46,10 +49,13 @@ Route::get('/logout', 'AuthController@logout')->middleware('ipblock');
 
 Route::get('/category', 'HomeController@allCategories')->name('categories');
 Route::get('/category/{slug}', 'HomeController@showCategory')->name('showcategory');
+
 Route::get('/posts', 'HomeController@allPosts')->name('posts');
 Route::get('/posts/{tag}', 'HomeController@PostsByTag')->name('postsbytag');
 Route::get('/post/{slug}', 'HomeController@showPost')->name('showpost');
+
 Route::get('/{url}', 'HomeController@getStaticPage')->name('staticpage');
+
 Route::get('/post/{slug}/comments', 'CommentController@getPostComments');
 Route::post('/post/{slug}/comments', 'CommentController@savePostComment');
 Route::put('/post/{slug}/comments', 'CommentController@editPostComments');

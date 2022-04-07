@@ -12,11 +12,6 @@ use App\{
 
 class HomeController extends Controller
 {
-    public function index()
-    {
-        return redirect()->route('posts');
-    }
-    
     public function allCategories()
     {
     	$categories = Category::where('hidden', 0)->get();

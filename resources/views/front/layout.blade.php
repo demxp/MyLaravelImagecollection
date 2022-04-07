@@ -24,7 +24,17 @@
 </head>                                 
 <body class="header-sticky page-loading">
     <div id="vueapp">
-    <bg-slider :image-links="['/img/slide_bg/bg_kosmos1.jpg','/img/slide_bg/bg_kosmos2.jpg','/img/slide_bg/bg_kosmos3.jpg','/img/slide_bg/bg_kosmos4.jpg','/img/slide_bg/bg_kosmos5.jpg','/img/slide_bg/bg_kosmos6.jpg','/img/slide_bg/bg_kosmos7.jpg']" :change-timeout="10000"></bg-slider>        
+    <bg-slider
+    :image-links="[
+    '/img/slide_bg/bg_kosmos1.jpg',
+    '/img/slide_bg/bg_kosmos2.jpg',
+    '/img/slide_bg/bg_kosmos3.jpg',
+    '/img/slide_bg/bg_kosmos4.jpg',
+    '/img/slide_bg/bg_kosmos5.jpg',
+    '/img/slide_bg/bg_kosmos6.jpg',
+    '/img/slide_bg/bg_kosmos7.jpg'
+    ]" :change-timeout="10000"
+    ></bg-slider>        
     <div class="loading-overlay">
     </div>
     
@@ -51,12 +61,17 @@
                                 <nav id="mainnav" class="mainnav">
                                     <ul class="menu"> 
                                         <li class="home">
-                                            <a href="{{route('home')}}">НА ГЛАВНУЮ</a>
+                                            <a href="{{route('home')}}">ГЛАВНАЯ</a>
                                         </li>
-                                        <li class="categories">
-                                            <a href="{{route('categories')}}">КАТЕГОРИИ</a>
+                                        <li>
+                                            <a href="{{route('posts')}}">БЛОГ</a>
+                                        </li>                                        
+                                        <li>
+                                            <a href="{{route('categories')}}">ГАЛЕРЕЯ</a>
                                         </li>
-                                        <li><a href="/about">ОБО МНЕ</a></li>                                        
+                                        <li>
+                                            <a href="/about">ОБО МНЕ</a>
+                                        </li>                                        
                                     </ul><!-- /.menu -->
                                 </nav><!-- /.mainnav -->  
                             </div><!-- /.nav-wrap -->

@@ -8,7 +8,7 @@
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
-  <link rel="stylesheet" type="text/css" href="/css/admin.css" />
+  <link rel="stylesheet" type="text/css" href="{{ mix('/css/admin.css') }}" />
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -97,7 +97,9 @@
   </footer>
 </div>
 <!-- ./wrapper -->
-<script src="/js/admin.js"></script>
-<script src="/js/appadmin.js"></script>
+<script src="{{ mix('/js/manifest.js') }}"></script>
+<script src="{{ mix('/js/vendor.js') }}"></script>
+<script src="{{ mix('/js/appadmin.js') }}"></script>
+<script src="{{ mix('/js/admin.js') }}"></script>
 </body>
 </html>

@@ -10,7 +10,7 @@
 
     <!-- Mobile Specific Metas -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" type="text/css" href="/css/front.css" >
+    <link rel="stylesheet" type="text/css" href="{{ mix('/css/front.css') }}" >
 
     <!-- Favicon and touch icons  -->
     <link href="/icon/apple-touch-icon-48-precomposed.png" rel="apple-touch-icon-precomposed" sizes="48x48">
@@ -91,7 +91,9 @@
     </div>
     </div>
     <!-- Javascript -->
-    <script src="/js/front.js"></script>
-    <script src="/js/appwebsite.js"></script>
+    <script src="{{ mix('/js/manifest.js') }}"></script>
+    <script src="{{ mix('/js/vendor.js') }}"></script>
+    <script src="{{ mix('/js/appwebsite.js') }}"></script>
+    <script src="{{ mix('/js/front.js') }}"></script>
 </body>
 </html>

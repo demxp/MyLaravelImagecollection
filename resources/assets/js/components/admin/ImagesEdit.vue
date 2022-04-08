@@ -8,7 +8,17 @@
             <div class="col-md-12">
               <div class="form-group">
                 <label>Категория</label>
-                <select2 :options="cats" v-model="category_id" style="width: 100%;"></select2>
+                <multiselect
+                :options="cats"
+                :searchable="false"
+                :close-on-select="true"
+                :show-labels="false"
+                placeholder="Pick a value"
+                v-model="category_id"
+                track-by="title"
+                label="title"
+                style="width: 100%;"
+                ></multiselect>
               </div>
               <div class="form-group">
                 <a class="btn btn-success btn-xs uploadbtn" @click="selectImages">Загрузить</a>
@@ -29,7 +39,10 @@
 </template>
 
 <script>
+    import Multiselect from 'vue-multiselect';
+
     export default {
+      components: {Multiselect},  
       props: {
         imageId: {
           type: Number,
@@ -45,22 +58,11 @@
         }
       },
       mounted(){
-        ajaxfun('/api/v1/categories', 'get', null, this.fillCategories);
+        window.localCache.get('/api/v1/categories', this.fillCategories);
       },
       methods:{
         fillCategories(data){
-          this.cats.push({
-            titleimage: 0,
-            text: "Нет категории",
-            id: 0
-          });
-          data.map((item, i) => {
-            this.cats.push({
-              titleimage: item.titleimage,
-              text: item.title,
-              id: item.id
-            });
-          });
+          data.map((item, i) => this.cats.push(item));
         },
         addimages(){
           if(this.imagefiles.length < 1){
@@ -69,13 +71,12 @@
           }
 
           let toServer = {
-            category_id: (this.category_id === null || this.category_id == 0) ? null : this.category_id,
-            status: 'hide'
+            category_id: (this.category_id === null) ? null : this.category_id.id,
+            status: 'hide',
+            images: this.imagefiles.map(function(item, index, array) {
+              return item.processed;
+            })
           };
-
-          toServer.images = this.imagefiles.map(function(item, index, array) {
-            return item.processed;
-          });
 
           console.log(toServer)
 

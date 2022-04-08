@@ -233,4 +233,8 @@ return [
     /* Comment symbols limit */
 
     'commentLimit' => env('COMMENT_LIMIT', '2000'),
+
+    /* Route name for INDEX */
+
+    'indexRoute' => env('INDEX_ROUTE', 'posts'),
 ];

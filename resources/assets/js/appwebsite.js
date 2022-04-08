@@ -1,7 +1,10 @@
 window.Vue = require('vue');
 
 import swal from 'sweetalert'
-import moment from 'moment';
+import $ from 'jquery';
+ 
+global.jQuery = $;
+global.$ = $;
 
 /* Скрипт кастомного Alert */
 

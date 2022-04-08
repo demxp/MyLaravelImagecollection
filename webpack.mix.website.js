@@ -11,7 +11,7 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/assets/js/appwebsite.js', 'public/js');
+mix.js('resources/assets/js/appwebsite.js', 'public/js').extract(['vue', 'jquery', 'moment']).version().mergeManifest();
 
 mix.styles([
 	'resources/assets/front/stylesheets/bootstrap.css',
@@ -22,11 +22,10 @@ mix.styles([
 	'resources/assets/front/stylesheets/colors/color1.css',
 	'resources/assets/front/stylesheets/animate.css',
 	'resources/assets/front/stylesheets/magnific-popup.css',	
-], 'public/css/front.css');
+], 'public/css/front.css').version().mergeManifest();
 
 
 mix.scripts([
-	'resources/assets/front/javascript/jquery.min.js',
 	'resources/assets/front/javascript/bootstrap.min.js',
 	'resources/assets/front/javascript/jquery.easing.js',
 	'resources/assets/front/javascript/jquery-waypoints.js',
@@ -35,7 +34,7 @@ mix.scripts([
 	'resources/assets/front/javascript/jquery.isotope.min.js',	
 	'resources/assets/front/javascript/jquery.magnific-popup.min.js',	
 	'resources/assets/front/javascript/main.js',
-], 'public/js/front.js');
+], 'public/js/front.js').version().mergeManifest();
 
 
 mix.copy('resources/assets/front/icon','public/icon');

@@ -42,7 +42,7 @@
         }
       },
       mounted(){
-        ajaxfun('/api/v1/staticpages', 'get', null, this.fillTable)
+        ajaxfun(this.$apiLink('staticpage'), 'get', null, this.fillTable)
       },
       methods:{
         fillTable(data){
@@ -64,12 +64,11 @@
         },
         deletePage(page){
           if(!confirm("Вы уверены?")){return false;}
-          let url = '/api/v1/staticpages/'+page.id;
-          ajaxfun(url, 'delete', {
+          ajaxfun(this.$apiLink('staticpage', page.id), 'delete', {
             id: page.id
           }, (req) => {
             if(req.status == 'ok'){
-              ajaxfun('/api/v1/staticpages', 'get', null, this.fillTable);
+              ajaxfun(this.$apiLink('staticpage'), 'get', null, this.fillTable);
             }else{
               customAlert(req);
             }            

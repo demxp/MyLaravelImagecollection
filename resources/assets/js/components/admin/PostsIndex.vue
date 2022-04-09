@@ -5,33 +5,13 @@
         <a class="btn btn-success" @click="$parent.$emit('switch-mode', {'mode': 'editposts', 'id': null})">Добавить</a>
       </div>
       <div style="text-align: right;">
-        <div class="row pagination">
-          <div style="text-align: center;">
-            <p>Страница {{ current_page }} из {{ last_page }}</p>
-            <div class="input-group" style="max-width: 170px; display: inline-table;">
-              <span class="input-group-btn">
-                <button class="btn btn-info btn-sm" type="button" :disabled="current_page <= 1" @click="firstPage"><<</button>
-              </span>            
-              <span class="input-group-btn">
-                <button class="btn btn-info btn-sm" type="button" :disabled="current_page <= 1" @click="prevPage"><</button>
-              </span>
-              <input type="text" class="form-control input-sm" style="text-align: center;" v-model="current_page" @keyup.13="setPage">
-              <span class="input-group-btn">
-                <button class="btn btn-info btn-sm" type="button" :disabled="current_page === last_page" @click="nextPage">></button>
-              </span>      
-              <span class="input-group-btn">
-                <button class="btn btn-info btn-sm" type="button" :disabled="current_page === last_page" @click="lastPage">>></button>
-              </span>                    
-            </div><!-- /input-group -->
-          </div><!-- /.col-lg-6 -->
-        </div><!-- /.row -->             
-      </div>       
+        <paginate v-model="current_page" :last-page="last_page"></paginate>
+      </div> 
       <table class="table table-bordered table-striped">
         <thead>
           <tr>
             <th>ID</th>
             <th>Заголовок</th>
-            <th>Ссылка</th>
             <th>Публикация</th>
             <th>Комментирование</th>
             <th>Действия</th>
@@ -45,8 +25,7 @@
         <tbody>
           <tr v-for="post in posts" :class="{'tr__green':post.success, 'tr__red':post.danger}">
             <td><span v-text="post.id"></span></td>
-            <td><span v-text="post.title"></span></td>
-            <td><a :href="post.link" target="_black">/<span v-text="post.slug"></span></a></td>
+            <td><a :href="post.link" target="_black"><span v-text="post.title"></span></a></td>
             <td>
               <distate-switcher
               :select="post.publication"
@@ -70,33 +49,17 @@
         </tbody>
       </table>
       <div style="text-align: right;">
-        <div class="row pagination">
-          <div style="text-align: center;">
-            <p>Страница {{ current_page }} из {{ last_page }}</p>
-            <div class="input-group" style="max-width: 170px; display: inline-table;">
-              <span class="input-group-btn">
-                <button class="btn btn-info btn-sm" type="button" :disabled="current_page <= 1" @click="firstPage"><<</button>
-              </span>            
-              <span class="input-group-btn">
-                <button class="btn btn-info btn-sm" type="button" :disabled="current_page <= 1" @click="prevPage"><</button>
-              </span>
-              <input type="text" class="form-control input-sm" style="text-align: center;" v-model="current_page" @keyup.13="setPage">
-              <span class="input-group-btn">
-                <button class="btn btn-info btn-sm" type="button" :disabled="current_page === last_page" @click="nextPage">></button>
-              </span>      
-              <span class="input-group-btn">
-                <button class="btn btn-info btn-sm" type="button" :disabled="current_page === last_page" @click="lastPage">>></button>
-              </span>                    
-            </div><!-- /input-group -->
-          </div><!-- /.col-lg-6 -->
-        </div><!-- /.row -->             
-      </div>        
+        <paginate v-model="current_page" :last-page="last_page"></paginate>
+      </div> 
     </div>
   </div>
 </template>
 
 <script>
+    import Paginate from './Paginate.vue';
+
     export default {
+      components: {Paginate},
       data(){
         return{
           posts: [],
@@ -114,7 +77,12 @@
             {value: '1', text: 'Модерация'},
             {value: '2', text: 'Включено'}
         ];
-        ajaxfun('/api/v1/posts', 'get', null, this.fillTable)
+        ajaxfun(this.$apiLink('post'), 'get', null, this.fillTable)
+      },
+      watch: {
+        'current_page': function (value) {
+          ajaxfun(this.$apiLink('post') + '?page=' + value, 'get', null, this.fillTable);
+        },
       },
       methods:{
         fillTable(data){
@@ -132,28 +100,6 @@
           }
           this.current_page = data.meta.current_page;
           this.last_page = data.meta.last_page;          
-        },
-        nextPage(){
-          let url = '/api/v1/posts' + '?page=' + (this.current_page + 1);
-          ajaxfun(url, 'get', null, this.fillTable);
-        },
-        prevPage(){
-          let url = '/api/v1/posts' + '?page=' + (this.current_page - 1);
-          ajaxfun(url, 'get', null, this.fillTable);
-        }, 
-        firstPage(){
-          let url = '/api/v1/posts' + '?page=1';
-          ajaxfun(url, 'get', null, this.fillTable);
-        },
-        lastPage(){
-          let url = '/api/v1/posts' + '?page=' + this.last_page;
-          ajaxfun(url, 'get', null, this.fillTable);
-        },     
-        setPage(){
-          if(this.current_page >= 1 && this.current_page <= this.last_page){
-            let url = '/api/v1/posts' + '?page=' + this.current_page;
-            ajaxfun(url, 'get', null, this.fillTable);
-          }
         },
         createChange(model, field, event, valid){
           this.roll = ((model) => {
@@ -175,9 +121,8 @@
           saveable[field] = model[field];
           this.saveModel(saveable, this.createCallback(model));          
         },
-        saveModel(post, callback){
-          let url = '/api/v1/posts/'+post.id;
-          ajaxfun(url, 'put', post, callback);
+        saveModel(model, callback){
+          ajaxfun(this.$apiLink('post', model.id), 'put', post, callback);
         },
         createCallback(obj){
           let roll = this.roll;
@@ -198,8 +143,7 @@
         },
         deletePost(post){
           if(!confirm("Вы уверены?")){return false;}
-          let url = '/api/v1/posts/'+post.id;
-          ajaxfun(url, 'delete', {
+          ajaxfun(this.$apiLink('post', post.id), 'delete', {
             id: post.id
           }, (req) => {
             if(req.status == 'ok'){

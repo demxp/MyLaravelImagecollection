@@ -60,8 +60,7 @@
             submit_style_success: false,
             submit_style_warning: true
           };
-          let url = '/api/v1/staticpages/' + this.pageId;
-          ajaxfun(url, 'get', null, (req) => {
+          ajaxfun(this.$apiLink('staticpage', this.pageId), 'get', null, (req) => {
             for(let i in req){
               this.page[i] = req[i];
             }
@@ -88,7 +87,7 @@
             return false;
           }
 
-          let url = '/api/v1/staticpages';
+          let url = this.$apiLink('staticpage');
           let method = 'post';
           let request_data = {
             title: this.page.title,

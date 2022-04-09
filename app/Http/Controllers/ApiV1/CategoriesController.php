@@ -35,7 +35,7 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        return CategoryShort::collection(Category::all());
+        return CategoryShort::collection(Category::orderBy('id')->get());
     }
 
     /**
@@ -73,18 +73,11 @@ class CategoriesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if(is_null($request->get('titleimage'))){
-            $validator = Validator::make($request->all(), [
-                'title' => 'required|min:3',
-                'hidden' => 'required'
-            ]);
-            $editparams = ['title', 'hidden'];
-        }else{
-            $validator = Validator::make($request->all(), [
-                'titleimage' => 'required|integer',
-            ]);
-            $editparams = ['titleimage'];
-        }
+        $validator = Validator::make($request->all(), [
+            'title' => 'sometimes|min:3',
+            'hidden' => 'sometimes',
+            'titleimage' => 'sometimes|integer',
+        ]);
 
         if($validator->fails()) {
             return [
@@ -95,8 +88,8 @@ class CategoriesController extends Controller
         }
 
         $category = Category::find($id);
-        foreach($editparams as $param){
-            $category->$param = $request->get($param);    
+        foreach($request->all() as $key=>$param){
+            $category->$key = $param;
         }
         $category->save();
 

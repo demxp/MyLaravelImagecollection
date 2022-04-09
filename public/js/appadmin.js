@@ -82,7 +82,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     };
   },
   mounted: function mounted() {
-    ajaxfun('/api/v1/audiofiles', 'get', null, this.fillTable);
+    ajaxfun(this.$apiLink('audio'), 'get', null, this.fillTable);
   },
 
   watch: {
@@ -140,8 +140,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.saveModel(saveable, this.createCallback(model));
     },
     saveModel: function saveModel(data, callback) {
-      var url = '/api/v1/audiofiles/' + data.id;
-      ajaxfun(url, 'put', data, callback);
+      ajaxfun(this.$apiLink('audio', data.id), 'put', data, callback);
     },
     createCallback: function createCallback(obj) {
       var roll = this.roll;
@@ -204,7 +203,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         fd.append(i, this.upload[i]);
       }
 
-      fetch('/api/v1/audiofiles', {
+      fetch(this.$apiLink('audio'), {
         method: 'POST',
         headers: { 'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content },
         body: fd
@@ -226,8 +225,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       if (!confirm("Вы уверены?")) {
         return false;
       }
-      var url = '/api/v1/audiofiles/' + afile.id;
-      ajaxfun(url, 'delete', {
+      ajaxfun(this.$apiLink('audio', afile.id), 'delete', {
         id: afile.id
       }, function (req) {
         if (req.status == 'ok') {
@@ -293,7 +291,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
     };
   },
-  mounted: function mounted() {},
 
   methods: {
     addcategory: function addcategory() {
@@ -303,8 +300,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         alert("Надо написать название категории! Минимум 3 символа.");
         return false;
       }
-      var url = '/api/v1/categories';
-      ajaxfun(url, 'post', {
+      ajaxfun(this.$apiLink('category'), 'post', {
         title: this.cat.title,
         hidden: this.cat.hidden ? 1 : 0
       }, function (req) {
@@ -371,7 +367,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     };
   },
   mounted: function mounted() {
-    ajaxfun('/api/v1/categories', 'get', null, this.fillTable);
+    ajaxfun(this.$apiLink('category'), 'get', null, this.fillTable);
   },
 
   methods: {
@@ -394,8 +390,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
     },
     saveModel: function saveModel(cat, callback) {
-      var url = '/api/v1/categories/' + cat.id;
-      ajaxfun(url, 'put', {
+      ajaxfun(this.$apiLink('category', cat.id), 'put', {
         id: cat.id,
         title: cat.title,
         hidden: cat.hidden
@@ -440,12 +435,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       if (!confirm("Вы уверены?")) {
         return false;
       }
-      var url = '/api/v1/categories/' + cat.id;
-      ajaxfun(url, 'delete', {
+      ajaxfun(this.apiLink('category', cat.id), 'delete', {
         id: cat.id
       }, function (req) {
         if (req.status == 'ok') {
-          ajaxfun('/api/v1/categories', 'get', null, _this5.fillTable);
+          ajaxfun(_this5.$apiLink('category'), 'get', null, _this5.fillTable);
         } else {
           customAlert(req);
         }
@@ -613,7 +607,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
   },
   mounted: function mounted() {
-    window.localCache.get('/api/v1/categories', this.fillCategories);
+    window.localCache.get(this.$apiLink('category'), this.fillCategories);
   },
 
   methods: {
@@ -640,10 +634,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         })
       };
 
-      console.log(toServer);
-
-      var url = '/api/v1/images';
-      ajaxfun(url, 'post', toServer, function (req) {
+      ajaxfun(this.$apiLink('image'), 'post', toServer, function (req) {
         if (req.status == 'ok') {
           _this2.$parent.$emit('switch-mode', { 'mode': 'index', 'id': null });
           return true;
@@ -710,6 +701,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_multiselect__ = __webpack_require__("./node_modules/vue-multiselect/dist/vue-multiselect.min.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_multiselect___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue_multiselect__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Paginate_vue__ = __webpack_require__("./resources/assets/js/components/admin/Paginate.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Paginate_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Paginate_vue__);
 //
 //
 //
@@ -769,49 +762,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  components: { Multiselect: __WEBPACK_IMPORTED_MODULE_0_vue_multiselect___default.a },
+  components: { Multiselect: __WEBPACK_IMPORTED_MODULE_0_vue_multiselect___default.a, Paginate: __WEBPACK_IMPORTED_MODULE_1__Paginate_vue___default.a },
   data: function data() {
     return {
       imgs: [],
@@ -821,10 +777,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     };
   },
   mounted: function mounted() {
-    window.localCache.get('/api/v1/categories', this.fillCategories);
-    ajaxfun('/api/v1/images', 'get', null, this.fillTable);
+    window.localCache.get(this.$apiLink('category'), this.fillCategories);
+    ajaxfun(this.$apiLink('image'), 'get', null, this.fillTable);
   },
 
+  watch: {
+    'current_page': function current_page(value) {
+      ajaxfun(this.$apiLink('image') + '?page=' + value, 'get', null, this.fillTable);
+    }
+  },
   methods: {
     fillCategories: function fillCategories(data) {
       var _this2 = this;
@@ -864,121 +825,64 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.current_page = data.meta.current_page;
       this.last_page = data.meta.last_page;
     },
-    nextPage: function nextPage() {
-      var url = '/api/v1/images' + '?page=' + (this.current_page + 1);
-      ajaxfun(url, 'get', null, this.fillTable);
-    },
-    prevPage: function prevPage() {
-      var url = '/api/v1/images' + '?page=' + (this.current_page - 1);
-      ajaxfun(url, 'get', null, this.fillTable);
-    },
-    firstPage: function firstPage() {
-      var url = '/api/v1/images' + '?page=1';
-      ajaxfun(url, 'get', null, this.fillTable);
-    },
-    lastPage: function lastPage() {
-      var url = '/api/v1/images' + '?page=' + this.last_page;
-      ajaxfun(url, 'get', null, this.fillTable);
-    },
-    setPage: function setPage() {
-      if (this.current_page >= 1 && this.current_page <= this.last_page) {
-        var url = '/api/v1/images' + '?page=' + this.current_page;
-        ajaxfun(url, 'get', null, this.fillTable);
-      }
-    },
-    saveModel: function saveModel(img, callback) {
-      var url = '/api/v1/images/' + img.id;
-      ajaxfun(url, 'put', {
-        id: img.id,
-        title: img.title,
-        category_id: !!img.category ? img.category.id : null,
-        status: img.status ? null : 'hide',
-        image: null
-      }, callback);
-    },
-    setTitle: function setTitle(img, event) {
+    createChange: function createChange(model, field, event, valid) {
       var _this4 = this;
 
-      this.roll = function (img) {
-        var old = img.title;
+      this.roll = function (model) {
+        var oldState = model[field];
         var _this = _this4;
         return function (obj) {
-          obj.title = old;
+          obj[field] = oldState;
           _this.roll = function () {};
         };
-      }(img);
-      var text = event.target.innerText;
-      if (text.length < 3) {
-        return false;
+      }(model);
+      if (valid == 'boolean') {
+        model[field] = event.target.checked ? 1 : 0;
       }
-      img.title = text;
-      this.saveModel(img, this.createCallback(img));
+      if (valid == 'native') {
+        model[field] = event;
+      }
+      if (valid == 'text') {
+        model[field] = event.target.innerText;
+      }
+      var saveable = {};
+      saveable.id = model.id;
+      saveable[field] = model[field];
+      this.saveModel(saveable, this.createCallback(model));
     },
-    setStatus: function setStatus(img, event) {
-      var _this5 = this;
-
-      this.roll = function (img) {
-        var old = img.status;
-        var _this = _this5;
-        return function (obj) {
-          obj.status = old;
-          _this.roll = function () {};
-        };
-      }(img);
-      img.status = event.target.checked;
-      this.saveModel(img, this.createCallback(img));
-    },
-    setCategory: function setCategory(img, event, mode) {
-      var _this6 = this;
-
-      this.roll = function (img) {
-        var old = img.category;
-        var _this = _this6;
-        return function (obj) {
-          obj.category = old;
-          _this.roll = function () {};
-        };
-      }(img);
-      img.category = mode == 'clear' ? null : event;
-      if (!!img.category) img.iscattitle = false;
-      this.saveModel(img, this.createCallback(img));
+    saveModel: function saveModel(model, callback) {
+      ajaxfun(this.$apiLink('image', model.id), 'put', model, callback);
     },
     setCategoryTitle: function setCategoryTitle(img) {
-      var _this7 = this;
+      var _this5 = this;
 
-      var url = '/api/v1/categories/' + img.category.id;
-      ajaxfun(url, 'put', {
+      ajaxfun(this.$apiLink('category', img.category.id), 'put', {
         id: img.category.id,
         titleimage: img.id
       }, function (req) {
         if (req.status == "ok") {
-          _this7.imgs.map(function (image, i) {
+          _this5.imgs.map(function (image, i) {
             if (!!image.category && image.category.id == img.category.id) {
-              _this7.imgs[i].iscattitle = false;
+              _this5.imgs[i].iscattitle = false;
             }
           });
           img.iscattitle = true;
         } else {
           customAlert(req);
-          obj.danger = true;
-          setTimeout(function () {
-            obj.danger = false;
-          }, 1000);
         }
       });
     },
     deleteImage: function deleteImage(img) {
-      var _this8 = this;
+      var _this6 = this;
 
       if (!confirm("Вы уверены?")) {
         return false;
       }
-      var url = '/api/v1/images/' + img.id;
-      ajaxfun(url, 'delete', {
+      ajaxfun(this.$apiLink('image', img.id), 'delete', {
         id: img.id
       }, function (req) {
         if (req.status == 'ok') {
-          _this8.setPage();
+          _this6.setPage();
         } else {
           customAlert(req);
         }
@@ -1162,8 +1066,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         submit_style_success: false,
         submit_style_warning: true
       };
-      var url = '/api/v1/staticpages/' + this.pageId;
-      ajaxfun(url, 'get', null, function (req) {
+      ajaxfun(this.$apiLink('staticpage', this.pageId), 'get', null, function (req) {
         for (var i in req) {
           _this.page[i] = req[i];
         }
@@ -1193,7 +1096,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return false;
       }
 
-      var url = '/api/v1/staticpages';
+      var url = this.$apiLink('staticpage');
       var method = 'post';
       var request_data = {
         title: this.page.title,
@@ -1269,7 +1172,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     };
   },
   mounted: function mounted() {
-    ajaxfun('/api/v1/staticpages', 'get', null, this.fillTable);
+    ajaxfun(this.$apiLink('staticpage'), 'get', null, this.fillTable);
   },
 
   methods: {
@@ -1300,16 +1203,68 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       if (!confirm("Вы уверены?")) {
         return false;
       }
-      var url = '/api/v1/staticpages/' + page.id;
-      ajaxfun(url, 'delete', {
+      ajaxfun(this.$apiLink('staticpage', page.id), 'delete', {
         id: page.id
       }, function (req) {
         if (req.status == 'ok') {
-          ajaxfun('/api/v1/staticpages', 'get', null, _this2.fillTable);
+          ajaxfun(_this2.$apiLink('staticpage'), 'get', null, _this2.fillTable);
         } else {
           customAlert(req);
         }
       });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/admin/Paginate.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    lastPage: {
+      type: Number,
+      required: true,
+      default: 1
+    },
+    value: {
+      type: Number,
+      required: false,
+      default: 1
+    }
+  },
+  methods: {
+    setPage: function setPage(val) {
+      if (val > this.lastPage) val = this.lastPage;
+      if (val < 1) val = 1;
+      this.$emit('input', val);
     }
   }
 });
@@ -1710,7 +1665,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         submit_style_success: false,
         submit_style_warning: true
       };
-      ajaxfun('/api/v1/posts/' + this.postId, 'get', null, function (req) {
+      ajaxfun(this.$apiLink('post', this.postId), 'get', null, function (req) {
         var post = req;
         for (var i in post) {
           _this.post[i] = post[i];
@@ -1721,7 +1676,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           }
         }
       });
-      ajaxfun('/api/v1/tags', 'get', null, function (req) {
+      ajaxfun(this.$apiLink('tag'), 'get', null, function (req) {
         req.map(function (item, i) {
           _this.tags.push(item);
         });
@@ -1754,7 +1709,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return false;
       }
 
-      var url = '/api/v1/posts';
+      var url = this.$apiLink('post');
       var method = 'post';
       var request_data = {
         title: this.post.title,
@@ -1795,46 +1750,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Paginate_vue__ = __webpack_require__("./resources/assets/js/components/admin/Paginate.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Paginate_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Paginate_vue__);
 //
 //
 //
@@ -1893,7 +1810,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: { Paginate: __WEBPACK_IMPORTED_MODULE_0__Paginate_vue___default.a },
   data: function data() {
     return {
       posts: [],
@@ -1904,9 +1824,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   mounted: function mounted() {
     this.publicMode = [{ value: '0', text: 'Закрыто' }, { value: '1', text: 'Открыто' }];
     this.commentMode = [{ value: '0', text: 'Выключено' }, { value: '1', text: 'Модерация' }, { value: '2', text: 'Включено' }];
-    ajaxfun('/api/v1/posts', 'get', null, this.fillTable);
+    ajaxfun(this.$apiLink('post'), 'get', null, this.fillTable);
   },
 
+  watch: {
+    'current_page': function current_page(value) {
+      ajaxfun(this.$apiLink('post') + '?page=' + value, 'get', null, this.fillTable);
+    }
+  },
   methods: {
     fillTable: function fillTable(data) {
       var _this2 = this;
@@ -1927,28 +1852,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
       this.current_page = data.meta.current_page;
       this.last_page = data.meta.last_page;
-    },
-    nextPage: function nextPage() {
-      var url = '/api/v1/posts' + '?page=' + (this.current_page + 1);
-      ajaxfun(url, 'get', null, this.fillTable);
-    },
-    prevPage: function prevPage() {
-      var url = '/api/v1/posts' + '?page=' + (this.current_page - 1);
-      ajaxfun(url, 'get', null, this.fillTable);
-    },
-    firstPage: function firstPage() {
-      var url = '/api/v1/posts' + '?page=1';
-      ajaxfun(url, 'get', null, this.fillTable);
-    },
-    lastPage: function lastPage() {
-      var url = '/api/v1/posts' + '?page=' + this.last_page;
-      ajaxfun(url, 'get', null, this.fillTable);
-    },
-    setPage: function setPage() {
-      if (this.current_page >= 1 && this.current_page <= this.last_page) {
-        var url = '/api/v1/posts' + '?page=' + this.current_page;
-        ajaxfun(url, 'get', null, this.fillTable);
-      }
     },
     createChange: function createChange(model, field, event, valid) {
       var _this3 = this;
@@ -1972,9 +1875,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       saveable[field] = model[field];
       this.saveModel(saveable, this.createCallback(model));
     },
-    saveModel: function saveModel(post, callback) {
-      var url = '/api/v1/posts/' + post.id;
-      ajaxfun(url, 'put', post, callback);
+    saveModel: function saveModel(model, callback) {
+      ajaxfun(this.$apiLink('post', model.id), 'put', post, callback);
     },
     createCallback: function createCallback(obj) {
       var roll = this.roll;
@@ -2003,8 +1905,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       if (!confirm("Вы уверены?")) {
         return false;
       }
-      var url = '/api/v1/posts/' + post.id;
-      ajaxfun(url, 'delete', {
+      ajaxfun(this.$apiLink('post', post.id), 'delete', {
         id: post.id
       }, function (req) {
         if (req.status == 'ok') {
@@ -2075,7 +1976,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     };
   },
   mounted: function mounted() {
-    ajaxfun('/api/v1/tags', 'get', null, this.fillTable);
+    ajaxfun(this.$apiLink('tag'), 'get', null, this.fillTable);
   },
 
   watch: {
@@ -2132,8 +2033,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.saveModel(saveable, this.createCallback(model));
     },
     saveModel: function saveModel(data, callback) {
-      var url = '/api/v1/tags/' + data.id;
-      ajaxfun(url, 'put', data, callback);
+      ajaxfun(this.$apiLink('tag', data.id), 'put', data, callback);
     },
     createCallback: function createCallback(obj) {
       var roll = this.roll;
@@ -2161,12 +2061,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return false;
       }
 
-      ajaxfun('/api/v1/tags', 'post', {
+      ajaxfun(this.$apiLink('tag'), 'post', {
         title: this.store.title
       }, function (req) {
         if (req.status == 'ok') {
           _this4.store.state = false;
-          ajaxfun('/api/v1/tags', 'get', null, _this4.fillTable);
+          ajaxfun(_this4.$apiLink('tag'), 'get', null, _this4.fillTable);
         } else {
           customAlert(req);
         }
@@ -2178,12 +2078,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       if (!confirm("Вы уверены?")) {
         return false;
       }
-      var url = '/api/v1/tags/' + tag.id;
-      ajaxfun(url, 'delete', {
+      ajaxfun(this.$apiLink('tag', tag.id), 'delete', {
         id: tag.id
       }, function (req) {
         if (req.status == 'ok') {
-          ajaxfun('/api/v1/tags', 'get', null, _this5.fillTable);
+          ajaxfun(_this5.$apiLink('tag'), 'get', null, _this5.fillTable);
         } else {
           customAlert(req);
         }
@@ -2353,8 +2252,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         submit_style_success: false,
         submit_style_warning: true
       };
-      var url = '/api/v1/users/' + this.userId;
-      ajaxfun(url, 'get', null, function (req) {
+      ajaxfun(this.$apiLink('user', this.userId), 'get', null, function (req) {
         for (var i in req) {
           _this.user[i] = req[i];
         }
@@ -2379,7 +2277,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return false;
       }
 
-      var url = '/api/v1/users';
+      var url = this.$apiLink('user');
       var method = 'post';
       var request_data = {
         name: this.user.name,
@@ -2459,7 +2357,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     };
   },
   mounted: function mounted() {
-    ajaxfun('/api/v1/users', 'get', null, this.fillTable);
+    ajaxfun(this.$apiLink('user'), 'get', null, this.fillTable);
   },
 
   methods: {
@@ -2493,11 +2391,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       if (!confirm("Вы уверены?")) {
         return false;
       }
-      var url = '/api/v1/users/' + user.id;
-      ajaxfun(url, 'delete', {
+      ajaxfun(this.$apiLink('user', user.id), 'delete', {
         id: user.id
       }, function () {
-        ajaxfun('/api/v1/users', 'get', null, _this2.fillTable);
+        ajaxfun(_this2.$apiLink('user'), 'get', null, _this2.fillTable);
       });
     },
     createCallback: function createCallback(obj) {
@@ -2582,7 +2479,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     };
   },
   mounted: function mounted() {
-    var url = '/api/v1/users/' + this.userId + '/rules';
+    var url = this.$apiLink('user', this.userId) + '/rules';
     ajaxfun(url, 'get', null, this.fillRules);
   },
 
@@ -2621,12 +2518,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     save: function save() {
       var _this2 = this;
 
-      var ret = this.allrules.map(function (rule) {
+      var ret = this.allrules.reduce(function (acc, rule) {
         if (rule[2] != "") {
-          return [rule[0], rule[1], rule[2]];
+          acc.push([rule[0], rule[1], rule[2]]);
         }
-      });
-      var url = '/api/v1/users/' + this.userId + '/rules';
+        return acc;
+      }, []);
+      var url = this.$apiLink('user', this.userId) + '/rules';
       ajaxfun(url, 'put', ret, function (req) {
         if (req.status == 'ok') {
           _this2.$parent.$emit('switch-mode', { 'mode': 'index', 'id': null });
@@ -4187,6 +4085,121 @@ if (false) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-4559edae\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/admin/Paginate.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "row pagination" }, [
+    _c("div", { staticStyle: { "text-align": "center" } }, [
+      _c("p", [
+        _vm._v("Страница " + _vm._s(_vm.value) + " из " + _vm._s(_vm.lastPage))
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "input-group",
+          staticStyle: { "max-width": "170px", display: "inline-table" }
+        },
+        [
+          _c("span", { staticClass: "input-group-btn" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-info btn-sm",
+                attrs: { type: "button", disabled: _vm.value <= 1 },
+                on: {
+                  click: function($event) {
+                    _vm.setPage(1)
+                  }
+                }
+              },
+              [_vm._v("<<")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("span", { staticClass: "input-group-btn" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-info btn-sm",
+                attrs: { type: "button", disabled: _vm.value <= 1 },
+                on: {
+                  click: function($event) {
+                    _vm.setPage(_vm.value - 1)
+                  }
+                }
+              },
+              [_vm._v("<")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "form-control input-sm",
+            staticStyle: { "text-align": "center" },
+            attrs: { type: "text" },
+            domProps: { value: _vm.value },
+            on: {
+              keyup: function($event) {
+                if (!("button" in $event) && $event.keyCode !== 13) {
+                  return null
+                }
+                _vm.setPage(Number($event.target.value))
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("span", { staticClass: "input-group-btn" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-info btn-sm",
+                attrs: { type: "button", disabled: _vm.value === _vm.lastPage },
+                on: {
+                  click: function($event) {
+                    _vm.setPage(_vm.value + 1)
+                  }
+                }
+              },
+              [_vm._v(">")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("span", { staticClass: "input-group-btn" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-info btn-sm",
+                attrs: { type: "button", disabled: _vm.value === _vm.lastPage },
+                on: {
+                  click: function($event) {
+                    _vm.setPage(_vm.lastPage)
+                  }
+                }
+              },
+              [_vm._v(">>")]
+            )
+          ])
+        ]
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-4559edae", module.exports)
+  }
+}
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-48c61346\",\"hasScoped\":true,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/admin/DistateSwitcher.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4720,118 +4733,23 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
-      _c("div", { staticStyle: { "text-align": "right" } }, [
-        _c("div", { staticClass: "row pagination" }, [
-          _c("div", { staticStyle: { "text-align": "center" } }, [
-            _c("p", [
-              _vm._v(
-                "Страница " +
-                  _vm._s(_vm.current_page) +
-                  " из " +
-                  _vm._s(_vm.last_page)
-              )
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "input-group",
-                staticStyle: { "max-width": "170px", display: "inline-table" }
+      _c(
+        "div",
+        { staticStyle: { "text-align": "right" } },
+        [
+          _c("paginate", {
+            attrs: { "last-page": _vm.last_page },
+            model: {
+              value: _vm.current_page,
+              callback: function($$v) {
+                _vm.current_page = $$v
               },
-              [
-                _c("span", { staticClass: "input-group-btn" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-info btn-sm",
-                      attrs: {
-                        type: "button",
-                        disabled: _vm.current_page <= 1
-                      },
-                      on: { click: _vm.firstPage }
-                    },
-                    [_vm._v("<<")]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("span", { staticClass: "input-group-btn" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-info btn-sm",
-                      attrs: {
-                        type: "button",
-                        disabled: _vm.current_page <= 1
-                      },
-                      on: { click: _vm.prevPage }
-                    },
-                    [_vm._v("<")]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.current_page,
-                      expression: "current_page"
-                    }
-                  ],
-                  staticClass: "form-control input-sm",
-                  staticStyle: { "text-align": "center" },
-                  attrs: { type: "text" },
-                  domProps: { value: _vm.current_page },
-                  on: {
-                    keyup: function($event) {
-                      if (!("button" in $event) && $event.keyCode !== 13) {
-                        return null
-                      }
-                      return _vm.setPage($event)
-                    },
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.current_page = $event.target.value
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _c("span", { staticClass: "input-group-btn" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-info btn-sm",
-                      attrs: {
-                        type: "button",
-                        disabled: _vm.current_page === _vm.last_page
-                      },
-                      on: { click: _vm.nextPage }
-                    },
-                    [_vm._v(">")]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("span", { staticClass: "input-group-btn" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-info btn-sm",
-                      attrs: {
-                        type: "button",
-                        disabled: _vm.current_page === _vm.last_page
-                      },
-                      on: { click: _vm.lastPage }
-                    },
-                    [_vm._v(">>")]
-                  )
-                ])
-              ]
-            )
-          ])
-        ])
-      ]),
+              expression: "current_page"
+            }
+          })
+        ],
+        1
+      ),
       _vm._v(" "),
       _c("table", { staticClass: "table table-bordered table-striped" }, [
         _vm._m(0),
@@ -4861,13 +4779,10 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("td", [
-                  _c("span", { domProps: { textContent: _vm._s(post.title) } })
-                ]),
-                _vm._v(" "),
-                _c("td", [
                   _c("a", { attrs: { href: post.link, target: "_black" } }, [
-                    _vm._v("/"),
-                    _c("span", { domProps: { textContent: _vm._s(post.slug) } })
+                    _c("span", {
+                      domProps: { textContent: _vm._s(post.title) }
+                    })
                   ])
                 ]),
                 _vm._v(" "),
@@ -4946,118 +4861,23 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
-      _c("div", { staticStyle: { "text-align": "right" } }, [
-        _c("div", { staticClass: "row pagination" }, [
-          _c("div", { staticStyle: { "text-align": "center" } }, [
-            _c("p", [
-              _vm._v(
-                "Страница " +
-                  _vm._s(_vm.current_page) +
-                  " из " +
-                  _vm._s(_vm.last_page)
-              )
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "input-group",
-                staticStyle: { "max-width": "170px", display: "inline-table" }
+      _c(
+        "div",
+        { staticStyle: { "text-align": "right" } },
+        [
+          _c("paginate", {
+            attrs: { "last-page": _vm.last_page },
+            model: {
+              value: _vm.current_page,
+              callback: function($$v) {
+                _vm.current_page = $$v
               },
-              [
-                _c("span", { staticClass: "input-group-btn" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-info btn-sm",
-                      attrs: {
-                        type: "button",
-                        disabled: _vm.current_page <= 1
-                      },
-                      on: { click: _vm.firstPage }
-                    },
-                    [_vm._v("<<")]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("span", { staticClass: "input-group-btn" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-info btn-sm",
-                      attrs: {
-                        type: "button",
-                        disabled: _vm.current_page <= 1
-                      },
-                      on: { click: _vm.prevPage }
-                    },
-                    [_vm._v("<")]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.current_page,
-                      expression: "current_page"
-                    }
-                  ],
-                  staticClass: "form-control input-sm",
-                  staticStyle: { "text-align": "center" },
-                  attrs: { type: "text" },
-                  domProps: { value: _vm.current_page },
-                  on: {
-                    keyup: function($event) {
-                      if (!("button" in $event) && $event.keyCode !== 13) {
-                        return null
-                      }
-                      return _vm.setPage($event)
-                    },
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.current_page = $event.target.value
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _c("span", { staticClass: "input-group-btn" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-info btn-sm",
-                      attrs: {
-                        type: "button",
-                        disabled: _vm.current_page === _vm.last_page
-                      },
-                      on: { click: _vm.nextPage }
-                    },
-                    [_vm._v(">")]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("span", { staticClass: "input-group-btn" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-info btn-sm",
-                      attrs: {
-                        type: "button",
-                        disabled: _vm.current_page === _vm.last_page
-                      },
-                      on: { click: _vm.lastPage }
-                    },
-                    [_vm._v(">>")]
-                  )
-                ])
-              ]
-            )
-          ])
-        ])
-      ])
+              expression: "current_page"
+            }
+          })
+        ],
+        1
+      )
     ])
   ])
 }
@@ -5071,8 +4891,6 @@ var staticRenderFns = [
         _c("th", [_vm._v("ID")]),
         _vm._v(" "),
         _c("th", [_vm._v("Заголовок")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Ссылка")]),
         _vm._v(" "),
         _c("th", [_vm._v("Публикация")]),
         _vm._v(" "),
@@ -5256,118 +5074,23 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
-      _c("div", { staticStyle: { "text-align": "right" } }, [
-        _c("div", { staticClass: "row pagination" }, [
-          _c("div", { staticStyle: { "text-align": "center" } }, [
-            _c("p", [
-              _vm._v(
-                "Страница " +
-                  _vm._s(_vm.current_page) +
-                  " из " +
-                  _vm._s(_vm.last_page)
-              )
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "input-group",
-                staticStyle: { "max-width": "170px", display: "inline-table" }
+      _c(
+        "div",
+        { staticStyle: { "text-align": "right" } },
+        [
+          _c("paginate", {
+            attrs: { "last-page": _vm.last_page },
+            model: {
+              value: _vm.current_page,
+              callback: function($$v) {
+                _vm.current_page = $$v
               },
-              [
-                _c("span", { staticClass: "input-group-btn" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-info btn-sm",
-                      attrs: {
-                        type: "button",
-                        disabled: _vm.current_page <= 1
-                      },
-                      on: { click: _vm.firstPage }
-                    },
-                    [_vm._v("<<")]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("span", { staticClass: "input-group-btn" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-info btn-sm",
-                      attrs: {
-                        type: "button",
-                        disabled: _vm.current_page <= 1
-                      },
-                      on: { click: _vm.prevPage }
-                    },
-                    [_vm._v("<")]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.current_page,
-                      expression: "current_page"
-                    }
-                  ],
-                  staticClass: "form-control input-sm",
-                  staticStyle: { "text-align": "center" },
-                  attrs: { type: "text" },
-                  domProps: { value: _vm.current_page },
-                  on: {
-                    keyup: function($event) {
-                      if (!("button" in $event) && $event.keyCode !== 13) {
-                        return null
-                      }
-                      return _vm.setPage($event)
-                    },
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.current_page = $event.target.value
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _c("span", { staticClass: "input-group-btn" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-info btn-sm",
-                      attrs: {
-                        type: "button",
-                        disabled: _vm.current_page === _vm.last_page
-                      },
-                      on: { click: _vm.nextPage }
-                    },
-                    [_vm._v(">")]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("span", { staticClass: "input-group-btn" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-info btn-sm",
-                      attrs: {
-                        type: "button",
-                        disabled: _vm.current_page === _vm.last_page
-                      },
-                      on: { click: _vm.lastPage }
-                    },
-                    [_vm._v(">>")]
-                  )
-                ])
-              ]
-            )
-          ])
-        ])
-      ]),
+              expression: "current_page"
+            }
+          })
+        ],
+        1
+      ),
       _vm._v(" "),
       _c("table", { staticClass: "table table-bordered table-striped" }, [
         _vm._m(0),
@@ -5407,7 +5130,7 @@ var render = function() {
                           return null
                         }
                         $event.preventDefault()
-                        _vm.setTitle(img, $event)
+                        _vm.createChange(img, "title", $event, "text")
                       }
                     }
                   }),
@@ -5433,7 +5156,7 @@ var render = function() {
                       domProps: { checked: img.status },
                       on: {
                         change: function($event) {
-                          _vm.setStatus(img, $event)
+                          _vm.createChange(img, "status", $event, "boolean")
                         }
                       }
                     }),
@@ -5457,10 +5180,10 @@ var render = function() {
                       },
                       on: {
                         select: function($event) {
-                          _vm.setCategory(img, $event, "change")
+                          _vm.createChange(img, "category", $event.id, "native")
                         },
                         remove: function($event) {
-                          _vm.setCategory(img, $event, "clear")
+                          _vm.createChange(img, "category", null, "native")
                         }
                       },
                       model: {
@@ -5472,7 +5195,7 @@ var render = function() {
                       }
                     }),
                     _vm._v(" "),
-                    img.category_id !== 0
+                    img.category !== null
                       ? _c(
                           "div",
                           {
@@ -5533,118 +5256,23 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
-      _c("div", { staticStyle: { "text-align": "right" } }, [
-        _c("div", { staticClass: "row pagination" }, [
-          _c("div", { staticStyle: { "text-align": "center" } }, [
-            _c("p", [
-              _vm._v(
-                "Страница " +
-                  _vm._s(_vm.current_page) +
-                  " из " +
-                  _vm._s(_vm.last_page)
-              )
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "input-group",
-                staticStyle: { "max-width": "170px", display: "inline-table" }
+      _c(
+        "div",
+        { staticStyle: { "text-align": "right" } },
+        [
+          _c("paginate", {
+            attrs: { "last-page": _vm.last_page },
+            model: {
+              value: _vm.current_page,
+              callback: function($$v) {
+                _vm.current_page = $$v
               },
-              [
-                _c("span", { staticClass: "input-group-btn" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-info btn-sm",
-                      attrs: {
-                        type: "button",
-                        disabled: _vm.current_page <= 1
-                      },
-                      on: { click: _vm.firstPage }
-                    },
-                    [_vm._v("<<")]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("span", { staticClass: "input-group-btn" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-info btn-sm",
-                      attrs: {
-                        type: "button",
-                        disabled: _vm.current_page <= 1
-                      },
-                      on: { click: _vm.prevPage }
-                    },
-                    [_vm._v("<")]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.current_page,
-                      expression: "current_page"
-                    }
-                  ],
-                  staticClass: "form-control input-sm",
-                  staticStyle: { "text-align": "center" },
-                  attrs: { type: "text" },
-                  domProps: { value: _vm.current_page },
-                  on: {
-                    keyup: function($event) {
-                      if (!("button" in $event) && $event.keyCode !== 13) {
-                        return null
-                      }
-                      return _vm.setPage($event)
-                    },
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.current_page = $event.target.value
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _c("span", { staticClass: "input-group-btn" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-info btn-sm",
-                      attrs: {
-                        type: "button",
-                        disabled: _vm.current_page === _vm.last_page
-                      },
-                      on: { click: _vm.nextPage }
-                    },
-                    [_vm._v(">")]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("span", { staticClass: "input-group-btn" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-info btn-sm",
-                      attrs: {
-                        type: "button",
-                        disabled: _vm.current_page === _vm.last_page
-                      },
-                      on: { click: _vm.lastPage }
-                    },
-                    [_vm._v(">>")]
-                  )
-                ])
-              ]
-            )
-          ])
-        ])
-      ])
+              expression: "current_page"
+            }
+          })
+        ],
+        1
+      )
     ])
   ])
 }
@@ -7229,6 +6857,37 @@ window.Vue = __webpack_require__("./node_modules/vue/dist/vue.common.js");
 global.jQuery = __WEBPACK_IMPORTED_MODULE_1_jquery___default.a;
 global.$ = __WEBPACK_IMPORTED_MODULE_1_jquery___default.a;
 
+Vue.prototype.$apiLink = function (mode) {
+  var id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+  var apiVersion = 1;
+  var address = '/api/v' + apiVersion + '/?' + (id ? '/' + id : '');
+
+  switch (mode) {
+    case 'image':
+      return address.replace('?', 'images');
+      break;
+    case 'category':
+      return address.replace('?', 'categories');
+      break;
+    case 'audio':
+      return address.replace('?', 'audiofiles');
+      break;
+    case 'staticpage':
+      return address.replace('?', 'staticpages');
+      break;
+    case 'post':
+      return address.replace('?', 'posts');
+      break;
+    case 'tag':
+      return address.replace('?', 'tags');
+      break;
+    case 'user':
+      return address.replace('?', 'users');
+      break;
+  }
+};
+
 /* Скрипт кастомного Alert */
 
 (function (window) {
@@ -7297,22 +6956,25 @@ global.$ = __WEBPACK_IMPORTED_MODULE_1_jquery___default.a;
       },
       body: body !== null ? JSON.stringify(body) : null
     }).then(function (response) {
-      if (response.status != 200) {
-        var error = response.json();
-        error.then(function (data) {
-          customAlert(data);
-        }).catch(function (e) {
-          customAlert({ text: 'Ошибка ответа сервера' });
-          console.log(e);
-        });
-        return;
+      if (response.status != 200 && response.status != 201) {
+        throw { name: 'StatusError', message: response };
       }
       return response.json();
     }).then(function (req) {
       if (!!req) return callback(req);
     }).catch(function (e) {
-      customAlert({ text: 'Ошибка исполнения запроса' });
-      console.log(e);
+      if (e.name == 'StatusError') {
+        e.message.json().then(function (json) {
+          callback(json);
+          customAlert(json);
+        });
+      } else if (e.name == 'SyntaxError') {
+        customAlert({ text: 'Некорректный ответ сервера' });
+        console.log(e);
+      } else {
+        customAlert({ text: 'Непонятная ошибка' });
+        console.log(e);
+      }
     });
   };
   window.localCache = {
@@ -7921,6 +7583,54 @@ if (false) {(function () {
     hotAPI.createRecord("data-v-c89e9536", Component.options)
   } else {
     hotAPI.reload("data-v-c89e9536", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/admin/Paginate.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\",[\"transform-runtime\",{\"polyfill\":false,\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/admin/Paginate.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-4559edae\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/admin/Paginate.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/admin/Paginate.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4559edae", Component.options)
+  } else {
+    hotAPI.reload("data-v-4559edae", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true

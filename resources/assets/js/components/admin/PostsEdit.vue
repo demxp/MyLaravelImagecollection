@@ -135,7 +135,7 @@
             submit_style_success: false,
             submit_style_warning: true
           };
-          ajaxfun('/api/v1/posts/' + this.postId, 'get', null, (req) => {
+          ajaxfun(this.$apiLink('post', this.postId), 'get', null, (req) => {
             let post = req;
             for(let i in post){
               this.post[i] = post[i];  
@@ -146,7 +146,7 @@
               }
             }
           });
-          ajaxfun('/api/v1/tags', 'get', null, (req) => {
+          ajaxfun(this.$apiLink('tag'), 'get', null, (req) => {
             req.map((item, i) => {
               this.tags.push(item);
             });
@@ -176,7 +176,7 @@
             return false;
           }
 
-          let url = '/api/v1/posts';
+          let url = this.$apiLink('post');
           let method = 'post';
           let request_data = {
             title: this.post.title,

@@ -67,8 +67,7 @@
             submit_style_success: false,
             submit_style_warning: true
           };
-          let url = '/api/v1/users/' + this.userId;
-          ajaxfun(url, 'get', null, (req) => {
+          ajaxfun(this.$apiLink('user', this.userId), 'get', null, (req) => {
             for(let i in req){
               this.user[i] = req[i];
             }
@@ -90,7 +89,7 @@
             return false;
           }
 
-          let url = '/api/v1/users';
+          let url = this.$apiLink('user');
           let method = 'post';
           let request_data = {
             name: this.user.name,

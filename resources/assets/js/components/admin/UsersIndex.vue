@@ -45,7 +45,7 @@
         }
       },
       mounted(){
-        ajaxfun('/api/v1/users', 'get', null, this.fillTable)
+        ajaxfun(this.$apiLink('user'), 'get', null, this.fillTable)
       },
       methods:{
         fillTable(data){
@@ -70,10 +70,9 @@
         },        
         deleteUser(user){
           if(!confirm("Вы уверены?")){return false;}
-          let url = '/api/v1/users/'+user.id;
-          ajaxfun(url, 'delete', {
+          ajaxfun(this.$apiLink('user', user.id), 'delete', {
             id: user.id
-          }, () => {ajaxfun('/api/v1/users', 'get', null, this.fillTable)});         
+          }, () => {ajaxfun(this.$apiLink('user'), 'get', null, this.fillTable)});         
         },
         createCallback(obj){
           return function(req){

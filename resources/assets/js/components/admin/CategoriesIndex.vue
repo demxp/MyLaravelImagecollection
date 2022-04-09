@@ -44,7 +44,7 @@
         }
       },
       mounted(){
-        ajaxfun('/api/v1/categories', 'get', null, this.fillTable)
+        ajaxfun(this.$apiLink('category'), 'get', null, this.fillTable)
       },
       methods:{
         fillTable(data){
@@ -62,8 +62,7 @@
           }
         },
         saveModel(cat, callback){
-          let url = '/api/v1/categories/'+cat.id;
-          ajaxfun(url, 'put', {
+          ajaxfun(this.$apiLink('category', cat.id), 'put', {
             id: cat.id,
             title: cat.title,
             hidden: cat.hidden,
@@ -100,12 +99,11 @@
         },    
         deleteCategory(cat){
           if(!confirm("Вы уверены?")){return false;}
-          let url = '/api/v1/categories/'+cat.id;
-          ajaxfun(url, 'delete', {
+          ajaxfun(this.apiLink('category', cat.id), 'delete', {
             id: cat.id
           }, (req) => {
             if(req.status == 'ok'){
-              ajaxfun('/api/v1/categories', 'get', null, this.fillTable);
+              ajaxfun(this.$apiLink('category'), 'get', null, this.fillTable);
             }else{
               customAlert(req);
             }            

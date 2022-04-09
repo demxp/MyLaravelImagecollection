@@ -49,7 +49,7 @@
         }
       },
       mounted(){
-        ajaxfun('/api/v1/tags', 'get', null, this.fillTable)
+        ajaxfun(this.$apiLink('tag'), 'get', null, this.fillTable)
       },
       watch: {
         'store.state': function (value) {
@@ -99,8 +99,7 @@
           this.saveModel(saveable, this.createCallback(model));          
         },
         saveModel(data, callback){
-          let url = '/api/v1/tags/'+data.id;
-          ajaxfun(url, 'put', data, callback);
+          ajaxfun(this.$apiLink('tag', data.id), 'put', data, callback);
         },
         createCallback(obj){
           let roll = this.roll;
@@ -122,12 +121,12 @@
             return false;
           }
 
-          ajaxfun('/api/v1/tags', 'post', {
+          ajaxfun(this.$apiLink('tag'), 'post', {
             title: this.store.title
           }, (req) => {
             if(req.status == 'ok'){
               this.store.state = false;
-              ajaxfun('/api/v1/tags', 'get', null, this.fillTable);
+              ajaxfun(this.$apiLink('tag'), 'get', null, this.fillTable);
             }else{
               customAlert(req);
             }            
@@ -135,12 +134,11 @@
         },
         deleteTag(tag){
           if(!confirm("Вы уверены?")){return false;}
-          let url = '/api/v1/tags/'+tag.id;
-          ajaxfun(url, 'delete', {
+          ajaxfun(this.$apiLink('tag', tag.id), 'delete', {
             id: tag.id
           }, (req) => {
             if(req.status == 'ok'){
-              ajaxfun('/api/v1/tags', 'get', null, this.fillTable);
+              ajaxfun(this.$apiLink('tag'), 'get', null, this.fillTable);
             }else{
               customAlert(req);
             }            

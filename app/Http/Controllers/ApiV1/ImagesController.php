@@ -37,9 +37,9 @@ class ImagesController extends Controller
     public function index()
     {
         if(\Auth::user()->is_admin == 1){
-            return ImageShort::collection(Images::paginate(20));
+            return ImageShort::collection(Images::orderBy('id')->paginate(20));
         }else{
-            return ImageShort::collection(Images::where('user_id', \Auth::user()->id)->paginate(20));
+            return ImageShort::collection(Images::where('user_id', \Auth::user()->id)->orderBy('id')->paginate(20));
         }
     }
 
@@ -86,29 +86,27 @@ class ImagesController extends Controller
     public function update(Request $request, $id)
     {
 		$validator = Validator::make($request->all(), [
-			'title' => 'required|min:5',
+			'title' => 'sometimes|min:5',
+            'status' => 'sometimes|numeric',
+            'category' => 'sometimes|numeric|nullable'
 		]);
 
     	if($validator->fails()) {
     		return [
-    			"status" => "error",
-    			"message" => "IncorrectInputData"
+                "status" => "error",
+                "message" => "ValidateError",
+                "errors" => $validator->messages()->all()
     		];
  		}
         $image = Images::find($id);
-        if(($image->user_id != Auth::user()->id) && (Auth::user()->is_admin == 0)){
-            return [
-                "status" => "error",
-                "message" => "NotEnoughRights"
-            ];            
-        }
 
         $image->edit($request->all());
-        $image->setCategory($request->get('category_id'));
-        $image->toggleVisibility($request->get('status'));
+        if($image) return ["status" => "ok"];
         return [
-            "status" => "ok"
-        ]; 
+            "status" => "error",
+            "message" => "SaveError",
+            "errors" => $image->errors()
+        ];
     }
 
     /**
@@ -120,12 +118,6 @@ class ImagesController extends Controller
     public function destroy($id)
     {
         $image = Images::find($id);
-        if(($image->user_id != Auth::user()->id) && (Auth::user()->is_admin == 0)){
-            return [
-                "status" => "error",
-                "message" => "NotEnoughRights"
-            ];            
-        }
         $image->remove();
         return [
         	"status" => "ok"

@@ -55,12 +55,12 @@ class Images extends Model
 
     public function edit($fields)
     {
-    	$this->fill($fields);
-        if(!is_null($fields['image'])){
-            Storage::delete('storage/'.$this->image);
-            $this->image = self::uploadImageByString($fields['image'], $this->user_id);
-        }
-    	$this->save();
+        if(array_key_exists('title', $fields)) $this->title = $fields['title'];
+        if(array_key_exists('status', $fields)) $this->status = $fields['status'];
+        if(array_key_exists('category', $fields)) $this->setCategory($fields['category']);
+
+        $this->save();
+        return $this;
     }
 
     public function remove()
@@ -162,56 +162,13 @@ class Images extends Model
         return $image;        
     }      
 
-    public function setTitle($text)
-    {
-        if(strlen($text) < 5) { return 1;}
-
-        $this->title = $text;
-        $this->save();
-
-        return 0;
-    }
-
     public function setCategory($id)
     {
         if(is_null($id) && $this->id == $this->category->titleimage){
             $this->category->resetHeadImage();
         }
-
     	$this->category_id = $id;
-    	$this->save();
-    }
-
-    public function setCategoryTitleimage($id)
-    {
-        if($id == null) { return 1;}
-
-        $this->category->setHeadImage($id);
-        return 0;                
-    }
-
-    public function setPrivate()
-    {
-    	$this->status = 0;
-    	$this->save();
-
-        return 0;        
-    }
-
-    public function setPublic()
-    {
-    	$this->status = 1;
-    	$this->save();
-
-        return 0;        
-    }
-
-    public function toggleVisibility($value)
-    {
-    	if(!is_null($value)){
-    		return $this->setPrivate();
-    	}
-    	return $this->setPublic();
+    	return $this;
     }
 
     public function getCategoryTitle()

@@ -6,6 +6,35 @@ import $ from 'jquery';
 global.jQuery = $;
 global.$ = $;
 
+Vue.prototype.$apiLink = function(mode, id=false){
+  let apiVersion = 1;
+  let address = '/api/v' + apiVersion + '/?' + ((id) ? '/' + id : '');
+
+  switch(mode){
+    case('image'):
+    return address.replace('?', 'images');
+    break;
+    case('category'):
+    return address.replace('?', 'categories');
+    break;
+    case('audio'):
+    return address.replace('?', 'audiofiles');
+    break;
+    case('staticpage'):
+    return address.replace('?', 'staticpages');
+    break;
+    case('post'):
+    return address.replace('?', 'posts');
+    break;
+    case('tag'):
+    return address.replace('?', 'tags');
+    break;    
+    case('user'):
+    return address.replace('?', 'users');
+    break;        
+  }
+};
+
 /* Скрипт кастомного Alert */
 
 (function(window) {
@@ -68,22 +97,25 @@ global.$ = $;
       },
       body: (body !== null) ? JSON.stringify(body) : null
     }).then(response => {
-        if(response.status != 200){
-          let error = response.json();
-          error.then(data => {
-            customAlert(data);
-          }).catch(e => {
-            customAlert({text: 'Ошибка ответа сервера'});
-            console.log(e);
-          });
-          return;
-        }
-        return response.json();
+      if(response.status != 200 && response.status != 201){
+        throw {name: 'StatusError', message: response};
+      }
+      return response.json();
     }).then(req => {
         if(!!req) return callback(req);
     }).catch(e => {
-      customAlert({text: 'Ошибка исполнения запроса'});
-      console.log(e);
+      if(e.name == 'StatusError'){
+        e.message.json().then((json) => {
+          callback(json);
+          customAlert(json);
+        })
+      }else if(e.name == 'SyntaxError'){
+        customAlert({text: 'Некорректный ответ сервера'});
+        console.log(e);
+      }else{
+        customAlert({text: 'Непонятная ошибка'});
+        console.log(e);
+      }
     });         
   };
   window.localCache = {
@@ -196,5 +228,5 @@ const app = new Vue({
     checkMode(mode){
       return this.current == mode;
     }
-  },
+  } 
 });

@@ -44,17 +44,13 @@
           }
         }
       },
-      mounted(){
-
-      },
       methods:{
         addcategory(){
           if(this.cat.title === null || this.cat.title.length < 3){
             alert("Надо написать название категории! Минимум 3 символа.");
             return false;
           }      
-          let url = '/api/v1/categories';
-          ajaxfun(url, 'post', {
+          ajaxfun(this.$apiLink('category'), 'post', {
             title: this.cat.title,
             hidden: (this.cat.hidden) ? 1 : 0,
           }, (req) => {

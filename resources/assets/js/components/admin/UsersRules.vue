@@ -55,7 +55,7 @@
         }
       },
       mounted(){
-        let url = '/api/v1/users/' + this.userId + '/rules';
+        let url = this.$apiLink('user', this.userId) + '/rules';
         ajaxfun(url, 'get', null, this.fillRules);           
       },
       methods:{
@@ -89,12 +89,13 @@
           return this.texts[v].toUpperCase();
         },
         save(){
-          let ret = this.allrules.map((rule) => {
+          let ret = this.allrules.reduce(function(acc, rule) {
             if(rule[2] != ""){
-              return [rule[0], rule[1], rule[2]];
+              acc.push([rule[0], rule[1], rule[2]]);
             }
-          });
-          let url = '/api/v1/users/' + this.userId + '/rules';      
+            return acc;
+          }, []);
+          let url = this.$apiLink('user', this.userId) + '/rules';      
           ajaxfun(url, 'put', ret, (req) => {
             if(req.status == 'ok'){
               this.$parent.$emit('switch-mode', {'mode': 'index', 'id': null});

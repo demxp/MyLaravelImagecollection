@@ -5,26 +5,7 @@
         <a class="btn btn-success" @click="$parent.$emit('switch-mode', {'mode': 'uploadimages', 'id': null})">Добавить</a>
       </div>      
       <div style="text-align: right;">
-        <div class="row pagination">
-          <div style="text-align: center;">
-            <p>Страница {{ current_page }} из {{ last_page }}</p>
-            <div class="input-group" style="max-width: 170px; display: inline-table;">
-              <span class="input-group-btn">
-                <button class="btn btn-info btn-sm" type="button" :disabled="current_page <= 1" @click="firstPage"><<</button>
-              </span>            
-              <span class="input-group-btn">
-                <button class="btn btn-info btn-sm" type="button" :disabled="current_page <= 1" @click="prevPage"><</button>
-              </span>
-              <input type="text" class="form-control input-sm" style="text-align: center;" v-model="current_page" @keyup.13="setPage">
-              <span class="input-group-btn">
-                <button class="btn btn-info btn-sm" type="button" :disabled="current_page === last_page" @click="nextPage">></button>
-              </span>      
-              <span class="input-group-btn">
-                <button class="btn btn-info btn-sm" type="button" :disabled="current_page === last_page" @click="lastPage">>></button>
-              </span>                    
-            </div><!-- /input-group -->
-          </div><!-- /.col-lg-6 -->
-        </div><!-- /.row -->             
+        <paginate v-model="current_page" :last-page="last_page"></paginate>
       </div> 
       <table class="table table-bordered table-striped">
         <thead>
@@ -46,18 +27,18 @@
           <tr v-for="img in imgs" :key="img.id" :class="{'tr__green':img.success, 'tr__red':img.danger}">
             <td>{{ img.id }}</td>
             <td>
-              <span contenteditable="true" @keydown.13.prevent="setTitle(img, $event)" v-text="img.title"></span><br /><br />
+              <span contenteditable="true" @keydown.13.prevent="createChange(img, 'title', $event, 'text')" v-text="img.title"></span><br /><br />
               <input type="text" class="imglink bg-info" readonly="readonly" :value="img.fullimage" @click="$event.target.select()">
             </td>
             <td>
               <label class="switcher">
-                  <input :checked="img.status" type="checkbox" @change="setStatus(img, $event)"/>
+                  <input :checked="img.status" type="checkbox" @change="createChange(img, 'status', $event, 'boolean')"/>
                   <div class="switcher__text"></div>
               </label>
             </td>
             <td>
-              <multiselect v-model="img.category" :options="cats" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Pick a value" @select="setCategory(img, $event, 'change')" @remove="setCategory(img, $event, 'clear')" track-by="title" label="title"></multiselect>
-                <div :class="{ setcattitle:true, 'selected': img.iscattitle }" v-if="img.category_id !== 0">
+              <multiselect v-model="img.category" :options="cats" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Pick a value" @select="createChange(img, 'category', $event.id, 'native')" @remove="createChange(img, 'category', null, 'native')" track-by="title" label="title"></multiselect>
+                <div :class="{ setcattitle:true, 'selected': img.iscattitle }" v-if="img.category !== null">
                   <button type="button" class="btn btn-info btn-xs" @click="setCategoryTitle(img)">Иконка</button>                      
                   <span>Иконка</span>
                 </div>
@@ -70,26 +51,7 @@
         </tbody>
       </table>
       <div style="text-align: right;">
-        <div class="row pagination">
-          <div style="text-align: center;">
-            <p>Страница {{ current_page }} из {{ last_page }}</p>
-            <div class="input-group" style="max-width: 170px; display: inline-table;">
-              <span class="input-group-btn">
-                <button class="btn btn-info btn-sm" type="button" :disabled="current_page <= 1" @click="firstPage"><<</button>
-              </span>            
-              <span class="input-group-btn">
-                <button class="btn btn-info btn-sm" type="button" :disabled="current_page <= 1" @click="prevPage"><</button>
-              </span>
-              <input type="text" class="form-control input-sm" style="text-align: center;" v-model="current_page" @keyup.13="setPage">
-              <span class="input-group-btn">
-                <button class="btn btn-info btn-sm" type="button" :disabled="current_page === last_page" @click="nextPage">></button>
-              </span>      
-              <span class="input-group-btn">
-                <button class="btn btn-info btn-sm" type="button" :disabled="current_page === last_page" @click="lastPage">>></button>
-              </span>                    
-            </div><!-- /input-group -->
-          </div><!-- /.col-lg-6 -->
-        </div><!-- /.row -->             
+        <paginate v-model="current_page" :last-page="last_page"></paginate>
       </div> 
     </div>
   </div>
@@ -97,9 +59,10 @@
 
 <script>
     import Multiselect from 'vue-multiselect';
+    import Paginate from './Paginate.vue';
 
     export default {
-      components: {Multiselect},  
+      components: {Multiselect, Paginate},  
       data(){
         return{
           imgs: [],
@@ -109,8 +72,13 @@
         }
       },
       mounted(){
-        window.localCache.get('/api/v1/categories', this.fillCategories);
-        ajaxfun('/api/v1/images', 'get', null, this.fillTable)
+        window.localCache.get(this.$apiLink('category'), this.fillCategories);
+        ajaxfun(this.$apiLink('image'), 'get', null, this.fillTable)
+      },
+      watch: {
+        'current_page': function (value) {
+          ajaxfun(this.$apiLink('image') + '?page=' + value, 'get', null, this.fillTable);
+        },
       },
       methods:{
         fillCategories(data){
@@ -127,7 +95,7 @@
               });
             }
           });
-        },        
+        },
         fillTable(data){
           let imgs = data.data;
           imgs.map((item, i) => {
@@ -145,80 +113,34 @@
           this.current_page = data.meta.current_page;
           this.last_page = data.meta.last_page;
         },
-        nextPage(){
-          let url = '/api/v1/images' + '?page=' + (this.current_page + 1);
-          ajaxfun(url, 'get', null, this.fillTable);
-        },
-        prevPage(){
-          let url = '/api/v1/images' + '?page=' + (this.current_page - 1);
-          ajaxfun(url, 'get', null, this.fillTable);
-        }, 
-        firstPage(){
-          let url = '/api/v1/images' + '?page=1';
-          ajaxfun(url, 'get', null, this.fillTable);
-        },
-        lastPage(){
-          let url = '/api/v1/images' + '?page=' + this.last_page;
-          ajaxfun(url, 'get', null, this.fillTable);
-        },     
-        setPage(){
-          if(this.current_page >= 1 && this.current_page <= this.last_page){
-            let url = '/api/v1/images' + '?page=' + this.current_page;
-            ajaxfun(url, 'get', null, this.fillTable);
+        createChange(model, field, event, valid){
+          this.roll = ((model) => {
+            let oldState = model[field];
+            let _this = this;          
+            return function(obj){
+              obj[field] = oldState;
+              _this.roll = function(){};
+            };
+          })(model);
+          if(valid == 'boolean'){
+            model[field] = (event.target.checked) ? 1 : 0;
           }
-        },
-        saveModel(img, callback){
-          let url = '/api/v1/images/'+img.id;
-          ajaxfun(url, 'put', {
-            id: img.id,
-            title: img.title,
-            category_id: (!!img.category) ? img.category.id : null,
-            status: (img.status) ? null : 'hide',
-            image: null
-          }, callback);        
-        },
-        setTitle(img, event){
-          this.roll = ((img) => {
-            let old = img.title;
-            let _this = this;          
-            return function(obj){
-              obj.title = old;
-              _this.roll = function(){};
-            };
-          })(img);
-          let text = event.target.innerText;
-          if (text.length < 3) {return false;}
-          img.title = text;
-          this.saveModel(img, this.createCallback(img));
-        },
-        setStatus(img, event){
-          this.roll = ((img) => {
-            let old = img.status;
-            let _this = this;          
-            return function(obj){
-              obj.status = old;
-              _this.roll = function(){};
-            };
-          })(img);
-          img.status = event.target.checked;
-          this.saveModel(img, this.createCallback(img));
-        },
-        setCategory(img, event, mode){
-          this.roll = ((img) => {
-            let old = img.category;
-            let _this = this;
-            return function(obj){
-              obj.category = old;
-              _this.roll = function(){};
-            };
-          })(img);
-          img.category = (mode == 'clear') ? null : event;
-          if(!!img.category) img.iscattitle = false;
-          this.saveModel(img, this.createCallback(img));
+          if(valid == 'native'){
+            model[field] = event;
+          }
+          if(valid == 'text'){
+            model[field] = event.target.innerText;
+          }          
+          let saveable = {};
+          saveable.id = model.id;
+          saveable[field] = model[field];
+          this.saveModel(saveable, this.createCallback(model));          
+        },        
+        saveModel(model, callback){
+          ajaxfun(this.$apiLink('image', model.id), 'put', model, callback);        
         },
         setCategoryTitle(img){
-          let url = '/api/v1/categories/'+img.category.id;
-          ajaxfun(url, 'put', {
+          ajaxfun(this.$apiLink('category', img.category.id), 'put', {
             id: img.category.id,
             titleimage: img.id
           }, (req) => {
@@ -231,15 +153,12 @@
               img.iscattitle = true;
             }else{
               customAlert(req);
-              obj.danger = true;
-              setTimeout(() => {obj.danger = false;},1000);
             }
           });         
         },      
         deleteImage(img){
           if(!confirm("Вы уверены?")){return false;}
-          let url = '/api/v1/images/'+img.id;
-          ajaxfun(url, 'delete', {
+          ajaxfun(this.$apiLink('image', img.id), 'delete', {
             id: img.id
           }, (req) => {
             if(req.status == 'ok'){

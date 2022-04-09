@@ -58,7 +58,7 @@
         }
       },
       mounted(){
-        window.localCache.get('/api/v1/categories', this.fillCategories);
+        window.localCache.get(this.$apiLink('category'), this.fillCategories);
       },
       methods:{
         fillCategories(data){
@@ -78,10 +78,7 @@
             })
           };
 
-          console.log(toServer)
-
-          let url = '/api/v1/images';
-          ajaxfun(url, 'post', toServer, (req) => {
+          ajaxfun(this.$apiLink('image'), 'post', toServer, (req) => {
             if(req.status == 'ok'){
               this.$parent.$emit('switch-mode', {'mode': 'index', 'id': null});
               return true;

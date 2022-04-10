@@ -33,7 +33,10 @@
 </template>
 
 <script>
+    import PictureLoader from './../reusable/PictureLoader.vue';
+
     export default {
+      components: {PictureLoader},  
       props: {
         userId: {
           type: Number,

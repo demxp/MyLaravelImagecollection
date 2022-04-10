@@ -21,14 +21,15 @@
         <tbody>
           <tr v-for="cat in cats" :class="{'tr__green':cat.success, 'tr__red':cat.danger}">
             <td>{{ cat.id }}</td>
-            <td><span contenteditable="true" @keydown.13.prevent="setTitle(cat, $event)" v-text="cat.title"></span></td>
+            <td><span contenteditable="true" @keydown.13.prevent="createChange(cat,'title',$event,'text')" v-text="cat.title"></span></td>
             <td>
-              <label class="switcher">
-                  <input :checked="cat.hidden" type="checkbox" @change="setStatus(cat, $event)"/>
-                  <div class="switcher__text"></div>
-              </label>
+              <distate-switcher
+              :select="cat.hidden"
+              :options="switcherOpts"
+               @change="createChange(cat,'hidden',$event,'native')"
+              ></distate-switcher>              
             </td>            
-            <td><button class="btn btn-xs btn-danger" @click="deleteCategory(cat)">Удалить</button></td>   
+            <td><button class="btn btn-xs btn-danger btn-block" @click="deleteElem(cat.id)">Удалить</button></td>   
           </tr>                 
         </tbody>
       </table>
@@ -37,92 +38,26 @@
 </template>
 
 <script>
+    import { MethodsMixin } from './../mixins/methods.mixin.js';
+    import DistateSwitcher from './../reusable/DistateSwitcher.vue';
+
     export default {
+      components: {DistateSwitcher},
+      mixins: [MethodsMixin],
+      apiPath: 'category',
+      mainArrayName: 'cats',
       data(){
         return{
           cats: []
         }
       },
-      mounted(){
-        ajaxfun(this.$apiLink('category'), 'get', null, this.fillTable)
-      },
-      methods:{
-        fillTable(data){
-          data.map((item, i) => {
-            item.success = false;
-            item.danger = false;
-            if(!!this.cats[i]){
-              Object.keys(item).map((param) => this.cats[i][param] = item[param]);
-            }else{
-              this.cats.push(item)
-            }
-          });
-          if(data.length < this.cats.length){
-            this.cats.splice(data.length,this.cats.length - data.length);
-          }
-        },
-        saveModel(cat, callback){
-          ajaxfun(this.$apiLink('category', cat.id), 'put', {
-            id: cat.id,
-            title: cat.title,
-            hidden: cat.hidden,
-          }, callback);        
-        },
-        setTitle(cat, event){
-          this.roll = ((cat) => {
-            let old = cat.title;
-            let _this = this;          
-            return function(obj){
-              obj.title = old;
-              _this.roll = function(){};
-            };
-          })(cat);        
-          let text = event.target.innerText;
-          if (text.length < 3) {
-            alert("Надо написать название категории! Минимум 3 символа.");
-            return false;
-          }
-          cat.title = text;
-          this.saveModel(cat, this.createCallback(cat));
-        },
-        setStatus(cat, event){
-          this.roll = ((cat) => {
-            let old = cat.hidden; 
-            let _this = this;          
-            return function(obj){
-              obj.hidden = old;
-              _this.roll = function(){};
-            };
-          })(cat);
-          cat.hidden = (event.target.checked) ? 1 : 0;        
-          this.saveModel(cat, this.createCallback(cat));
-        },    
-        deleteCategory(cat){
-          if(!confirm("Вы уверены?")){return false;}
-          ajaxfun(this.apiLink('category', cat.id), 'delete', {
-            id: cat.id
-          }, (req) => {
-            if(req.status == 'ok'){
-              ajaxfun(this.$apiLink('category'), 'get', null, this.fillTable);
-            }else{
-              customAlert(req);
-            }            
-          });
-        },
-        createCallback(obj){
-          let roll = this.roll;
-          return function(req){
-            if(req.status == 'ok'){
-              obj.success = true;
-              setTimeout(() => {obj.success = false;},1000);
-            }else{
-              customAlert(req);
-              obj.danger = true;
-              setTimeout(() => {obj.danger = false;},1000);
-              roll(obj);
-            }
-          };      
+      computed:{
+        switcherOpts(){
+          return [
+              {value: '1', text: 'Скрытая'},
+              {value: '0', text: 'Открытая'}
+          ];
         }
-      }  
+      }
     }
 </script>

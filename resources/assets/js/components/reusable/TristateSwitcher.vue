@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!!mode">
+  <div v-if="!!mode" style="text-align: center;">
     <span :class="swClass">
       <input
       type="radio"

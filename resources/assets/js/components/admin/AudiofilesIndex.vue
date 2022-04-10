@@ -50,7 +50,7 @@
             <td><span contenteditable="true" @keydown.13.prevent="createChange(afile,'artist',$event,'text')" v-text="afile.artist"></span></td>
             <td><span contenteditable="true" @keydown.13.prevent="createChange(afile,'album',$event,'text')" v-text="afile.album"></span></td>
             <td>
-              <button class="btn btn-xs btn-danger" @click="deleteAfile(afile)">Удалить</button>
+              <button class="btn btn-xs btn-danger btn-block" @click="deleteElem(afile.id)">Удалить</button>
             </td>
           </tr>                 
         </tbody>
@@ -60,7 +60,12 @@
 </template>
 
 <script>
+    import { MethodsMixin } from './../mixins/methods.mixin.js';
+    
     export default {
+      mixins: [MethodsMixin],
+      apiPath: 'audio',
+      mainArrayName: 'afiles',
       data(){
         return{
           afiles: [],
@@ -74,9 +79,6 @@
           }
         }
       },
-      mounted(){
-        ajaxfun(this.$apiLink('audio'), 'get', null, this.fillTable)
-      },
       watch: {
         'upload.state': function (value) {
           if(!value){
@@ -86,62 +88,6 @@
         }
       },      
       methods:{
-        fillTable(data){
-          data.map((item, i) => {
-            item.success = false;
-            item.danger = false;
-            if(!!this.afiles[i]){
-              Object.keys(item).map((param) => this.afiles[i][param] = item[param]);
-            }else{
-              this.afiles.push(item)
-            }
-          });
-          if(data.length < this.afiles.length){
-            this.afiles.splice(data.length,this.afiles.length - data.length);
-          }
-        },
-        createChange(model, field, event, valid){
-          this.roll = ((model) => {
-            let oldState = model[field];
-            let _this = this;          
-            return function(obj){
-              obj[field] = oldState;
-              _this.roll = function(){};
-            };
-          })(model);
-          if(valid == 'boolean'){
-            model[field] = (event.target.checked) ? 1 : 0;
-          }
-          if(valid == 'text'){
-            let text = event.target.innerText;
-            if (text.length < 3) {
-              alert("Нужно заполнить поле! Минимум 3 символа.");
-              return false;
-            }
-            model[field] = text;
-          }          
-          let saveable = {};
-          saveable.id = model.id;
-          saveable[field] = model[field];
-          this.saveModel(saveable, this.createCallback(model));          
-        },
-        saveModel(data, callback){
-          ajaxfun(this.$apiLink('audio', data.id), 'put', data, callback);
-        },
-        createCallback(obj){
-          let roll = this.roll;
-          return function(req){
-            if(req.status == 'ok'){
-              obj.success = true;
-              setTimeout(() => {obj.success = false;},1000);
-            }else{
-              customAlert(req);
-              obj.danger = true;
-              setTimeout(() => {obj.danger = false;},1000);
-              roll(obj);
-            }
-          };
-        },
         selectFile(){
           if(this.upload.file !== null) return false;
           return new Promise(function(resolve, reject) {
@@ -181,7 +127,7 @@
             fd.append(i, this.upload[i]);
           }
 
-          fetch(this.$apiLink('audio'), {
+          fetch(this.$apiLink(this.$options.apiPath), {
               method: 'POST',
               headers: {'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content},
               body: fd
@@ -195,18 +141,6 @@
             this.upload.state = false;
           }).catch((err) => {
             customAlert(err);
-          });
-        },
-        deleteAfile(afile){
-          if(!confirm("Вы уверены?")){return false;}
-          ajaxfun(this.$apiLink('audio', afile.id), 'delete', {
-            id: afile.id
-          }, (req) => {
-            if(req.status == 'ok'){
-              ajaxfun('/api/v1/audiofiles', 'get', null, this.fillTable);
-            }else{
-              customAlert(req);
-            }            
           });
         }
       }  

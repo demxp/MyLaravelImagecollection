@@ -40,9 +40,10 @@
 
 <script>
     import Multiselect from 'vue-multiselect';
+    import PictureLoader from './../reusable/PictureLoader.vue';
 
     export default {
-      components: {Multiselect},  
+      components: {Multiselect, PictureLoader},  
       props: {
         imageId: {
           type: Number,

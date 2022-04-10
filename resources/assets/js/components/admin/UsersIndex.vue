@@ -26,9 +26,18 @@
             <td><span v-text="user.email"></span></td>            
             <td class="user-avatar"><img :src="user.avatarimage" class="img-circle" /></td>
             <td>
-              <button class="btn btn-xs btn-warning btn-block" @click="editUserRules(user)">Права</button>            
-              <button class="btn btn-xs btn-info btn-block" @click="editUser(user)">Изменить</button>
-              <button class="btn btn-xs btn-danger btn-block" @click="deleteUser(user)">Удалить</button>
+              <button
+              class="btn btn-xs btn-warning btn-block"
+              @click="$parent.$emit('switch-mode', {'mode': 'userrules', 'id': user.id})"
+              >Права</button>            
+              <button 
+              class="btn btn-xs btn-info btn-block" 
+              @click="$parent.$emit('switch-mode', {'mode': 'editusers', 'id': user.id})"
+              >Изменить</button>
+              <button
+              class="btn btn-xs btn-danger btn-block" 
+              @click="deleteElem(user)"
+              >Удалить</button>
             </td>   
           </tr>                 
         </tbody>
@@ -38,54 +47,17 @@
 </template>
 
 <script>
+    import { MethodsMixin } from './../mixins/methods.mixin.js';
+
     export default {
+      mixins: [MethodsMixin],
+      apiPath: 'user',
+      mainArrayName: 'users',
       data(){
         return{
           users: []
         }
-      },
-      mounted(){
-        ajaxfun(this.$apiLink('user'), 'get', null, this.fillTable)
-      },
-      methods:{
-        fillTable(data){
-          data.map((item, i) => {
-            item.success = false;
-            item.danger = false;
-            if(!!this.users[i]){
-              Object.keys(item).map((param) => this.users[i][param] = item[param]);
-            }else{
-              this.users.push(item)
-            }
-          });
-          if(data.length < this.users.length){
-            this.users.splice(data.length,this.users.length - data.length);
-          }
-        },
-        editUser(user){
-          this.$parent.$emit('switch-mode', {'mode': 'editusers', 'id': user.id});      
-        },
-        editUserRules(user){
-          this.$parent.$emit('switch-mode', {'mode': 'userrules', 'id': user.id});      
-        },        
-        deleteUser(user){
-          if(!confirm("Вы уверены?")){return false;}
-          ajaxfun(this.$apiLink('user', user.id), 'delete', {
-            id: user.id
-          }, () => {ajaxfun(this.$apiLink('user'), 'get', null, this.fillTable)});         
-        },
-        createCallback(obj){
-          return function(req){
-            if(req.status == 'ok'){
-              obj.success = true;
-              setTimeout(() => {obj.success = false;},1000);
-            }else{
-              obj.danger = true;
-              setTimeout(() => {obj.danger = false;},1000);            
-            }
-          };        
-        }
-      }  
+      }
     }
 </script>
 

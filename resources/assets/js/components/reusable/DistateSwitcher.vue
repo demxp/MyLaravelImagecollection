@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="text-align: center;">
     <span class="distate distate-switcher">
       <input
       type="radio"
@@ -10,7 +10,7 @@
       v-on:change="$emit('change', $event.target.value)"
       >
       <i></i>
-      <label :for="generateId(elem.value)" v-text="elem.text" v-for="(elem, i) in options"></label>
+      <label :for="generateId(elem.value)" v-text="elem.text" v-for="(elem, i) in options" v-if="!noLabel"></label>
     </span>
   </div>
 </template>
@@ -25,6 +25,11 @@
         select: {
           required: true,
           default: '0'
+        },
+        noLabel: {
+          type: Boolean,
+          required: false,
+          default: false
         },
         options: {
           type: Array,

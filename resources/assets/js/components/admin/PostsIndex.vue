@@ -29,7 +29,7 @@
             <td>
               <distate-switcher
               :select="post.publication"
-              :options="publicMode"
+              :options="switcherPublicationOpts"
                @change="createChange(post, 'publication', $event, 'native')"
               ></distate-switcher>              
             </td>
@@ -38,12 +38,18 @@
               mode="switcher"
               :select="post.commenting"
               @change="createChange(post, 'commenting', $event, 'native')"
-              :options="commentMode"
+              :options="switcherCommentingOpts"
               ></tristate-switcher>
             </td>            
             <td>
-              <button class="btn btn-xs btn-info" @click="editPost(post)">Изменить</button>
-              <button class="btn btn-xs btn-danger" @click="deletePost(post)">Удалить</button>
+              <button
+              class="btn btn-xs btn-info btn-block"
+              @click="$parent.$emit('switch-mode', {'mode': 'editposts', 'id': post.id})"
+              >Изменить</button>
+              <button
+              class="btn btn-xs btn-danger btn-block"
+              @click="deleteElem(post.id)"
+              >Удалить</button>
             </td>
           </tr>
         </tbody>
@@ -56,10 +62,16 @@
 </template>
 
 <script>
-    import Paginate from './Paginate.vue';
+    import Paginate from './../reusable/Paginate.vue';
+    import { MethodsMixin } from './../mixins/methods.mixin.js';
+    import DistateSwitcher from './../reusable/DistateSwitcher.vue';
+    import TristateSwitcher from './../reusable/TristateSwitcher.vue';
 
     export default {
-      components: {Paginate},
+      mixins: [MethodsMixin],
+      apiPath: 'post',
+      mainArrayName: 'posts',      
+      components: {TristateSwitcher, DistateSwitcher, Paginate},  
       data(){
         return{
           posts: [],
@@ -67,92 +79,25 @@
           last_page: 0
         }
       },
-      mounted(){
-        this.publicMode = [
+      watch: {
+        'current_page': function (value, old) {
+          if(old != 0) this.setPage(value);
+        },
+      },
+      computed:{
+        switcherPublicationOpts(){
+          return [
             {value: '0', text: 'Закрыто'},
-            {value: '1', text: 'Открыто'}            
-        ];        
-        this.commentMode = [
+            {value: '1', text: 'Открыто'}
+          ];
+        },
+        switcherCommentingOpts(){
+          return [
             {value: '0', text: 'Выключено'},
             {value: '1', text: 'Модерация'},
             {value: '2', text: 'Включено'}
-        ];
-        ajaxfun(this.$apiLink('post'), 'get', null, this.fillTable)
-      },
-      watch: {
-        'current_page': function (value) {
-          ajaxfun(this.$apiLink('post') + '?page=' + value, 'get', null, this.fillTable);
-        },
-      },
-      methods:{
-        fillTable(data){
-          data.data.map((item, i) => {
-            item.success = false;
-            item.danger = false;
-            if(!!this.posts[i]){
-              Object.keys(item).map((param) => this.posts[i][param] = item[param]);
-            }else{
-              this.posts.push(item)
-            }
-          });
-          if(data.data.length < this.posts.length){
-            this.posts.splice(data.data.length, this.posts.length - data.data.length);
-          }
-          this.current_page = data.meta.current_page;
-          this.last_page = data.meta.last_page;          
-        },
-        createChange(model, field, event, valid){
-          this.roll = ((model) => {
-            let oldState = model[field];
-            let _this = this;          
-            return function(obj){
-              obj[field] = oldState;
-              _this.roll = function(){};
-            };
-          })(model);
-          if(valid == 'boolean'){
-            model[field] = (event.target.checked) ? 1 : 0;
-          }
-          if(valid == 'native'){
-            model[field] = event;
-          }          
-          let saveable = {};
-          saveable.id = model.id;
-          saveable[field] = model[field];
-          this.saveModel(saveable, this.createCallback(model));          
-        },
-        saveModel(model, callback){
-          ajaxfun(this.$apiLink('post', model.id), 'put', post, callback);
-        },
-        createCallback(obj){
-          let roll = this.roll;
-          return function(req){
-            if(req.status == 'ok'){
-              obj.success = true;
-              setTimeout(() => {obj.success = false;},1000);
-            }else{
-              customAlert(req);
-              obj.danger = true;
-              setTimeout(() => {obj.danger = false;},1000);
-              roll(obj);
-            }
-          };
-        },
-        editPost(post){
-          this.$parent.$emit('switch-mode', {'mode': 'editposts', 'id': post.id});      
-        },
-        deletePost(post){
-          if(!confirm("Вы уверены?")){return false;}
-          ajaxfun(this.$apiLink('post', post.id), 'delete', {
-            id: post.id
-          }, (req) => {
-            if(req.status == 'ok'){
-              this.setPage();
-            }else{
-              customAlert(req);
-            }            
-          });
+          ];
         }
-      }  
+      }
     }
 </script>

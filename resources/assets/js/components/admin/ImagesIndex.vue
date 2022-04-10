@@ -31,10 +31,12 @@
               <input type="text" class="imglink bg-info" readonly="readonly" :value="img.fullimage" @click="$event.target.select()">
             </td>
             <td>
-              <label class="switcher">
-                  <input :checked="img.status" type="checkbox" @change="createChange(img, 'status', $event, 'boolean')"/>
-                  <div class="switcher__text"></div>
-              </label>
+              <distate-switcher
+              no-label
+              :select="img.status"
+              :options="switcherOpts"
+               @change="createChange(img, 'status', $event, 'native')"
+              ></distate-switcher>                            
             </td>
             <td>
               <multiselect v-model="img.category" :options="cats" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Pick a value" @select="createChange(img, 'category', $event.id, 'native')" @remove="createChange(img, 'category', null, 'native')" track-by="title" label="title"></multiselect>
@@ -45,7 +47,7 @@
             </td>
             <td><a :href="img.getlink" target="_blank"><img :src="img.thumbnail" class="img-responsive"></a></td>
             <td>
-              <button class="btn btn-xs btn-danger" @click="deleteImage(img)">Удалить</button>
+              <button class="btn btn-xs btn-danger btn-block" @click="deleteElem(img.id)">Удалить</button>
             </td>   
           </tr>                 
         </tbody>
@@ -59,10 +61,15 @@
 
 <script>
     import Multiselect from 'vue-multiselect';
-    import Paginate from './Paginate.vue';
+    import Paginate from './../reusable/Paginate.vue';
+    import { MethodsMixin } from './../mixins/methods.mixin.js';
+    import DistateSwitcher from './../reusable/DistateSwitcher.vue';
 
     export default {
-      components: {Multiselect, Paginate},  
+      mixins: [MethodsMixin],
+      apiPath: 'image',
+      mainArrayName: 'imgs',      
+      components: {DistateSwitcher, Multiselect, Paginate},  
       data(){
         return{
           imgs: [],
@@ -73,72 +80,21 @@
       },
       mounted(){
         window.localCache.get(this.$apiLink('category'), this.fillCategories);
-        ajaxfun(this.$apiLink('image'), 'get', null, this.fillTable)
       },
       watch: {
-        'current_page': function (value) {
-          ajaxfun(this.$apiLink('image') + '?page=' + value, 'get', null, this.fillTable);
+        'current_page': function (value, old) {
+          if(old != 0) this.setPage(value);
         },
       },
+      computed:{
+        switcherOpts(){
+          return [
+              {value: '0', text: 'Скрытая'},
+              {value: '1', text: 'Открытая'}
+          ];
+        }
+      },
       methods:{
-        fillCategories(data){
-          data.map((item, i) => {
-            if(!!this.cats[i]){
-              this.cats[i].titleimage = item.titleimage;
-              this.cats[i].text = item.title;
-              this.cats[i].id = item.id;
-            }else{
-              this.cats.push({
-                titleimage: item.titleimage,
-                title: item.title,
-                id: item.id
-              });
-            }
-          });
-        },
-        fillTable(data){
-          let imgs = data.data;
-          imgs.map((item, i) => {
-            item.success = false;
-            item.danger = false;
-            if(!!this.imgs[i]){
-              Object.keys(item).map((param) => this.imgs[i][param] = item[param]);
-            }else{
-              this.imgs.push(item)
-            }
-          });
-          if(imgs.length < this.imgs.length){
-            this.imgs.splice(imgs.length,this.imgs.length - imgs.length);
-          }
-          this.current_page = data.meta.current_page;
-          this.last_page = data.meta.last_page;
-        },
-        createChange(model, field, event, valid){
-          this.roll = ((model) => {
-            let oldState = model[field];
-            let _this = this;          
-            return function(obj){
-              obj[field] = oldState;
-              _this.roll = function(){};
-            };
-          })(model);
-          if(valid == 'boolean'){
-            model[field] = (event.target.checked) ? 1 : 0;
-          }
-          if(valid == 'native'){
-            model[field] = event;
-          }
-          if(valid == 'text'){
-            model[field] = event.target.innerText;
-          }          
-          let saveable = {};
-          saveable.id = model.id;
-          saveable[field] = model[field];
-          this.saveModel(saveable, this.createCallback(model));          
-        },        
-        saveModel(model, callback){
-          ajaxfun(this.$apiLink('image', model.id), 'put', model, callback);        
-        },
         setCategoryTitle(img){
           ajaxfun(this.$apiLink('category', img.category.id), 'put', {
             id: img.category.id,
@@ -155,32 +111,6 @@
               customAlert(req);
             }
           });         
-        },      
-        deleteImage(img){
-          if(!confirm("Вы уверены?")){return false;}
-          ajaxfun(this.$apiLink('image', img.id), 'delete', {
-            id: img.id
-          }, (req) => {
-            if(req.status == 'ok'){
-              this.setPage();          
-            }else{
-              customAlert(req);
-            }           
-          });         
-        },
-        createCallback(obj){
-          let roll = this.roll;
-          return function(req){
-            if(req.status == 'ok'){
-              obj.success = true;
-              setTimeout(() => {obj.success = false;},1000);
-            }else{
-              customAlert(req);
-              obj.danger = true;
-              setTimeout(() => {obj.danger = false;},1000);
-              roll(obj);
-            }
-          };        
         }
       }  
     }

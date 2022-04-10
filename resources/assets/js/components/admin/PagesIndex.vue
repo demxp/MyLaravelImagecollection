@@ -24,8 +24,14 @@
             <td><span v-text="page.title"></span></td>
             <td>/<span v-text="page.slug"></span></td>
             <td>
-              <button class="btn btn-xs btn-info" @click="editPage(page)">Изменить</button>
-              <button class="btn btn-xs btn-danger" @click="deletePage(page)">Удалить</button>
+              <button
+              class="btn btn-xs btn-info btn-block"
+              @click="$parent.$emit('switch-mode', {'mode': 'editpages', 'id': page.id})"
+              >Изменить</button>
+              <button
+              class="btn btn-xs btn-danger btn-block"
+              @click="deleteElem(page.id)"
+              >Удалить</button>
             </td>
           </tr>
         </tbody>
@@ -35,45 +41,16 @@
 </template>
 
 <script>
+    import { MethodsMixin } from './../mixins/methods.mixin.js';
+
     export default {
+      mixins: [MethodsMixin],
+      apiPath: 'staticpage',
+      mainArrayName: 'pages',      
       data(){
         return{
           pages: []
         }
-      },
-      mounted(){
-        ajaxfun(this.$apiLink('staticpage'), 'get', null, this.fillTable)
-      },
-      methods:{
-        fillTable(data){
-          data.map((item, i) => {
-            item.success = false;
-            item.danger = false;
-            if(!!this.pages[i]){
-              Object.keys(item).map((param) => this.pages[i][param] = item[param]);
-            }else{
-              this.pages.push(item)
-            }
-          });
-          if(data.length < this.pages.length){
-            this.pages.splice(data.length,this.pages.length - data.length);
-          }
-        },
-        editPage(page){
-          this.$parent.$emit('switch-mode', {'mode': 'editpages', 'id': page.id});      
-        },
-        deletePage(page){
-          if(!confirm("Вы уверены?")){return false;}
-          ajaxfun(this.$apiLink('staticpage', page.id), 'delete', {
-            id: page.id
-          }, (req) => {
-            if(req.status == 'ok'){
-              ajaxfun(this.$apiLink('staticpage'), 'get', null, this.fillTable);
-            }else{
-              customAlert(req);
-            }            
-          });
-        }
-      }  
+      }
     }
 </script>

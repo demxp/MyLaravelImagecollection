@@ -6,7 +6,11 @@
 </template>
 
 <script>
+    import PLImageImage from './../reusable/PLImageImage.vue';
+    import PLImageAvatar from './../reusable/PLImageAvatar.vue';
+
     export default {
+      components: {PLImageAvatar, PLImageImage},
       props: {
         nosquare: {
           type: Boolean,

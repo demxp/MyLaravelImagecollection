@@ -28,7 +28,7 @@
               <span contenteditable="true" @keydown.13.prevent="createChange(tag,'title',$event,'text')" v-text="tag.title"></span>
             </td>
             <td>
-              <button class="btn btn-xs btn-danger" @click="deleteTag(tag)">Удалить</button>
+              <button class="btn btn-xs btn-danger btn-block" @click="deleteElem(tag.id)">Удалить</button>
             </td>
           </tr>                 
         </tbody>
@@ -38,7 +38,12 @@
 </template>
 
 <script>
+    import { MethodsMixin } from './../mixins/methods.mixin.js';
+
     export default {
+      mixins: [MethodsMixin],
+      apiPath: 'tag',
+      mainArrayName: 'tags',      
       data(){
         return{
           tags: [],
@@ -48,9 +53,6 @@
           }
         }
       },
-      mounted(){
-        ajaxfun(this.$apiLink('tag'), 'get', null, this.fillTable)
-      },
       watch: {
         'store.state': function (value) {
           if(!value){
@@ -59,62 +61,6 @@
         }
       },      
       methods:{
-        fillTable(data){
-          data.map((item, i) => {
-            item.success = false;
-            item.danger = false;
-            if(!!this.tags[i]){
-              Object.keys(item).map((param) => this.tags[i][param] = item[param]);
-            }else{
-              this.tags.push(item)
-            }
-          });
-          if(data.length < this.tags.length){
-            this.tags.splice(data.length,this.tags.length - data.length);
-          }
-        },
-        createChange(model, field, event, valid){
-          this.roll = ((model) => {
-            let oldState = model[field];
-            let _this = this;          
-            return function(obj){
-              obj[field] = oldState;
-              _this.roll = function(){};
-            };
-          })(model);
-          if(valid == 'boolean'){
-            model[field] = (event.target.checked) ? 1 : 0;
-          }
-          if(valid == 'text'){
-            let text = event.target.innerText;
-            if (text.length < 3) {
-              alert("Нужно заполнить поле! Минимум 3 символа.");
-              return false;
-            }
-            model[field] = text;
-          }          
-          let saveable = {};
-          saveable.id = model.id;
-          saveable[field] = model[field];
-          this.saveModel(saveable, this.createCallback(model));          
-        },
-        saveModel(data, callback){
-          ajaxfun(this.$apiLink('tag', data.id), 'put', data, callback);
-        },
-        createCallback(obj){
-          let roll = this.roll;
-          return function(req){
-            if(req.status == 'ok'){
-              obj.success = true;
-              setTimeout(() => {obj.success = false;},1000);
-            }else{
-              customAlert(req);
-              obj.danger = true;
-              setTimeout(() => {obj.danger = false;},1000);
-              roll(obj);
-            }
-          };
-        },
         saveTag(){
           if(this.store.title == ''){
             customAlert({text: 'Заполните имя тега'});
@@ -126,18 +72,6 @@
           }, (req) => {
             if(req.status == 'ok'){
               this.store.state = false;
-              ajaxfun(this.$apiLink('tag'), 'get', null, this.fillTable);
-            }else{
-              customAlert(req);
-            }            
-          });
-        },
-        deleteTag(tag){
-          if(!confirm("Вы уверены?")){return false;}
-          ajaxfun(this.$apiLink('tag', tag.id), 'delete', {
-            id: tag.id
-          }, (req) => {
-            if(req.status == 'ok'){
               ajaxfun(this.$apiLink('tag'), 'get', null, this.fillTable);
             }else{
               customAlert(req);

@@ -1,5 +1,5 @@
 <template>
-  <div class="row pagination">
+  <div class="pagination">
     <div style="text-align: center;">
       <p>Страница {{ value }} из {{ lastPage }}</p>
       <div class="input-group" style="max-width: 170px; display: inline-table;">
@@ -44,3 +44,9 @@
     }
   }
 </script>
+
+<style>
+  .pagination {
+      margin-bottom: 0;
+  }  
+</style>

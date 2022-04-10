@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <div class="box-body">
-      <div class="form-group">
+      <div class="form-group top-block">
         <a class="btn btn-success" @click="store.state = !store.state">Добавить</a>
       </div>
       <div v-if="store.state">

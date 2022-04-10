@@ -11,7 +11,8 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/assets/js/appwebsite.js', 'public/js').extract(['vue', 'jquery', 'moment']).version().mergeManifest();
+mix.js('resources/assets/js/appwebsite.js', 'public/js')
+.extract(['vue', 'jquery', 'moment', 'sweetalert']).version().mergeManifest();
 
 mix.styles([
 	'resources/assets/front/stylesheets/bootstrap.css',

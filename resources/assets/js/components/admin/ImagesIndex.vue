@@ -1,57 +1,57 @@
 <template>
   <div class="box">
     <div class="box-body">
-      <div class="form-group">
+      <div class="form-group top-block">
         <a class="btn btn-success" @click="$parent.$emit('switch-mode', {'mode': 'uploadimages', 'id': null})">Добавить</a>
-      </div>      
-      <div style="text-align: right;">
         <paginate v-model="current_page" :last-page="last_page"></paginate>
       </div> 
-      <table class="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th style="width:50%;">Название</th>
-            <th>Открытая</th>
-            <th>Категория</th>
-            <th>Картинка</th>
-            <th>Действия</th>
-          </tr>
-        </thead>
-        <tbody v-if="imgs.length == 0">
-          <tr>
-            <td colspan=6><center><h3>НЕТ ДАННЫХ</h3></center></td>
-          </tr>
-        </tbody>
-        <tbody>
-          <tr v-for="img in imgs" :key="img.id" :class="{'tr__green':img.success, 'tr__red':img.danger}">
-            <td>{{ img.id }}</td>
-            <td>
-              <span contenteditable="true" @keydown.13.prevent="createChange(img, 'title', $event, 'text')" v-text="img.title"></span><br /><br />
-              <input type="text" class="imglink bg-info" readonly="readonly" :value="img.fullimage" @click="$event.target.select()">
-            </td>
-            <td>
-              <distate-switcher
-              no-label
-              :select="img.status"
-              :options="switcherOpts"
-               @change="createChange(img, 'status', $event, 'native')"
-              ></distate-switcher>                            
-            </td>
-            <td>
-              <multiselect v-model="img.category" :options="cats" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Pick a value" @select="createChange(img, 'category', $event.id, 'native')" @remove="createChange(img, 'category', null, 'native')" track-by="title" label="title"></multiselect>
-                <div :class="{ setcattitle:true, 'selected': img.iscattitle }" v-if="img.category !== null">
-                  <button type="button" class="btn btn-info btn-xs" @click="setCategoryTitle(img)">Иконка</button>                      
-                  <span>Иконка</span>
-                </div>
-            </td>
-            <td><a :href="img.getlink" target="_blank"><img :src="img.thumbnail" class="img-responsive"></a></td>
-            <td>
-              <button class="btn btn-xs btn-danger btn-block" @click="deleteElem(img.id)">Удалить</button>
-            </td>   
-          </tr>                 
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th style="width:50%;">Название</th>
+              <th>Открытая</th>
+              <th>Категория</th>
+              <th>Картинка</th>
+              <th>Действия</th>
+            </tr>
+          </thead>
+          <tbody v-if="imgs.length == 0">
+            <tr>
+              <td colspan=6><center><h3>НЕТ ДАННЫХ</h3></center></td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr v-for="img in imgs" :key="img.id" :class="{'tr__green':img.success, 'tr__red':img.danger}">
+              <td>{{ img.id }}</td>
+              <td>
+                <span contenteditable="true" @keydown.13.prevent="createChange(img, 'title', $event, 'text')" v-text="img.title"></span><br /><br />
+                <input type="text" class="imglink bg-info" readonly="readonly" :value="img.fullimage" @click="$event.target.select()">
+              </td>
+              <td>
+                <distate-switcher
+                no-label
+                :select="img.status"
+                :options="switcherOpts"
+                 @change="createChange(img, 'status', $event, 'native')"
+                ></distate-switcher>                            
+              </td>
+              <td>
+                <multiselect v-model="img.category" :options="cats" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Pick a value" @select="createChange(img, 'category', $event.id, 'native')" @remove="createChange(img, 'category', null, 'native')" track-by="title" label="title"></multiselect>
+                  <div :class="{ setcattitle:true, 'selected': img.iscattitle }" v-if="img.category !== null">
+                    <button type="button" class="btn btn-info btn-xs" @click="setCategoryTitle(img)">Иконка</button>                      
+                    <span>Иконка</span>
+                  </div>
+              </td>
+              <td><a :href="img.getlink" target="_blank"><img :src="img.thumbnail" class="img-responsive"></a></td>
+              <td>
+                <button class="btn btn-xs btn-danger btn-block" @click="deleteElem(img.id)">Удалить</button>
+              </td>   
+            </tr>                 
+          </tbody>
+        </table>
+      </div>
       <div style="text-align: right;">
         <paginate v-model="current_page" :last-page="last_page"></paginate>
       </div> 
@@ -147,4 +147,8 @@
 .imglink{
   width: 100%;
 }
+
+div.form-group > 
+margin-top: 46px;
+    display: table;
 </style>

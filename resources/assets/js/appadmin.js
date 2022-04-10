@@ -2,9 +2,12 @@ window.Vue = require('vue');
 
 import swal from 'sweetalert'
 import $ from 'jquery';
+import { WindowInstallCustom } from './components/window.functions.module.js';
  
 global.jQuery = $;
 global.$ = $;
+
+WindowInstallCustom();
 
 Vue.prototype.$apiLink = function(mode, id=false){
   let apiVersion = 1;
@@ -34,137 +37,6 @@ Vue.prototype.$apiLink = function(mode, id=false){
     break;        
   }
 };
-
-/* Скрипт кастомного Alert */
-
-(function(window) {
-  let al = ((swal) => {
-    return function(text){
-      swal("Oops!", text, "error");
-    }; 
-  })(swal);
-  let errors = {
-    'IncorrectInputData': {
-      'parseFunc': (resp) => {
-        al("Некорректные данные");
-      }
-    },
-    'ValidateError': {
-      'parseFunc': (resp) => {
-        al(resp.errors.reduce((acc, item) => {
-          return acc += item + '\n';
-        }, ""));
-      }
-    },
-    'NotEnoughRights': {
-      'parseFunc': (resp) => {
-        al("Не хватает прав для выполнения");
-      }
-    }
-  };
-  window.customAlert = (resp) => {
-    if (!!errors[resp.message]) {
-      errors[resp.message].parseFunc(resp);
-    } else if (!!resp.text) {
-      al(resp.text);
-    } else if (!!resp.message) {
-      al(resp.message);      
-    } else if (!!resp) {
-      al("Неизвестная ошибка!");
-      console.log(resp);
-    }
-    return;
-  };
-  window.moment = require('moment');
-  window.moment.locale('ru');
-  window.cyrb53 = function(str, seed = 0) {
-      let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
-      for (let i = 0, ch; i < str.length; i++) {
-          ch = str.charCodeAt(i);
-          h1 = Math.imul(h1 ^ ch, 2654435761);
-          h2 = Math.imul(h2 ^ ch, 1597334677);
-      }
-      h1 = Math.imul(h1 ^ (h1>>>16), 2246822507) ^ Math.imul(h2 ^ (h2>>>13), 3266489909);
-      h2 = Math.imul(h2 ^ (h2>>>16), 2246822507) ^ Math.imul(h1 ^ (h1>>>13), 3266489909);
-      return 4294967296 * (2097151 & h2) + (h1>>>0);
-  }; 
-  window.ajaxfun = function(url, method, body=null, callback){
-    fetch(url, {
-      method: method,
-      headers: {  
-            "Content-type": "application/json; charset=UTF-8",
-            'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-      },
-      body: (body !== null) ? JSON.stringify(body) : null
-    }).then(response => {
-      if(response.status != 200 && response.status != 201){
-        throw {name: 'StatusError', message: response};
-      }
-      return response.json();
-    }).then(req => {
-        if(!!req) return callback(req);
-    }).catch(e => {
-      if(e.name == 'StatusError'){
-        e.message.json().then((json) => {
-          callback(json);
-          customAlert(json);
-        })
-      }else if(e.name == 'SyntaxError'){
-        customAlert({text: 'Некорректный ответ сервера'});
-        console.log(e);
-      }else{
-        customAlert({text: 'Непонятная ошибка'});
-        console.log(e);
-      }
-    });         
-  };
-  window.localCache = {
-    data: {},
-    get: function (url, callback){
-      if(this.data[url] && !this.data[url].wait){
-        return callback(this.data[url].data);
-      }
-      if(!this.data[url]){
-        this.data[url] = {
-          wait: true,
-          started: false,
-          cbArray: [],
-          data: null
-        };
-      }
-      if(this.data[url].wait){
-        this.data[url].cbArray.push(callback);
-      }
-      if(!this.data[url].started){
-        this.data[url].started = true;
-        let _this = this;
-        this.request(url, function(json){
-          _this.data[url].data = json;
-          _this.data[url].wait = false;
-          _this.data[url].cbArray.map((item, i) => {
-            item(json);
-          });
-          _this.data[url].cbArray = [];
-        });
-      }      
-    },
-    request: function (url, callback) {
-      console.log('Request in cache for url' + url);
-      new Promise(function(resolve, reject) {
-        fetch(url, {method: 'get'}).then(response => {
-            if(response.status != 200){
-                console.log('Error from LocalCache - Request');
-                return reject();
-            };
-            return response.json();
-        }).then(json => {
-          resolve(json);
-          callback(json);
-        })
-      });
-    }    
-  }; 
-})(window);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

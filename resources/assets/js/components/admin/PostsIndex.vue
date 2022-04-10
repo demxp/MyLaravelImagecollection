@@ -1,59 +1,59 @@
 <template>
   <div class="box">
     <div class="box-body">
-      <div class="form-group">
+      <div class="form-group top-block">
         <a class="btn btn-success" @click="$parent.$emit('switch-mode', {'mode': 'editposts', 'id': null})">Добавить</a>
-      </div>
-      <div style="text-align: right;">
         <paginate v-model="current_page" :last-page="last_page"></paginate>
-      </div> 
-      <table class="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Заголовок</th>
-            <th>Публикация</th>
-            <th>Комментирование</th>
-            <th>Действия</th>
-          </tr>
-        </thead>
-        <tbody v-if="posts.length == 0">
-          <tr>
-            <td colspan=6><center><h3>НЕТ ДАННЫХ</h3></center></td>
-          </tr>
-        </tbody>        
-        <tbody>
-          <tr v-for="post in posts" :class="{'tr__green':post.success, 'tr__red':post.danger}">
-            <td><span v-text="post.id"></span></td>
-            <td><a :href="post.link" target="_black"><span v-text="post.title"></span></a></td>
-            <td>
-              <distate-switcher
-              :select="post.publication"
-              :options="switcherPublicationOpts"
-               @change="createChange(post, 'publication', $event, 'native')"
-              ></distate-switcher>              
-            </td>
-            <td>
-              <tristate-switcher
-              mode="switcher"
-              :select="post.commenting"
-              @change="createChange(post, 'commenting', $event, 'native')"
-              :options="switcherCommentingOpts"
-              ></tristate-switcher>
-            </td>            
-            <td>
-              <button
-              class="btn btn-xs btn-info btn-block"
-              @click="$parent.$emit('switch-mode', {'mode': 'editposts', 'id': post.id})"
-              >Изменить</button>
-              <button
-              class="btn btn-xs btn-danger btn-block"
-              @click="deleteElem(post.id)"
-              >Удалить</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Заголовок</th>
+              <th>Публикация</th>
+              <th>Комментирование</th>
+              <th>Действия</th>
+            </tr>
+          </thead>
+          <tbody v-if="posts.length == 0">
+            <tr>
+              <td colspan=6><center><h3>НЕТ ДАННЫХ</h3></center></td>
+            </tr>
+          </tbody>        
+          <tbody>
+            <tr v-for="post in posts" :class="{'tr__green':post.success, 'tr__red':post.danger}">
+              <td><span v-text="post.id"></span></td>
+              <td><a :href="post.link" target="_black"><span v-text="post.title"></span></a></td>
+              <td>
+                <distate-switcher
+                :select="post.publication"
+                :options="switcherPublicationOpts"
+                 @change="createChange(post, 'publication', $event, 'native')"
+                ></distate-switcher>              
+              </td>
+              <td>
+                <tristate-switcher
+                mode="switcher"
+                :select="post.commenting"
+                @change="createChange(post, 'commenting', $event, 'native')"
+                :options="switcherCommentingOpts"
+                ></tristate-switcher>
+              </td>            
+              <td>
+                <button
+                class="btn btn-xs btn-info btn-block"
+                @click="$parent.$emit('switch-mode', {'mode': 'editposts', 'id': post.id})"
+                >Изменить</button>
+                <button
+                class="btn btn-xs btn-danger btn-block"
+                @click="deleteElem(post.id)"
+                >Удалить</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <div style="text-align: right;">
         <paginate v-model="current_page" :last-page="last_page"></paginate>
       </div> 

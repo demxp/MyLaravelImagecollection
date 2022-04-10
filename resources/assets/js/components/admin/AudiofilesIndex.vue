@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <div class="box-body">
-      <div class="form-group">
+      <div class="form-group top-block">
         <a class="btn btn-success" @click="upload.state = !upload.state">Добавить</a>
       </div>
       <div v-if="upload.state">

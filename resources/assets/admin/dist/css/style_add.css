@@ -59,3 +59,18 @@ tr.tr__red td{
     background-color: #ff9c9c !important;
     transition: .3s;
 }
+
+div.top-block{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+div.top-block a.btn{
+  margin-top: 46px;
+  display: table;  
+}
+
+div.top-block .pagination{
+  margin-bottom: 0;
+}

@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <div class="box-body">
-      <div class="form-group">
+      <div class="form-group top-block">
         <a class="btn btn-success" @click="$parent.$emit('switch-mode', {'mode': 'editusers', 'id': null})">Добавить</a>
       </div>      
       <table class="table table-bordered table-striped">

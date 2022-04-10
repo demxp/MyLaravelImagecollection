@@ -25,36 +25,38 @@
           <a class="btn btn-success btn-xs uploadbtn" @click="uploadFile()">Загрузить</a>
         </div>                      
       </div>
-      <table class="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Название</th>
-            <th>Исполнитель</th>
-            <th>Альбом</th>
-            <th>Действия</th>            
-          </tr>
-        </thead>
-        <tbody v-if="afiles.length == 0">
-          <tr>
-            <td colspan=5><center><h3>НЕТ ДАННЫХ</h3></center></td>
-          </tr>
-        </tbody>
-        <tbody>
-          <tr v-for="afile in afiles" :class="{'tr__green':afile.success, 'tr__red':afile.danger}">
-            <td>{{ afile.id }}</td>
-            <td>
-              <span contenteditable="true" @keydown.13.prevent="createChange(afile,'title',$event,'text')" v-text="afile.title"></span><br /><br />
-              <input type="text" class="imglink bg-info" readonly="readonly" :value="afile.filelink" @click="$event.target.select()">
-            </td>
-            <td><span contenteditable="true" @keydown.13.prevent="createChange(afile,'artist',$event,'text')" v-text="afile.artist"></span></td>
-            <td><span contenteditable="true" @keydown.13.prevent="createChange(afile,'album',$event,'text')" v-text="afile.album"></span></td>
-            <td>
-              <button class="btn btn-xs btn-danger btn-block" @click="deleteElem(afile.id)">Удалить</button>
-            </td>
-          </tr>                 
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Название</th>
+              <th>Исполнитель</th>
+              <th>Альбом</th>
+              <th>Действия</th>            
+            </tr>
+          </thead>
+          <tbody v-if="afiles.length == 0">
+            <tr>
+              <td colspan=5><center><h3>НЕТ ДАННЫХ</h3></center></td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr v-for="afile in afiles" :class="{'tr__green':afile.success, 'tr__red':afile.danger}">
+              <td>{{ afile.id }}</td>
+              <td>
+                <span contenteditable="true" @keydown.13.prevent="createChange(afile,'title',$event,'text')" v-text="afile.title"></span><br /><br />
+                <input type="text" class="imglink bg-info" readonly="readonly" :value="afile.filelink" @click="$event.target.select()">
+              </td>
+              <td><span contenteditable="true" @keydown.13.prevent="createChange(afile,'artist',$event,'text')" v-text="afile.artist"></span></td>
+              <td><span contenteditable="true" @keydown.13.prevent="createChange(afile,'album',$event,'text')" v-text="afile.album"></span></td>
+              <td>
+                <button class="btn btn-xs btn-danger btn-block" @click="deleteElem(afile.id)">Удалить</button>
+              </td>
+            </tr>                 
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
@@ -95,7 +97,7 @@
             fileselect.type = 'file';
             fileselect.onchange = function(){
               var selected = this.files[0];
-                if (!selected.type.match('audio/mp3')) {
+                if (!selected.type.match(/audio\/(mp3|mpeg)/)) {
                     return reject({
                       text: "Можно загружать только МР3 файлы!",
                       errorcode: "Upload no mp3 file"

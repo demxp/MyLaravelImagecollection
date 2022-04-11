@@ -21,6 +21,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admi
 });
 
 Route::group(['prefix' => 'api/v1', 'namespace' => 'ApiV1', 'middleware' => 'admin'], function(){
+	Route::get('/images/thumblist', 'ImagesController@getListThumbnails');
 	Route::resource('/images', 'ImagesController');	
 	Route::resource('/categories', 'CategoriesController');
 	Route::resource('/users', 'UsersController');

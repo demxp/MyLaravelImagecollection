@@ -24,11 +24,13 @@
               <td>{{ cat.id }}</td>
               <td><span contenteditable="true" @keydown.13.prevent="createChange(cat,'title',$event,'text')" v-text="cat.title"></span></td>
               <td>
-                <distate-switcher
-                :select="cat.hidden"
-                :options="switcherOpts"
-                 @change="createChange(cat,'hidden',$event,'native')"
-                ></distate-switcher>              
+                <div style="text-align: center">
+                  <distate-switcher
+                  :select="cat.hidden"
+                  :options="switcherOpts"
+                   @change="createChange(cat,'hidden',$event,'native')"
+                  ></distate-switcher>              
+                </div>
               </td>            
               <td><button class="btn btn-xs btn-danger btn-block" @click="deleteElem(cat.id)">Удалить</button></td>   
             </tr>                 

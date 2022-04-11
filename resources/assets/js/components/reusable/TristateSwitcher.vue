@@ -1,17 +1,19 @@
 <template>
-  <div v-if="!!mode" style="text-align: center;">
-    <span :class="swClass">
-      <input
-      type="radio"
-      :id="generateId(elem.value)"
-      :value="elem.value"
-      v-model="selected"
-      v-for="(elem, i) in options"
-      v-on:change="$emit('change', $event.target.value)"
-      >
-      <i></i>
-      <label :for="generateId(elem.value)" v-text="elem.text" v-for="(elem, i) in options"></label>
-    </span>
+  <div v-if="!!mode">
+    <slot name="pre"></slot>
+      <span :class="swClass">
+        <input
+        type="radio"
+        :id="generateId(elem.value)"
+        :value="elem.value"
+        v-model="selected"
+        v-for="(elem, i) in options"
+        v-on:change="$emit('change', $event.target.value)"
+        >
+        <i></i>
+        <label :for="generateId(elem.value)" v-text="elem.text" v-for="(elem, i) in options"></label>
+      </span>
+    <slot name="post"></slot>
   </div>
 </template>
 
@@ -63,6 +65,11 @@
       mounted(){
         this.selected = this.select;
       },
+      watch: {
+        'select': function (value) {
+          this.selected = value;
+        },
+      },      
       methods:{
         generateId(id){
           return 'switcher-item-state-' + id;

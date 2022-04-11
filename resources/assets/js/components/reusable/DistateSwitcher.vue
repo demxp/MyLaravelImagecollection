@@ -1,5 +1,6 @@
 <template>
-  <div style="text-align: center;">
+  <div>
+    <slot name="pre"></slot>
     <span class="distate distate-switcher">
       <input
       type="radio"
@@ -12,6 +13,7 @@
       <i></i>
       <label :for="generateId(elem.value)" v-text="elem.text" v-for="(elem, i) in options" v-if="!noLabel"></label>
     </span>
+    <slot name="post"></slot>
   </div>
 </template>
 
@@ -56,6 +58,11 @@
           selected: null
         }
       },
+      watch: {
+        'select': function (value) {
+          this.selected = value;
+        },
+      },      
       mounted(){
         this.selected = this.select;
       },

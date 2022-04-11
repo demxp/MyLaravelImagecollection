@@ -44,7 +44,6 @@ class BlogPost extends Model
         $post->fill($fields);
         $post->owner = \Auth::user()->id;
         $post->processingPublication($fields);
-        $post->processingTags($fields);
         if(isset($fields['commenting'])){
             $post->commenting = $fields['commenting'];
         }                
@@ -52,7 +51,7 @@ class BlogPost extends Model
             $post->title_image = $fields['title_image'];
         }                        
         $post->save();
-
+        $post->processingTags($fields);
         return $post;
     }
 

@@ -1953,6 +1953,14 @@ var nicImageButton = nicEditorAdvancedButton.extend({
                     width: '150px'
                 }
             },
+            'width': {
+                type: 'text',
+                txt: 'Width-%',
+                'value': '100',
+                style: {
+                    width: '100px'
+                }
+            },
             'alt': {
                 type: 'text',
                 txt: 'Alt Text',
@@ -1966,7 +1974,8 @@ var nicImageButton = nicEditorAdvancedButton.extend({
                 options: {
                     none: 'Default',
                     'left': 'Left',
-                    'right': 'Right'
+                    'right': 'Right',
+                    'center': 'Center'
                 }
             }
         }, this.im);
@@ -1978,6 +1987,11 @@ var nicImageButton = nicEditorAdvancedButton.extend({
             alert("You must enter a Image URL to insert");
             return false;
         }
+        var val = this.inputs['width'].value;
+        if (isNaN(parseInt(val, 10))) {
+            alert("You must enter correct Width value");
+            return false;
+        }        
         this.removePane();
 
         if (!this.im) {
@@ -1986,10 +2000,23 @@ var nicImageButton = nicEditorAdvancedButton.extend({
             this.im = this.findElm('IMG', 'src', tmp);
         }
         if (this.im) {
+            var stl = 'display:block;';
+            stl += 'width:' + this.inputs['width'].value + '%;';
+            switch(this.inputs['align'].value){
+                case('left'):
+                stl += 'margin: 0 auto 0 0;';
+                break;
+                case('right'):
+                stl += 'margin: 0 0 0 auto;';
+                break;
+                case('center'):
+                stl += 'margin: 0 auto 0 auto;';
+                break;
+            }
             this.im.setAttributes({
                 src: this.inputs['src'].value,
                 alt: this.inputs['alt'].value,
-                align: this.inputs['align'].value
+                style: stl
             });
         }
     }

@@ -26,19 +26,23 @@
               <td><span v-text="post.id"></span></td>
               <td><a :href="post.link" target="_black"><span v-text="post.title"></span></a></td>
               <td>
-                <distate-switcher
-                :select="post.publication"
-                :options="switcherPublicationOpts"
-                 @change="createChange(post, 'publication', $event, 'native')"
-                ></distate-switcher>              
+                <div style="text-align: center">
+                  <distate-switcher
+                  :select="post.publication"
+                  :options="switcherPublicationOpts"
+                  @change="createChange(post, 'publication', $event, 'native')"
+                  ></distate-switcher>              
+                </div>
               </td>
               <td>
-                <tristate-switcher
-                mode="switcher"
-                :select="post.commenting"
-                @change="createChange(post, 'commenting', $event, 'native')"
-                :options="switcherCommentingOpts"
-                ></tristate-switcher>
+                <div style="text-align: center">
+                  <tristate-switcher
+                  mode="switcher"
+                  :select="post.commenting"
+                  @change="createChange(post, 'commenting', $event, 'native')"
+                  :options="switcherCommentingOpts"
+                  ></tristate-switcher>
+                </div>
               </td>            
               <td>
                 <button

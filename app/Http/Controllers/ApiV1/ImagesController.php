@@ -8,7 +8,10 @@ use Validator;
 use Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ImageShort;
+use App\Http\Resources\{
+    ImageShort,
+    ImageThumb
+};
 
 class ImagesController extends Controller
 {
@@ -36,11 +39,12 @@ class ImagesController extends Controller
      */
     public function index()
     {
-        if(\Auth::user()->is_admin == 1){
-            return ImageShort::collection(Images::orderBy('id')->paginate(20));
-        }else{
-            return ImageShort::collection(Images::where('user_id', \Auth::user()->id)->orderBy('id')->paginate(20));
-        }
+        return $this->getImagesList(ImageShort::class);
+    }
+
+    public function getListThumbnails()
+    {
+        return $this->getImagesList(ImageThumb::class, $paginate=false);
     }
 
     /**
@@ -122,5 +126,17 @@ class ImagesController extends Controller
         return [
         	"status" => "ok"
         ];
+    }
+
+    private function getImagesList($resource, $paginate=true)
+    {
+        if(\Auth::user()->is_admin == 1){
+            $query = Images::orderBy('id');
+        }else{
+            $query = Images::where('user_id', \Auth::user()->id)->orderBy('id');
+        }
+
+        $query = ($paginate) ? $query->paginate(20) : $query->get();
+        return $resource::collection($query);
     }
 }

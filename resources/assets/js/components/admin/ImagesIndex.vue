@@ -30,12 +30,14 @@
                 <input type="text" class="imglink bg-info" readonly="readonly" :value="img.fullimage" @click="$event.target.select()">
               </td>
               <td>
-                <distate-switcher
-                no-label
-                :select="img.status"
-                :options="switcherOpts"
-                 @change="createChange(img, 'status', $event, 'native')"
-                ></distate-switcher>                            
+                <div style="text-align: center">
+                  <distate-switcher
+                  no-label
+                  :select="img.status"
+                  :options="switcherOpts"
+                   @change="createChange(img, 'status', $event, 'native')"
+                  ></distate-switcher>
+                </div>
               </td>
               <td>
                 <multiselect v-model="img.category" :options="cats" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Pick a value" @select="createChange(img, 'category', $event.id, 'native')" @remove="createChange(img, 'category', null, 'native')" track-by="title" label="title"></multiselect>

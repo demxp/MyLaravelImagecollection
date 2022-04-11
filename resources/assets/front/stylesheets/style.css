@@ -1763,80 +1763,6 @@ blockquote {
 	color: #ffe400;
 }
 
-/* Revolution Slider
--------------------------------------------------------------- */
-.tp-banner-container {
-	max-height: 530px !important;
-	width: 100% !important;
-	position: relative;
-	overflow: hidden !important;
-	padding: 0;
-	background-color: #fff;
-}
-
-.tp-banner-container3 {
-    max-height: 955px !important;
-    width: 100% !important;
-    position: relative;
-    overflow: hidden !important;
-    padding: 0;
-    background-color: #fff;
-}
-
-.tp-banner-container6 {
-	max-height: 500px !important;
-	width: 100% !important;
-	position: relative;
-	overflow: hidden !important;
-	padding: 0;
-	background-color: #fff;
-}
-
-.tp-bullets.simplebullets.navbar {
-	height: 35px;
-	padding: 0px 0px;
-}
-
-.tp-bullets.simplebullets .bullet {
-	cursor: pointer;
-    position: relative !important;
-    background: rgba(0, 0, 0, 0.5) !important;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    width: 6px !important;
-    height: 6px !important;
-    border: 5px solid rgba(0, 0, 0, 0) !important;
-    display: inline-block;
-    margin-right: 2px !important;
-    margin-bottom: 0px !important;
-    -webkit-transition: background-color 0.2s, border-color 0.2s;
-    -moz-transition: background-color 0.2s, border-color 0.2s;
-    -o-transition: background-color 0.2s, border-color 0.2s;
-    -ms-transition: background-color 0.2s, border-color 0.2s;
-    transition: background-color 0.2s, border-color 0.2s;
-    float: none !important;
-    box-sizing: content-box;
-    -moz-box-sizing: content-box;
-    -webkit-box-sizing: content-box;
-}
-
-.tp-bullets.simplebullets .bullet.last {
-	margin-right: 0px
-}
-
-.tp-bullets.simplebullets .bullet:hover,
-.tp-bullets.simplebullets .bullet.selected {
-	    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    background: rgba(255, 255, 255, 1) !important;
-    width: 6px !important;
-    height: 6px !important;
-    border: 5px solid rgba(0, 0, 0, 1) !important;
-}
 
 /* GoTop Button
 -------------------------------------------------------------- */
@@ -1960,23 +1886,6 @@ blockquote {
   	}
 }
 
-/* Parallax
--------------------------------------------------------------- */
-.parallax {
-	width: 100%;
-	background-repeat: no-repeat;
-	background-position: 50% 0;
-	background-size: cover;
-}
-
-.parallax1 { background-image: url(../images/parallax/bg-parallax1.jpg); }
-
-.parallax2 { background-image: url(../images/parallax/bg-parallax2.jpg); }
-
-.parallax3 { background-image: url(../images/parallax/bg-parallax3.jpg); }
-
-.parallax4 { background-image: url(../images/parallax/bg-parallax4.jpg); }
-
 
 /* Слайдер фона
 ----------------------------------------------------------------*/
@@ -1999,6 +1908,23 @@ body {
 	background-color: white;
     padding: 10px;
     border-radius: 5px;    
+}
+
+.blog.no-sidebar .main-content, 
+.single-post.no-sidebar .main-content {
+    width: 80%;
+}
+
+.single-post .hentry .entry-content > div,
+.single-post .hentry .entry-content > p {
+  line-height: 1.4;
+  text-indent: 10px;
+  text-align: justify;  
+}
+
+.single-post .hentry .entry-content > div,
+.single-post .hentry .entry-content > p {
+  margin-bottom: 15px;
 }
 
 .single-post .navigation,

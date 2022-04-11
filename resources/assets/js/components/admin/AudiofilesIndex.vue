@@ -46,7 +46,7 @@
               <td>{{ afile.id }}</td>
               <td>
                 <span contenteditable="true" @keydown.13.prevent="createChange(afile,'title',$event,'text')" v-text="afile.title"></span><br /><br />
-                <input type="text" class="imglink bg-info" readonly="readonly" :value="afile.filelink" @click="$event.target.select()">
+                <input type="text" class="imglink bg-info" readonly="readonly" :value="playerCode(afile)" @click="copyText($event)">
               </td>
               <td><span contenteditable="true" @keydown.13.prevent="createChange(afile,'artist',$event,'text')" v-text="afile.artist"></span></td>
               <td><span contenteditable="true" @keydown.13.prevent="createChange(afile,'album',$event,'text')" v-text="afile.album"></span></td>
@@ -88,8 +88,15 @@
             this.upload.filename = this.upload.title = this.upload.artist = this.upload.album = '';
           }
         }
-      },      
+      },
       methods:{
+        playerCode(afile){
+          return '[audio-player,"'+afile.filelink+'","audio-player-id-'+cyrb53(afile.filelink)+'"]';
+        },
+        copyText(evt){
+          evt.target.select();
+          return copyTextToClipboard(evt.target.value, true);
+        },
         selectFile(){
           if(this.upload.file !== null) return false;
           return new Promise(function(resolve, reject) {

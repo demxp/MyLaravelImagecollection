@@ -27,7 +27,7 @@
               <td>{{ img.id }}</td>
               <td>
                 <span contenteditable="true" @keydown.13.prevent="createChange(img, 'title', $event, 'text')" v-text="img.title"></span><br /><br />
-                <input type="text" class="imglink bg-info" readonly="readonly" :value="img.fullimage" @click="$event.target.select()">
+                <input type="text" class="imglink bg-info" readonly="readonly" :value="img.fullimage" @click="copyText($event)">
               </td>
               <td>
                 <div style="text-align: center">
@@ -97,6 +97,10 @@
         }
       },
       methods:{
+        copyText(evt){
+          evt.target.select();
+          return copyTextToClipboard(evt.target.value, true);
+        },
         setCategoryTitle(img){
           ajaxfun(this.$apiLink('category', img.category.id), 'put', {
             id: img.category.id,

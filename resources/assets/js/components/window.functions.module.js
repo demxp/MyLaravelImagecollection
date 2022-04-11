@@ -119,5 +119,89 @@ export function WindowInstallCustom() {
         })
       });
     }    
-  }; 
+  };
+  window.installTimeupdateEvent = function (elem, eventName) {
+    'use strict';
+
+    // Create the new `freqtimeupdate` event
+    var freqtimeupdate = new CustomEvent(eventName),
+
+        // The event frequency in milliseconds
+        frequency = 100,
+
+        // Wrappers around setInterval and clearInterval to ensure one interval per audio
+        setInterval = function() {
+            if (!this.hasOwnProperty('_interval')) {
+                this._interval = global.setInterval(intervalFunc.bind(this), frequency);
+            }
+        },
+
+        clearInterval = function() {
+            global.clearInterval(this._interval);
+            delete this._interval;
+        },
+
+        // The actual interval function that dispatches the event
+        intervalFunc = function() {
+            this.dispatchEvent(freqtimeupdate);
+        };
+
+    if (!elem.paused) {
+        setInterval.call(elem);
+    }
+
+    elem.addEventListener('play', setInterval);
+    elem.addEventListener('playing', setInterval);
+    elem.addEventListener('seeked', setInterval);
+
+    elem.addEventListener('abort', clearInterval);
+    elem.addEventListener('emptied', clearInterval);
+    elem.addEventListener('ended', clearInterval);
+    elem.addEventListener('pause', clearInterval);
+  };
+  var fallback = function (text, debugFn) {
+    var textArea = document.createElement("textarea");
+    textArea.value = text;
+    
+    // Avoid scrolling to bottom
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      var successful = document.execCommand('copy');
+      var msg = successful ? 'successful' : 'unsuccessful';
+      debugFn('Fallback: Copying text command was ' + msg);
+    } catch (err) {
+      debugFn('Fallback: Oops, unable to copy', true);
+    }
+
+    document.body.removeChild(textArea);
+  }
+  window.copyTextToClipboard = function (text, debug=false) {
+    let debugFn = ((txt, err=false) => {
+      if(debug){
+        if(err){
+          swal('Oops!', txt, 'error');
+        }else{
+          swal('', txt, 'success');
+        }
+      }else{
+        console.log(txt);
+      }
+    });
+    if (!navigator.clipboard) {
+      fallback(text, debugFn);
+      return;
+    }
+    navigator.clipboard.writeText(text).then(function() {
+      debugFn('Async: Copying to clipboard was successful!');
+    }, function(err) {
+      debugFn('Async: Could not copy text: ', true);
+    });
+  }
 }

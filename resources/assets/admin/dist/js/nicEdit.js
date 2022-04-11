@@ -1955,7 +1955,7 @@ var nicImageButton = nicEditorAdvancedButton.extend({
             },
             'width': {
                 type: 'text',
-                txt: 'Width-%',
+                txt: 'Width',
                 'value': '100',
                 style: {
                     width: '100px'

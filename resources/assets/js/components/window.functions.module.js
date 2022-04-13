@@ -225,7 +225,7 @@ export function WindowInstallCustom() {
       if(params.bodyAsForm){
         bodyToSend = new FormData();
         for(let i in params.body) bodyToSend.append(i, params.body[i]);
-        if(!(params.headers && ('Content-type' in params.headers))) xhr.setRequestHeader('Content-type', 'multipart/form-data');
+        //if(!(params.headers && ('Content-Type' in params.headers))) xhr.setRequestHeader('Content-type','multipart/form-data; charset=UTF-8; boundary=' + Math.random().toString().substr(2));
       }else{
         bodyToSend = JSON.stringify(params.body);
         if(!(params.headers && ('Content-type' in params.headers))) xhr.setRequestHeader('Content-type', 'application/json; charset=UTF-8');      

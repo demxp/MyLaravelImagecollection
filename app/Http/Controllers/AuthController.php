@@ -27,6 +27,7 @@ class AuthController extends Controller
 
     public function loginForm()
     {
+        if(\Auth::check()) return redirect('/admin');
     	return view('front.login');
     }    
 

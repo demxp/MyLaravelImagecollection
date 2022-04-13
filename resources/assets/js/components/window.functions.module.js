@@ -181,7 +181,7 @@ export function WindowInstallCustom() {
     }
 
     document.body.removeChild(textArea);
-  }
+  };
   window.copyTextToClipboard = function (text, debug=false) {
     let debugFn = ((txt, err=false) => {
       if(debug){
@@ -203,5 +203,84 @@ export function WindowInstallCustom() {
     }, function(err) {
       debugFn('Async: Could not copy text: ', true);
     });
-  }
+  };
+  window.ajaxfun_new = function(url,method,args){
+    var params = {
+      body: args.body || null,
+      downloadCallback: args.downloadCallback || null,
+      uploadCallback: args.uploadCallback || null,
+      bodyAsForm: args.bodyAsForm || false,
+      headers: args.headers || null,
+      resetWithConfirm: args.resetWithConfirm || false
+    },
+    xhr = new XMLHttpRequest(),
+    bodyToSend;
+
+    xhr.open(method, url);
+    xhr.setRequestHeader('X-CSRF-TOKEN', document.head.querySelector('meta[name="csrf-token"]').content);
+
+    if(!!params.headers) for(let i in params.headers) xhr.setRequestHeader(i, params.headers[i]);
+
+    if(!!params.body){
+      if(params.bodyAsForm){
+        bodyToSend = new FormData();
+        for(let i in params.body) bodyToSend.append(i, params.body[i]);
+        if(!(params.headers && ('Content-type' in params.headers))) xhr.setRequestHeader('Content-type', 'multipart/form-data');
+      }else{
+        bodyToSend = JSON.stringify(params.body);
+        if(!(params.headers && ('Content-type' in params.headers))) xhr.setRequestHeader('Content-type', 'application/json; charset=UTF-8');      
+      }
+    }else{
+      bodyToSend = null;
+    }
+
+    return {
+      reset: () => {
+        if(params.resetWithConfirm && !confirm("Прервать загрузку?")) return false;
+        xhr.abort();
+        return true;
+      },
+      request: new Promise(function(resolve, reject) {
+        xhr.onload = function(){
+          if(xhr.status != 200 && xhr.status != 201){
+            return reject({name: 'StatusError', message: xhr.response});
+          }else{
+            return resolve(xhr.response);
+          }
+        };
+        xhr.onerror = function(e){
+          return reject({name: 'RequestError', message: e.message});
+        };      
+        xhr.upload.onprogress = function(e){
+          if(!!params.uploadCallback) params.uploadCallback(e);
+        };
+        xhr.upload.onerror = function(e){
+          if(!!params.uploadCallback){
+            return reject({name: 'UploadError', message: e.message});
+          }
+        };
+        xhr.send(bodyToSend);
+      }).catch((e) => {
+        if(e.name == 'StatusError'){
+          try{
+            let json = JSON.parse(e.message);
+            params.downloadCallback(json);
+            customAlert(json);
+          }catch(e){
+            throw e;
+          }
+        }
+      }).then(data => {
+        let json = JSON.parse(data);
+        if(!!json) return params.downloadCallback(json);
+      }).catch((e) => {
+        if(e.name == 'StatusError'){
+          customAlert({text: 'Некорректный ответ сервера'});
+        }else{
+          customAlert({text: 'Непонятная ошибка'});
+        }
+        console.log(e);
+      })
+    };
+  };  
 }

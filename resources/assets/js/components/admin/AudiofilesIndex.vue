@@ -2,9 +2,9 @@
   <div class="box">
     <div class="box-body">
       <div class="form-group top-block">
-        <a class="btn btn-success" @click="upload.state = !upload.state">Добавить</a>
+        <a class="btn btn-success" @click="uploader.state = !uploader.state">Добавить</a>
       </div>
-      <div v-if="upload.state">
+      <div v-if="uploader.state">
         <div class="form-group">
           <label for="exampleInputEmail1">Имя файла</label>
           <input type="text" class="form-control" readonly="readonly" @click="selectFile()" :value="upload.filename">
@@ -22,7 +22,19 @@
           <input type="text" class="form-control" v-model="upload.album">
         </div>
         <div class="form-group">
-          <a class="btn btn-success btn-xs uploadbtn" @click="uploadFile()">Загрузить</a>
+          <a class="btn btn-success btn-xs uploadbtn" @click="uploadFile()">
+            <span v-if='!uploader.uploading'>Загрузить</span>
+              <input v-if='uploader.uploading'
+                :value="uploader.uploadPercent"
+                type="range"
+                min="0"
+                max="100"
+                id="position"
+                name="position"
+                disabled="disabled"
+              />
+              <span v-if='uploader.uploading'>ЗАГРУЗКА</span>
+          </a>
         </div>                      
       </div>
       <div class="table-responsive">
@@ -76,13 +88,17 @@
             filename: '',
             title: '',
             artist: '',
-            album: '',
-            state: false
+            album: ''
+          },
+          uploader: {
+            state: false,
+            uploading: false,
+            uploadPercent: 0            
           }
         }
       },
       watch: {
-        'upload.state': function (value) {
+        'uploader.state': function (value) {
           if(!value){
             this.upload.file = null;
             this.upload.filename = this.upload.title = this.upload.artist = this.upload.album = '';
@@ -122,7 +138,22 @@
             console.log(error);            
           })
         },
+        calcPercent(e){
+          if(e.lengthComputable){
+            this.uploader.uploadPercent = e.loaded / e.total * 100;
+          }else{
+            this.uploader.uploadPercent = 100;
+          }
+        },
         uploadFile(){
+          if(this.uploader.uploading){
+            if(this.request.reset()){
+              this.uploader.state = false;
+              this.uploader.uploading = false;
+              this.uploader.uploadPercent = 0;
+            }
+            return;
+          }
           if(this.upload.file === null){
             alert('Файл не выбран');
             return false;
@@ -131,27 +162,26 @@
             this.upload.title = this.upload.filename;
           }
 
-          const fd = new FormData();
-          for(let i in this.upload){
-            fd.append(i, this.upload[i]);
-          }
-
-          fetch(this.$apiLink(this.$options.apiPath), {
-              method: 'POST',
-              headers: {'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content},
-              body: fd
-          })
-          .then(res => res.json())
-          .then((json) => {
-            if(json.status != 'ok'){
-              throw json;
+          this.uploader.uploading = true;
+          this.request = ajaxfun_new(
+            this.$apiLink(this.$options.apiPath),
+            'POST',
+            {
+              body: this.upload,
+              downloadCallback: function(req){
+                req.data.success = true;
+                req.data.danger = false;
+                this.afiles.push(req.data);
+                this.uploader.state = false;
+                this.uploader.uploading = false;
+                this.uploader.uploadPercent = 0;
+              }.bind(this),
+              uploadCallback: this.calcPercent.bind(this),
+              bodyAsForm: true,
+              resetWithConfirm: true
             }
-            this.afiles.push(json.data);
-            this.upload.state = false;
-          }).catch((err) => {
-            customAlert(err);
-          });
-        }
+          );
+       }
       }  
     }
 </script>
@@ -164,5 +194,39 @@
 
 .imglink{
   width: 100%;
+}
+
+input[type='range'] {
+    overflow: hidden;
+    -webkit-appearance: none;
+    background-color: #00af16;
+}
+
+input[type='range']::-webkit-slider-runnable-track {
+    height: 20px;
+    -webkit-appearance: none;
+    color: #13bba4;
+    margin-top: -1px;
+}
+
+input[type='range']::-webkit-slider-thumb {
+    width: 0;
+    -webkit-appearance: none;
+    height: 20px;
+    background: #434343;
+    box-shadow: -2500px 0 0 2500px #43e5f7;
+}
+
+input[type="range"]::-moz-range-progress {
+    background-color: #43e5f7; 
+}
+input[type="range"]::-moz-range-track {  
+    background-color: #9a905d;
+}
+input[type="range"]::-ms-fill-lower {
+    background-color: #43e5f7; 
+}
+input[type="range"]::-ms-fill-upper {  
+    background-color: #9a905d;
 }
 </style>

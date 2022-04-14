@@ -74,7 +74,12 @@
           </div>          
           <div class="form-group">
             <div id="pagecontent-div" style="width: 100%; min-height: 250px; border: 1px solid black;padding: 10px;" v-html="post.content"></div>
+            <button class="btn btn-default btn-xs" @click="formatContent" v-if="!contentAsHtml">HTML</button>
           </div>
+          <div class="form-group" v-if="contentAsHtml">
+            <textarea v-model="contentHtml" style="width: 100%;min-height: 250px;border: 1px solid black;padding: 10px;"></textarea>
+            <button class="btn btn-default btn-xs" @click="applyFormatted" v-if="contentAsHtml">SAVE</button>
+          </div>          
         </div>
       </div>
     </div>
@@ -91,8 +96,10 @@
     import Multiselect from 'vue-multiselect';
     import DistateSwitcher from './../reusable/DistateSwitcher.vue';
     import TristateSwitcher from './../reusable/TristateSwitcher.vue';
+    import { MethodsMixin } from './../mixins/methods.mixin.js';
 
     export default {
+      mixins: [MethodsMixin],
       components: {DatePick, Multiselect, DistateSwitcher, TristateSwitcher},
       props: {
         postId: {
@@ -140,7 +147,9 @@
           },
           tempTags: [],
           tags: [],
-          images: []
+          images: [],
+          contentHtml: '',
+          contentAsHtml: false
         }
       },
       mounted(){
@@ -172,7 +181,7 @@
           req.map((item, i) => {
             this.images.push(item);
           });
-        });        
+        });
         this.contentEditor = new nicEditor({
           fullPanel: true,
           iconsPath: '/img/nicEditorIcons.gif'
@@ -186,6 +195,15 @@
         },
       },      
       methods:{
+        formatContent() {
+            this.contentHtml = this.formatHTML(this.post.content);
+            this.contentAsHtml = true;
+        },
+        applyFormatted() {
+            this.post.content = this.unformatHTML(this.contentHtml);
+            this.contentHtml = '';
+            this.contentAsHtml = false;
+        },        
         editpost(){
           if(this.post.title === null || this.post.title.length < 3){
             alert("Надо написать заголовок поста!");

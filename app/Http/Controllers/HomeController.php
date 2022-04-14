@@ -57,6 +57,16 @@ class HomeController extends Controller
         return view('front.single-post', ['post' => $post]);
     }
 
+    public function showHiddenPost($slug, $openKey)
+    {
+        $post = BlogPost::where([
+            ['slug', $slug]
+        ])->first();
+
+        if($post && $post->genPostOpenKey() == $openKey) return view('front.single-post', ['post' => $post]);
+        return view('front.single-post-fail');
+    }
+
     public function PostsByTag($tag)
     {
         $tag = PostTag::where([
@@ -66,5 +76,10 @@ class HomeController extends Controller
 
         $posts = $tag->posts()->where('publication', 1)->orderBy('publication_date', 'desc')->paginate();
         return view('front.posts', ['posts' => $posts]);
-    }    
+    }
+
+    private static function genPostOpenKey($post)
+    {
+        if($post) return md5($post->id . '|' . $post->slug . '|' .config('app.hiddenPostSalt'));
+    }
 }

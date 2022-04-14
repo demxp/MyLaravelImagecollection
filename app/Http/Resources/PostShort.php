@@ -20,7 +20,16 @@ class PostShort extends JsonResource
             'slug' => $this->slug,
             'publication' => $this->publication,
             'commenting' => $this->commenting,
-            'link' => \URL::to('/').'/post/'.$this->slug
+            'link' => $this->genLink(),
         ];
+    }
+
+    public function genLink()
+    {
+        if($this->publication == 1){
+            return \URL::to('/').'/post/'.$this->slug;
+        }else{
+            return \URL::to('/').'/post/'.$this->slug.'/hidden/'.$this->resource->genPostOpenKey();
+        }
     }
 }

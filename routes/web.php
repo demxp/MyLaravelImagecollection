@@ -50,6 +50,7 @@ Route::get('/category/{slug}', 'HomeController@showCategory')->name('showcategor
 Route::get('/posts', 'HomeController@allPosts')->name('posts');
 Route::get('/posts/{tag}', 'HomeController@PostsByTag')->name('postsbytag');
 Route::get('/post/{slug}', 'HomeController@showPost')->name('showpost');
+Route::get('/post/{slug}/hidden/{hidden}', 'HomeController@showHiddenPost');
 
 Route::get('/{url}', 'HomeController@getStaticPage')->name('staticpage');
 

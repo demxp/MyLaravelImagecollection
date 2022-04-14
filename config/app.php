@@ -237,4 +237,8 @@ return [
     /* Route name for INDEX */
 
     'indexRoute' => env('INDEX_ROUTE', 'posts'),
+
+    /* Hidden Post key salt */
+
+    'hiddenPostSalt' => env('HIDDEN_POST_SALT', '4.B9?VF31#ftRdz+]@:p?VHKQ0UwEh'),
 ];

@@ -163,6 +163,11 @@ class BlogPost extends Model
         return $this;
     }
 
+    public function genPostOpenKey()
+    {
+        return md5($this->id . '|' . $this->slug . '|' .config('app.hiddenPostSalt'));
+    }    
+
     public function remove()
     {
         return $this->delete();
